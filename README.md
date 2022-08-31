@@ -1,3 +1,3 @@
 # ProjetoJava
 
-Main se encontra no arquivo manager
+Main se encontra no arquivo Manager.java
