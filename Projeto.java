@@ -1,5 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.time.format.DateTimeFormatter;
 
 public class Projeto {
 
@@ -10,77 +12,169 @@ public class Projeto {
     private LocalDateTime termino = null;
 
     private String coordenador = null;
-    private ArrayList <String> profissionais = new ArrayList<String>();
+    private ArrayList <Usuario> projetistas = new ArrayList<Usuario>();
     private ArrayList <Atividade> atividades = new ArrayList<Atividade>();
 
-    private String bolsaDesenvolvedor = null;
-    private String bolsaTestador = null;
-    private String bolsaAnalista = null;
-    private String tempoBolsaDesenvolvedor = null;
-    private String tempoBolsaTestador = null;
-    private String tempoBolsaAnalista = null;
+    private float bolsaDesenvolvedor = 0;
+    private float bolsaTestador = 0;
+    private float bolsaAnalista = 0;
+    private LocalDateTime tempoBolsaDesenvolvedor = null;
+    private LocalDateTime tempoBolsaTestador = null;
+    private LocalDateTime tempoBolsaAnalista = null;
 
-    public int setID(int id)
+    //Scanner input = new Scanner(System.in);
+
+    public Projeto (int id, String desc, LocalDateTime inicio, LocalDateTime termino, String status)
     {
-        this.id = id;
+        this.setId(id);
+        this.setDesc(desc);
+        this.setInicio(inicio);
+        this.setTermino(termino);
+        this.setStatus(status);
+    }
+
+    public void EditarProjeto (Projeto project, Scanner input, DateTimeFormatter format)
+    {
+        System.out.println("Digite o nome do coordenador do projeto: ");
+        project.setCoordenador(input.nextLine());
+
+        /*System.out.println ("Quantos profissionais estarao no projeto? ");
+        int num = input.nextInt();
+        input.nextLine();
+        for (int i = 0; i < num; i++)
+        {
+            System.out.println("Digite o nome de um profissional do projeto: ");
+            project.setProfissionais(input.nextLine());
+        }*/
+
+        System.out.println("Digite o valor da bolsa para o(s) Desenvolvedor(es) no formato: ");
+        project.setBolsaDesenvolvedor(input.nextFloat());
+
+        System.out.println("Digite o valor da bolsa para o(s) Testador(es) no formato: ");
+        project.setBolsaTestador(input.nextFloat());
+
+        System.out.println("Digite o valor da bolsa para o(s) Analista(s) no formato: ");
+        project.setBolsaAnalista(input.nextFloat());
+
+        System.out.println("Digite o prazo da bolsa para o(s) Desenvolvedor(es) no formato: ");
+        //project.setTempoBolsaDesenvolvedor(input.nextLine());
+
+        System.out.println("Digite o prazo da bolsa para o(s) Testador(es) no formato: ");
+        //project.setTempoBolsaTestador(input.nextLine());
+
+        System.out.println("Digite o prazo da bolsa para o(s) Analista(s) no formato: ");
+        //project.setTempoBolsaAnalista(input.nextLine());
+    }
+
+    public int getId() {
         return this.id;
     }
-    public String setDesc(String desc)
-    {
-        this.desc = desc;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDesc() {
         return this.desc;
     }
-    public LocalDateTime setInicio(LocalDateTime inicio)
-    {
-        this.inicio = inicio;
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getInicio() {
         return this.inicio;
     }
-    public LocalDateTime setTermino(LocalDateTime termino)
-    {
-        this.termino = termino;
+
+    public void setInicio(LocalDateTime inicio) {
+        this.inicio = inicio;
+    }
+
+    public LocalDateTime getTermino() {
         return this.termino;
     }
-    public String setCoordenador(String coordenador)
-    {
-        this.coordenador = coordenador;
+
+    public void setTermino(LocalDateTime termino) {
+        this.termino = termino;
+    }
+
+    public String getCoordenador() {
         return this.coordenador;
     }
-    public void setProfissionais(String profissional)
-    {
-        this.profissionais.add(profissional);
+
+    public void setCoordenador(String coordenador) {
+        this.coordenador = coordenador;
     }
-    public void setAtividades(Atividade atividade)
-    {
-        this.atividades.add(atividade);
+
+    public ArrayList<Usuario> getProjetistas() {
+        return this.projetistas;
     }
-    public String setBolsaDesenvolvedor(String bolsaDesenvolvedor)
-    {
-        this.bolsaDesenvolvedor = bolsaDesenvolvedor;
+
+    public void setProjetistas(Usuario projestista) {
+        projetistas.add(projestista);
+    }
+
+    public ArrayList<Atividade> getAtividades() {
+        return this.atividades;
+    }
+
+    public void setAtividades(Atividade atividade) {
+        atividades.add(atividade);
+    }
+
+    public float getBolsaDesenvolvedor() {
         return this.bolsaDesenvolvedor;
     }
-    public String setBolsaTestador(String bolsaTestador)
-    {
-        this.bolsaTestador = bolsaTestador;
+
+    public void setBolsaDesenvolvedor(float bolsaDesenvolvedor) {
+        this.bolsaDesenvolvedor = bolsaDesenvolvedor;
+    }
+
+    public float getBolsaTestador() {
         return this.bolsaTestador;
     }
-    public String setBolsaAnalista(String bolsaAnalista)
-    {
-        this.bolsaAnalista = bolsaAnalista;
+
+    public void setBolsaTestador(float bolsaTestador) {
+        this.bolsaTestador = bolsaTestador;
+    }
+
+    public float getBolsaAnalista() {
         return this.bolsaAnalista;
     }
-    public String setTempoBolsaDesenvolvedor(String tempoBolsaDesenvolvedor)
-    {
-        this.tempoBolsaDesenvolvedor = tempoBolsaDesenvolvedor;
+
+    public void setBolsaAnalista(float bolsaAnalista) {
+        this.bolsaAnalista = bolsaAnalista;
+    }
+
+    public LocalDateTime getTempoBolsaDesenvolvedor() {
         return this.tempoBolsaDesenvolvedor;
     }
-    public String setTempoBolsaTestador(String tempoBolsaTestador)
-    {
-        this.tempoBolsaTestador = tempoBolsaTestador;
+
+    public void setTempoBolsaDesenvolvedor(LocalDateTime tempoBolsaDesenvolvedor) {
+        this.tempoBolsaDesenvolvedor = tempoBolsaDesenvolvedor;
+    }
+
+    public LocalDateTime getTempoBolsaTestador() {
         return this.tempoBolsaTestador;
     }
-    public String setTempoBolsaAnalista(String tempobolsaAnalista)
-    {
-        this.tempoBolsaAnalista = tempobolsaAnalista;
+
+    public void setTempoBolsaTestador(LocalDateTime tempoBolsaTestador) {
+        this.tempoBolsaTestador = tempoBolsaTestador;
+    }
+
+    public LocalDateTime getTempoBolsaAnalista() {
         return this.tempoBolsaAnalista;
+    }
+
+    public void setTempoBolsaAnalista(LocalDateTime tempoBolsaAnalista) {
+        this.tempoBolsaAnalista = tempoBolsaAnalista;
     }
 }
