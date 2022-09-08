@@ -18,12 +18,16 @@ public class Usuario
         setEmail(email);
         setSenha(senha);
         setTipo(tipo);
-        this.id = id;
+        setId(id);
 
     }
 
     public int getId() {
         return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {

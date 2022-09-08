@@ -33,37 +33,172 @@ public class Projeto {
         this.setStatus(status);
     }
 
-    public void EditarProjeto (Projeto project, Scanner input, DateTimeFormatter format)
+    public void EditarProjeto (ArrayList<Usuario> usuarios, Projeto project, Scanner input, DateTimeFormatter format)
     {
         System.out.println("Digite o nome do coordenador do projeto: ");
         project.setCoordenador(input.nextLine());
 
-        /*System.out.println ("Quantos profissionais estarao no projeto? ");
-        int num = input.nextInt();
+        System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
+        int quant = input.nextInt();
         input.nextLine();
-        for (int i = 0; i < num; i++)
+
+        for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite o nome de um profissional do projeto: ");
-            project.setProfissionais(input.nextLine());
-        }*/
+            System.out.println("Digite o CPF do usuario que deseja adicionar: ");
+            int idUser = input.nextInt();
+            input.nextLine();
 
-        System.out.println("Digite o valor da bolsa para o(s) Desenvolvedor(es) no formato: ");
-        project.setBolsaDesenvolvedor(input.nextFloat());
+            for (Usuario item : usuarios)
+            {
+                if (item.getId() == idUser)
+                {
+                    project.setProjetistas(item);
+                    break;
+                }
+            }
+        }
 
-        System.out.println("Digite o valor da bolsa para o(s) Testador(es) no formato: ");
-        project.setBolsaTestador(input.nextFloat());
+        System.out.println("Qual sera a quantidade de usuarios removidos?");
+        quant = input.nextInt();
+        input.nextLine();
 
-        System.out.println("Digite o valor da bolsa para o(s) Analista(s) no formato: ");
-        project.setBolsaAnalista(input.nextFloat());
+        for (int i = 0; i < quant; i++)
+        {
+            System.out.println("Digite CPF do usuario que deseja remover: ");
+            int idUser = input.nextInt();
+            input.nextLine();
 
-        System.out.println("Digite o prazo da bolsa para o(s) Desenvolvedor(es) no formato: ");
-        //project.setTempoBolsaDesenvolvedor(input.nextLine());
+            for (Usuario item: project.getProjetistas())
+            {
+                if (item.getId() == idUser)
+                {
+                    project.getProjetistas().remove(item);
+                    break;
+                }
+            }
+        }
+        System.out.println("Qual sera a quantidade de atividades adicionadas?");
+        quant = input.nextInt();
+        input.nextLine();
 
-        System.out.println("Digite o prazo da bolsa para o(s) Testador(es) no formato: ");
-        //project.setTempoBolsaTestador(input.nextLine());
+        for (int i = 0; i < quant; i++)
+        {
+            System.out.println("Crie a atividade a ser adicionada: ");
 
-        System.out.println("Digite o prazo da bolsa para o(s) Analista(s) no formato: ");
-        //project.setTempoBolsaAnalista(input.nextLine());
+            System.out.println("Digite o ID da atividade: ");
+            int idAtividade = input.nextInt();
+            input.nextLine();
+
+            System.out.println("Digite a descricao da atividade: ");
+            String descAtividade = input.nextLine();
+
+            System.out.println("Digite o nome do responsavel pela atividade: ");
+            String responsavel = input.nextLine();
+
+            System.out.println ("Digite a data de inicio no formato: HH:mm dd/MM/yyyy");
+            LocalDateTime inicio = LocalDateTime.parse(input.nextLine(), format);
+
+            System.out.println ("Digite a data de termino no formato: HH:mm dd/MM/yyyy");
+            LocalDateTime termino = LocalDateTime.parse(input.nextLine(), format);
+
+            if (idAtividade > 0 && descAtividade != null && inicio != null && termino != null)
+            {
+                Atividade atividade = new Atividade(idAtividade, descAtividade, responsavel, inicio, termino);
+                project.setAtividades(atividade);
+            }
+        }
+
+        System.out.println("Qual sera a quantidade de atividades removidas?");
+        quant = input.nextInt();
+        input.nextLine();
+
+        for (int i = 0; i < quant; i++)
+        {
+            System.out.println("Digite o ID da atividade a ser removida: ");
+            int idAtividade = input.nextInt();
+            input.nextLine();
+
+            for (Atividade item : project.getAtividades())
+            {
+                if (item.getId() == idAtividade)
+                {
+                    project.getAtividades().remove(item);
+                    break;
+                }
+            }
+        }                         
+
+        System.out.println("Valor atual da Bolsa-Desenvolvedor: " +project.getBolsaDesenvolvedor());
+        System.out.println("Digite o novo valor, -1 para manter");
+        float bolsa = input.nextFloat();
+
+        if (bolsa > -1)
+        {
+            project.setBolsaDesenvolvedor(bolsa);
+        }
+        else if (bolsa < -1)
+        {
+            //erro
+        }
+
+        System.out.println("Valor atual da Bolsa-Testador: " +project.getBolsaTestador());
+        System.out.println("Digite o novo valor, -1 para manter");
+        bolsa = input.nextFloat();
+
+        if (bolsa > -1)
+        {
+            project.setBolsaTestador(bolsa);
+        }
+        else if (bolsa < -1)
+        {
+            //erro
+        }
+
+        System.out.println("Valor atual da bolsa: " +project.getBolsaAnalista());
+        System.out.println("Digite o novo valor, -1 para manter");
+        bolsa = input.nextFloat();
+
+        if (bolsa > -1)
+        {
+            project.setBolsaAnalista(bolsa);
+        }
+        else if (bolsa < -1)
+        {
+            //erro
+        }
+
+        System.out.println("Prazo atual da bolsa: " +project.getTempoBolsaDesenvolvedor());
+        System.out.println("Gostaria de alterar? 1 para S, 0 para N");
+        int decisao = input.nextInt();
+        input.nextLine();
+
+        if (decisao == 1)
+        {
+            LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
+            project.setTempoBolsaDesenvolvedor(tempoBolsa);
+        }
+
+        System.out.println("Prazo atual da bolsa: " +project.getTempoBolsaTestador());
+        System.out.println("Gostaria de alterar? 1 para S, 0 para N");
+        decisao = input.nextInt();
+        input.nextLine();
+
+        if (decisao == 1)
+        {
+            LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
+            project.setTempoBolsaTestador(tempoBolsa);
+        }
+
+        System.out.println("Prazo atual da bolsa: " +project.getTempoBolsaAnalista());
+        System.out.println("Gostaria de alterar? 1 para S, 0 para N");
+        decisao = input.nextInt();
+        input.nextLine();
+
+        if (decisao == 1)
+        {
+            LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
+            project.setTempoBolsaAnalista(tempoBolsa);
+        }
     }
 
     public int getId() {
