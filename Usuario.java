@@ -8,9 +8,9 @@ public class Usuario
     private String senha = null;
     private String tipo = null;
 
-    private String projeto = null;
-    private String atividade = null;
-    private ArrayList <String> tarefas = new ArrayList<String>();
+    private int projeto = 0;
+    private int atividade = 0;
+    private ArrayList <Tarefa> tarefas = new ArrayList<Tarefa>();
 
     public Usuario(String nome, String email, String senha, String tipo, int id)
     {
@@ -21,6 +21,11 @@ public class Usuario
         setId(id);
 
     }
+
+    /*public void EditarUsuario()
+    {
+
+    }*/
 
     public int getId() {
         return this.id;
@@ -62,28 +67,28 @@ public class Usuario
         this.tipo = tipo;
     }
 
-    public String getProjeto() {
+    public int getProjeto() {
         return this.projeto;
     }
 
-    public void setProjeto(String projeto) {
+    public void setProjeto(int projeto) {
         this.projeto = projeto;
     }
 
-    public String getAtividade() {
+    public int getAtividade() {
         return this.atividade;
     }
 
-    public void setAtividade(String atividade) {
+    public void setAtividade(int atividade) {
         this.atividade = atividade;
     }
 
-    public ArrayList<String> getTarefas() {
+    public ArrayList<Tarefa> getTarefas() {
         return this.tarefas;
     }
 
-    public void setTarefas(ArrayList<String> tarefas) {
-        this.tarefas = tarefas;
+    public void setTarefas(Tarefa tarefa) {
+        tarefas.add(tarefa);
     }
 
 }

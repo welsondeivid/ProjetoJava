@@ -2,11 +2,13 @@ public class Tarefa {
     
     private String desc = null;
     private String profissional = null;
+    private String status = null;
 
     public Tarefa(String desc, String profissional)
     {
-        this.desc = desc;
-        this.profissional = profissional;
+        this.setDesc(desc);
+        this.setProfissional(profissional);
+        this.setStatus("Atribuida");
     }
 
     public String getDesc() {
@@ -25,4 +27,11 @@ public class Tarefa {
         this.profissional = profissional;
     }
 
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

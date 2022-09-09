@@ -22,6 +22,7 @@ public class Manager {
         System.out.println ("Digite 2 para: Cadastrar um Usuario");
         System.out.println ("Digite 3 para: Editar um projeto");
         System.out.println ("Digite 4 para: Editar uma atividade");
+        System.out.println ("Digite 5 para: Editar um usuario");
         System.out.println ("Digite 10 para: Printar");
 
         cmd = input.nextInt();
@@ -364,19 +365,14 @@ public class Manager {
 
                     if (atividade != null)
                     {
-                        System.out.println("Digite qual info deseja editar: ");
-
-                        System.out.println("Digite 0 para sair: ");
-                        System.out.println("Digite 1 para tudo: ");
-                        System.out.println("Digite 2 para responsavel: ");
-                        System.out.println("Digite 3 para adicionar ou remover usuarios da atividade: ");
-                        System.out.println("Digite 4 para adicionar ou remover tarefas da atividade: ");
+                        m.MenuAtividade();
 
                         int cmdAtividade = -1;
 
                         while (cmdAtividade != 0)
                         {
                             cmdAtividade = input.nextInt();
+                            input.nextLine();
                             if (cmdAtividade == 1)
                             {
                                 atividade.EditarAtividade(project, atividade, input);
@@ -457,7 +453,7 @@ public class Manager {
                                     atividade.setTarefas(tarefa);
                                 }
                             }
-                            else if (cmd == 6)
+                            else if (cmdAtividade == 6)
                             {
                                 System.out.println("Qual sera a quantidade de tarefas removidas? 0 para nenhuma");
                                 int quant = input.nextInt();
@@ -485,11 +481,178 @@ public class Manager {
                                     }
                                 }
                             }
+                            
+                            m.MenuPrincipal();
                         }
                     }
                 }
             }
 
+            else if (cmd == 5)
+            {
+                System.out.println("Digite seu CPF: ");
+                int cpfUsuario = input.nextInt();
+                input.nextLine();
+
+                Usuario usuario = null;
+                for (Usuario item : usuarios)
+                {
+                    if (item.getId() == cpfUsuario)
+                    {
+                        usuario = item;
+                    }
+                }
+
+                if (usuario != null)
+                {
+                    System.out.println("O que deseja editar? ");
+
+                    System.out.print("Digite 0  para sair: ");
+                    System.out.print("Digite 1 para alterar a senha: ");
+                    System.out.print("Digite 2  para se associar a um projeto: ");
+                    System.out.print("Digite 3  para se associar a uma atividade: ");
+                    System.out.print("Digite 4 para alterar o status de uma tarefa: ");
+
+                    int cmdUsuario = -1;
+
+                    while (cmdUsuario != 0)
+                    {
+                        cmdUsuario = input.nextInt();
+                        input.nextLine();
+
+                        if (cmdUsuario == 1)
+                        {
+                            System.out.println("Sua senha atual é "+usuario.getSenha());
+                            System.out.println("Gostaria de mudar? 1 para sim");
+
+                            int decisao = input.nextInt();
+                            input.nextLine();
+
+                            if (decisao == 1)
+                            {
+                                System.out.print("Digite a nova senha: ");
+                                String novaSenha = input.nextLine();
+
+                                // tratamento de erro senha, vazia
+                                usuario.setSenha(novaSenha);
+                            }
+                        }
+                        else if (cmdUsuario == 2)
+                        {
+                            System.out.print("Digite o ID do projeto ao qual gostaria de associar-se: ");
+
+                            int idProject = input.nextInt();
+                            input.nextLine();
+
+                            Projeto project = null;
+                            for(Projeto item : projetos)
+                            {
+                                if (item.getId() == idProject)
+                                {
+                                    project = item;
+                                    break;
+                                }
+                            }
+
+                            if (project != null)
+                            {
+                                usuario.setProjeto(project.getId());
+                            }
+                        }
+                        else if (cmdUsuario == 3)
+                        {
+                            System.out.print("Digite o ID do projeto ao qual gostaria de associar-se: ");
+
+                            int idProject = input.nextInt();
+                            input.nextLine();
+
+                            Projeto project = null;
+                            for(Projeto item : projetos)
+                            {
+                                if (item.getId() == idProject)
+                                {
+                                    project = item;
+                                    break;
+                                }
+                            }
+
+                            if (project != null)
+                            {
+                                System.out.print("Digite o ID da atividade a qual gostaria de associar-se: ");
+
+                                int idAtividade = input.nextInt();
+                                input.nextLine();
+
+                                Atividade atividade = null;
+                                for(Atividade item : project.getAtividades())
+                                {
+                                    if (item.getId() == idAtividade)
+                                    {
+                                        atividade = item;
+                                        break;
+                                    }
+                                }
+
+                                if (atividade != null)
+                                {
+                                    usuario.setAtividade(atividade.getId());
+                                }
+                            }
+                        }
+
+                        else if (cmdUsuario == 4)
+                        {
+                            System.out.println("Atividades atribuidas: ");
+
+                            /*for (Tarefa item : usuario.getTarefas())
+                            {
+                                System.out.println(item.getDesc());
+                            }*/
+
+                            Tarefa item = null;
+                            for (int i = 1; i <= usuario.getTarefas().size(); i++)
+                            {
+                                item = usuario.getTarefas().get(i);
+                                System.out.println(i+":"+item.getDesc());
+                            }
+
+                            System.out.print("Digite o indice da tarefa que deseja mudar o status: ");
+                            int indTarefa = input.nextInt() - 1;
+                            input.nextLine();
+
+                            if (indTarefa > 0 && indTarefa < usuario.getTarefas().size())
+                            {
+                                item = usuario.getTarefas().get(indTarefa);
+                            }
+                            else
+                            {
+                                item = null;
+                            }
+
+                            if (item != null)
+                            {
+                                System.out.print("Tarefa selecionada: "+item.getDesc());
+
+                                System.out.println("Digite 0 para escolher de novo");
+                                System.out.println("Digite 1 para marcar como Iniciada");
+                                System.out.println("Digite 2 para marcar como Finalizada");
+
+                                int decisao = input.nextInt();
+                                input.nextLine();
+
+                                if (decisao == 1)
+                                {
+                                    item.setDesc("Iniciada");
+                                }
+                                else if (decisao == 2)
+                                {
+                                    item.setDesc("Finalizada");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             /*else if (cmd == )
             {
                 System.out.println("Digite o ID do projeto que deseja checar: ");
@@ -613,6 +776,11 @@ public class Manager {
         return true;
     }
 
+    public void MenuPrincipal()
+    {
+
+    } 
+
     public void MenuProjeto()
     {
         System.out.println("Digite qual info deseja editar: ");
@@ -628,5 +796,16 @@ public class Manager {
         System.out.println("Digite 8 para adicionar ou editar o prazo da Bolsa-Desenvolvedor: ");
         System.out.println("Digite 9 para adicionar ou editar o prazo da Bolsa-Testador: ");
         System.out.println("Digite 10 para adicionar ou editar o prazo da Bolsa-Analista: ");
+    }
+
+    public void MenuAtividade()
+    {
+        System.out.println("Digite qual info deseja editar: ");
+
+        System.out.println("Digite 0 para sair: ");
+        System.out.println("Digite 1 para tudo: ");
+        System.out.println("Digite 2 para responsavel: ");
+        System.out.println("Digite 3 para adicionar ou remover usuarios da atividade: ");
+        System.out.println("Digite 4 para adicionar ou remover tarefas da atividade: ");
     }
 }
