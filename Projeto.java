@@ -5,13 +5,15 @@ import java.time.format.DateTimeFormatter;
 
 public class Projeto {
 
+    Utilidades U = new Utilidades();
+
     private int id = -1;
     private String desc = null;
     public String status = null;
     private LocalDateTime inicio = null;
     private LocalDateTime termino = null;
 
-    private String coordenador = null;
+    private int idCoordenador = 0;
     private ArrayList <Usuario> projetistas = new ArrayList<Usuario>();
     private ArrayList <Atividade> atividades = new ArrayList<Atividade>();
 
@@ -35,59 +37,59 @@ public class Projeto {
 
     public void EditarProjeto (ArrayList<Usuario> usuarios, Projeto project, Scanner input, DateTimeFormatter format)
     {
-        System.out.println("Digite o nome do coordenador do projeto: ");
-        project.setCoordenador(input.nextLine());
+        System.out.println("Somente Pesquisadores ou Professores podem coordenar um projeto");
+        System.out.println("Digite o CPF do novo coordenador do projeto: ");
+        
+        Usuario usuario = U.BuscarUsuario(usuarios, input);
+
+        if (usuario != null)
+        {
+            if (usuario.getTipo().equals("Prof") || usuario.getTipo().equals("Pesq"))
+            {
+                project.setIdCoordenador(usuario.getId());
+                usuario.setCoord(true);
+                usuario.setProjeto(project.getId());
+            }
+        }
 
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
-        int quant = input.nextInt();
-        input.nextLine();
+        int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o CPF do usuario que deseja adicionar: ");
-            int idUser = input.nextInt();
-            input.nextLine();
+            
+            usuario = U.BuscarUsuario(usuarios, input);
 
-            for (Usuario item : usuarios)
+            if (usuario != null)
             {
-                if (item.getId() == idUser)
-                {
-                    project.setProjetistas(item);
-                    break;
-                }
+                project.setProjetistas(usuario);
             }
         }
 
         System.out.println("Qual sera a quantidade de usuarios removidos?");
-        quant = input.nextInt();
-        input.nextLine();
+        quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite CPF do usuario que deseja remover: ");
-            int idUser = input.nextInt();
-            input.nextLine();
+            
+            usuario = U.BuscarUsuario(project.getProjetistas(), input);
 
-            for (Usuario item: project.getProjetistas())
+            if (usuario != null)
             {
-                if (item.getId() == idUser)
-                {
-                    project.getProjetistas().remove(item);
-                    break;
-                }
+                project.getProjetistas().remove(usuario);
             }
         }
         System.out.println("Qual sera a quantidade de atividades adicionadas?");
-        quant = input.nextInt();
-        input.nextLine();
+        quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Crie a atividade a ser adicionada: ");
 
             System.out.println("Digite o ID da atividade: ");
-            int idAtividade = input.nextInt();
-            input.nextLine();
+            int idAtividade = U.LerInt(input);
 
             System.out.println("Digite a descricao da atividade: ");
             String descAtividade = input.nextLine();
@@ -109,14 +111,12 @@ public class Projeto {
         }
 
         System.out.println("Qual sera a quantidade de atividades removidas?");
-        quant = input.nextInt();
-        input.nextLine();
+        quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o ID da atividade a ser removida: ");
-            int idAtividade = input.nextInt();
-            input.nextLine();
+            int idAtividade = U.LerInt(input);
 
             for (Atividade item : project.getAtividades())
             {
@@ -169,8 +169,7 @@ public class Projeto {
 
         System.out.println("Prazo atual da bolsa: " +project.getTempoBolsaDesenvolvedor());
         System.out.println("Gostaria de alterar? 1 para S, 0 para N");
-        int decisao = input.nextInt();
-        input.nextLine();
+        int decisao = U.LerInt(input);
 
         if (decisao == 1)
         {
@@ -180,8 +179,7 @@ public class Projeto {
 
         System.out.println("Prazo atual da bolsa: " +project.getTempoBolsaTestador());
         System.out.println("Gostaria de alterar? 1 para S, 0 para N");
-        decisao = input.nextInt();
-        input.nextLine();
+        decisao = U.LerInt(input);
 
         if (decisao == 1)
         {
@@ -191,8 +189,7 @@ public class Projeto {
 
         System.out.println("Prazo atual da bolsa: " +project.getTempoBolsaAnalista());
         System.out.println("Gostaria de alterar? 1 para S, 0 para N");
-        decisao = input.nextInt();
-        input.nextLine();
+        decisao = U.LerInt(input);
 
         if (decisao == 1)
         {
@@ -241,12 +238,12 @@ public class Projeto {
         this.termino = termino;
     }
 
-    public String getCoordenador() {
-        return this.coordenador;
+    public int getIdCoordenador() {
+        return this.idCoordenador;
     }
 
-    public void setCoordenador(String coordenador) {
-        this.coordenador = coordenador;
+    public void setIdCoordenador(int coordenador) {
+        this.idCoordenador = coordenador;
     }
 
     public ArrayList<Usuario> getProjetistas() {

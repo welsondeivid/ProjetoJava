@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class Atividade {
     
+    Utilidades U = new Utilidades();
+
     private int id = -1;
     private String desc = null;
     private String responsavel = null;
@@ -27,8 +29,7 @@ public class Atividade {
     {
         System.out.println("Responsavel atual pela ativiadade: " +atividade.getResponsavel());
         System.out.println("Gostaria de alterar? 1 para sim");
-        int decisao = input.nextInt();
-        input.nextLine();
+        int decisao = U.LerInt(input);
 
         if (decisao == 1)
         {
@@ -37,46 +38,37 @@ public class Atividade {
         }
 
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
-        int quant = input.nextInt();
-        input.nextLine();
+        int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o CPF do usuario que deseja adicionar: ");
-            int idUser = input.nextInt();
-            input.nextLine();
-            for (Usuario item : project.getProjetistas())
+            
+            Usuario usuario = U.BuscarUsuario(project.getProjetistas(), input);
+
+            if (usuario != null)
             {
-                if (item.getId() == idUser)
-                {
-                    atividade.setUsuarios(item);
-                    break;
-                }
+                atividade.setUsuarios(usuario);
             }
         }
 
         System.out.println("Qual sera a quantidade de usuarios removidos? 0 para nenhum");
-        quant = input.nextInt();
-        input.nextLine();
+        quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o CPF do usuario que deseja remover: ");
-            int idUser = input.nextInt();
-            input.nextLine();
-            for (Usuario item : atividade.getUsuarios())
+            
+            Usuario usuario = U.BuscarUsuario(atividade.getUsuarios(), input);
+
+            if (usuario != null)
             {
-                if (item.getId() == idUser)
-                {
-                    atividade.getUsuarios().remove(item);
-                    break;
-                }
+                atividade.getUsuarios().remove(usuario);
             }
         }
 
         System.out.println("Qual sera a quantidade de tarefas adicionadas? 0 para nenhuma: ");
-        quant = input.nextInt();
-        input.nextLine();
+        quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
@@ -93,8 +85,7 @@ public class Atividade {
         }
 
         System.out.println("Qual sera a quantidade de tarefas removidas? 0 para nenhuma");
-        quant = input.nextInt();
-        input.nextLine();
+        quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
@@ -108,7 +99,7 @@ public class Atividade {
                     System.out.println("Descricao da atividade: "+item.getDesc());
                     System.out.println("Gostaria de remove-la? 1 para sim");
 
-                    int dec = input.nextInt();
+                    int dec = U.LerInt(input);
                     if (dec == 1)
                     {
                         atividade.getTarefas().remove(item);

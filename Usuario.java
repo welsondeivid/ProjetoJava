@@ -7,6 +7,7 @@ public class Usuario
     private String email = null;
     private String senha = null;
     private String tipo = null;
+    private boolean Coord = false;
 
     private int projeto = 0;
     private int atividade = 0;
@@ -21,11 +22,6 @@ public class Usuario
         setId(id);
 
     }
-
-    /*public void EditarUsuario()
-    {
-
-    }*/
 
     public int getId() {
         return this.id;
@@ -91,4 +87,11 @@ public class Usuario
         tarefas.add(tarefa);
     }
 
+    public boolean getCoord() {
+        return this.Coord;
+    }
+
+    public void setCoord(boolean Coord) {
+        this.Coord = Coord;
+    }
 }
