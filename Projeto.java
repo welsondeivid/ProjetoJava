@@ -9,11 +9,15 @@ public class Projeto {
 
     private int id = -1;
     private String desc = null;
-    public String status = null;
+    private String status = null;
     private LocalDateTime inicio = null;
     private LocalDateTime termino = null;
 
     private int idCoordenador = 0;
+    private ArrayList<Usuario> desenvolvedores = new ArrayList<Usuario>();
+    private ArrayList<Usuario> testadores = new ArrayList<Usuario>();
+    private ArrayList<Usuario> analistas = new ArrayList<Usuario>();
+    private int tecnico = 0;
     private ArrayList <Usuario> projetistas = new ArrayList<Usuario>();
     private ArrayList <Atividade> atividades = new ArrayList<Atividade>();
 
@@ -63,6 +67,40 @@ public class Projeto {
 
             if (usuario != null)
             {
+                System.out.println("Designe a funcao dele no projeto: ");
+                System.out.println("Digite 1 para: Desenvolvedor");
+                System.out.println("Digite 2 para: Testador");
+                System.out.println("Digite 3 para: Analista");
+                System.out.println("Digite 4 para: Tecnico");
+                int funcUsuario = U.LerInt(input);
+
+                if (funcUsuario == 1)
+                {
+                    project.setDesenvolvedor(usuario);
+                    usuario.setFunc("Devp");
+                }
+                else if (funcUsuario == 2)
+                {
+                    project.setTestador(usuario);
+                    usuario.setFunc("Test");
+                }
+                else if (funcUsuario == 3)
+                {
+                    project.setAnalista(usuario);
+                    usuario.setFunc("Anlt");
+                }
+                else if (funcUsuario == 4)
+                {
+                    if (project.getTecnico() == 0)
+                    {
+                        project.setTecnico(usuario.getId());
+                        usuario.setFunc("Tecn");
+                    }
+                }
+                else
+                {
+                    //erro
+                }
                 project.setProjetistas(usuario);
             }
         }
@@ -78,6 +116,26 @@ public class Projeto {
 
             if (usuario != null)
             {
+                if (usuario.getFunc().equals("Devp"))
+                {
+                    project.getDesenvolvedor().remove(usuario);
+                    usuario.setFunc(null);
+                }
+                else if (usuario.getFunc().equals("Test"))
+                {
+                    project.getTestador().remove(usuario);
+                    usuario.setFunc(null);
+                }
+                else if (usuario.getFunc().equals("Anlt"))
+                {
+                    project.getAnalista().remove(usuario);
+                    usuario.setFunc(null);
+                }
+                else if (usuario.getFunc().equals("Tecn"))
+                {
+                    project.setTecnico(0);
+                    usuario.setFunc(null);
+                }
                 project.getProjetistas().remove(usuario);
             }
         }
@@ -94,8 +152,8 @@ public class Projeto {
             System.out.println("Digite a descricao da atividade: ");
             String descAtividade = input.nextLine();
 
-            System.out.println("Digite o nome do responsavel pela atividade: ");
-            String responsavel = input.nextLine();
+            System.out.println("Digite o CPF do responsavel pela atividade: ");
+            Usuario responsavel = U.BuscarUsuario(project.getProjetistas(), input);
 
             System.out.println ("Digite a data de inicio no formato: HH:mm dd/MM/yyyy");
             LocalDateTime inicio = LocalDateTime.parse(input.nextLine(), format);
@@ -105,7 +163,7 @@ public class Projeto {
 
             if (idAtividade > 0 && descAtividade != null && inicio != null && termino != null)
             {
-                Atividade atividade = new Atividade(idAtividade, descAtividade, responsavel, inicio, termino);
+                Atividade atividade = new Atividade(idAtividade, descAtividade, responsavel.getId(), responsavel, inicio, termino);
                 project.setAtividades(atividade);
             }
         }
@@ -246,6 +304,37 @@ public class Projeto {
         this.idCoordenador = coordenador;
     }
 
+    public ArrayList<Usuario> getDesenvolvedor() {
+        return this.desenvolvedores;
+    }
+
+    public void setDesenvolvedor(Usuario desenvolvedor) {
+        desenvolvedores.add(desenvolvedor);
+    }
+
+    public ArrayList<Usuario> getTestador() {
+        return this.testadores;
+    }
+
+    public void setTestador(Usuario testador) {
+        testadores.add(testador);
+    }
+
+    public ArrayList<Usuario> getAnalista() {
+        return this.analistas;
+    }
+
+    public void setAnalista(Usuario analista) {
+        analistas.add(analista);
+    }
+    public int getTecnico()
+    {
+        return this.tecnico;
+    }
+    public void setTecnico (int tecnico)
+    {
+        this.tecnico = tecnico;
+    }
     public ArrayList<Usuario> getProjetistas() {
         return this.projetistas;
     }

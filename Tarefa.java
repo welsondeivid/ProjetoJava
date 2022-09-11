@@ -1,10 +1,10 @@
 public class Tarefa {
     
     private String desc = null;
-    private String profissional = null;
+    private int profissional = 0;
     private String status = null;
 
-    public Tarefa(String desc, String profissional)
+    public Tarefa(String desc, int profissional)
     {
         this.setDesc(desc);
         this.setProfissional(profissional);
@@ -19,11 +19,11 @@ public class Tarefa {
         this.desc = desc;
     }
 
-    public String getProfissional() {
+    public int getProfissional() {
         return this.profissional;
     }
 
-    public void setProfissional(String profissional) {
+    public void setProfissional(int profissional) {
         this.profissional = profissional;
     }
 

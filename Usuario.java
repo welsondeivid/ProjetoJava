@@ -10,6 +10,7 @@ public class Usuario
     private boolean Coord = false;
 
     private int projeto = 0;
+    private String func = null;
     private int atividade = 0;
     private ArrayList <Tarefa> tarefas = new ArrayList<Tarefa>();
 
@@ -20,7 +21,6 @@ public class Usuario
         setSenha(senha);
         setTipo(tipo);
         setId(id);
-
     }
 
     public int getId() {
@@ -61,6 +61,14 @@ public class Usuario
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public String getFunc() {
+        return this.func;
+    }
+
+    public void setFunc(String func) {
+        this.func = func;
     }
 
     public int getProjeto() {

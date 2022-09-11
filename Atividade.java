@@ -8,7 +8,7 @@ public class Atividade {
 
     private int id = -1;
     private String desc = null;
-    private String responsavel = null;
+    private int responsavel = 0;
     private LocalDateTime inicio = null;
     private LocalDateTime termino = null;
 
@@ -16,25 +16,37 @@ public class Atividade {
 
     private ArrayList<Tarefa> tarefas = new ArrayList<Tarefa>();
 
-    public Atividade(int id, String desc, String responsavel, LocalDateTime inicio, LocalDateTime termino)
+    public Atividade(int id, String desc, int responsavel, Usuario user, LocalDateTime inicio, LocalDateTime termino)
     {
         this.setId(id);
         this.setDesc(desc);
         this.setResponsavel(responsavel);
+        this.setUsuarios(user);
         this.setInicio(inicio);
         this.setTermino(termino);
     }
 
     public void EditarAtividade(Projeto project, Atividade atividade, Scanner input)
     {
-        System.out.println("Responsavel atual pela ativiadade: " +atividade.getResponsavel());
+        System.out.print("Responsavel atual pela ativiadade: ");
+        for (Usuario item : atividade.getUsuarios())
+        {
+            if (atividade.getResponsavel() == item.getId())
+            {
+                System.out.println(item.getNome());
+                break;
+            }
+        }
+
         System.out.println("Gostaria de alterar? 1 para sim");
         int decisao = U.LerInt(input);
 
         if (decisao == 1)
         {
-            String responsavel = input.nextLine();
-            atividade.setResponsavel(responsavel);
+            System.out.println("Digite o CPF do novo responsavel");
+            Usuario responsavel = U.BuscarUsuario(atividade.getUsuarios(), input);
+            atividade.setResponsavel(responsavel.getId());
+            atividade.setUsuarios(responsavel);
         }
 
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
@@ -78,9 +90,9 @@ public class Atividade {
             String descTarefa = input.nextLine();
 
             System.out.println("Digite o nome do profissional que realizara a tarefa: ");
-            String profTarefa = input.nextLine();
+            int respTarefa = U.LerInt(input);
 
-            Tarefa tarefa = new Tarefa(descTarefa, profTarefa);
+            Tarefa tarefa = new Tarefa(descTarefa, respTarefa);
             atividade.setTarefas(tarefa);
         }
 
@@ -90,11 +102,11 @@ public class Atividade {
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o CPF do responsável pela tarefa que deseja remover: ");
-            String profTarefa = input.nextLine();
+            int respTarefa = U.LerInt(input);
 
             for (Tarefa item : atividade.getTarefas())
             {
-                if (item.getProfissional().equals(profTarefa))
+                if (item.getProfissional() == respTarefa)
                 {
                     System.out.println("Descricao da atividade: "+item.getDesc());
                     System.out.println("Gostaria de remove-la? 1 para sim");
@@ -142,11 +154,11 @@ public class Atividade {
         this.termino = termino;
     }
 
-    public String getResponsavel() {
+    public int getResponsavel() {
         return this.responsavel;
     }
 
-    public void setResponsavel(String responsavel) {
+    public void setResponsavel(int responsavel) {
         this.responsavel = responsavel;
     }
 

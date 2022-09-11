@@ -3,7 +3,8 @@ import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-//Check as funcs do projeto polir e criar classe com utilidades
+//Criar Consulta
+//Printar as listas para opcao
 
 public class Manager {
 
@@ -14,8 +15,12 @@ public class Manager {
 
         ArrayList<Projeto> projetos = new ArrayList<Projeto>();
         ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+        String[] tipos = {"Grad", "Mest", "Dout", "Prof", "Pesq"};
 
         DateTimeFormatter format = DateTimeFormatter.ofPattern ("HH:mm dd/MM/yyyy");
+        //DateTimeFormatter dataForm = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    //DateTimeFormatter horaForm = DateTimeFormatter.ofPattern("HH:mm");
+	    
         Scanner input = new Scanner(System.in);
 
         int cmd = -1;
@@ -26,6 +31,7 @@ public class Manager {
         System.out.println ("Digite 4 para: Editar uma atividade");
         System.out.println ("Digite 5 para: Editar um usuario");
         System.out.println ("Digite 6 para: Alterar o status de um projeto");
+        System.out.println("Digite 7 para: Consultar");
         System.out.println ("Digite 10 para: Printar");
 
         cmd = U.LerInt(input);
@@ -68,6 +74,10 @@ public class Manager {
                 String senhaUser = input.nextLine();
 
                 System.out.println("Digite o seu tipo de usuario: "); // Especifique os tipos permitidos
+                for (int i = 0; i < tipos.length; i++)
+                {
+                    System.out.print(tipos[i]);
+                }
                 String tipoUser = input.nextLine();
 
                 Usuario usuario = new Usuario(nomeUser, emailUser, senhaUser, tipoUser, idUser);
@@ -134,6 +144,40 @@ public class Manager {
 
                                     if (usuario != null)
                                     {
+                                        System.out.println("Designe a funcao dele no projeto: ");
+                                        System.out.println("Digite 1 para: Desenvolvedor");
+                                        System.out.println("Digite 2 para: Testador");
+                                        System.out.println("Digite 3 para: Analista");
+                                        System.out.println("Digite 4 para: Tecnico");
+                                        int funcUsuario = U.LerInt(input);
+
+                                        if (funcUsuario == 1)
+                                        {
+                                            project.setDesenvolvedor(usuario);
+                                            usuario.setFunc("Devp");
+                                        }
+                                        else if (funcUsuario == 2)
+                                        {
+                                            project.setTestador(usuario);
+                                            usuario.setFunc("Test");
+                                        }
+                                        else if (funcUsuario == 3)
+                                        {
+                                            project.setAnalista(usuario);
+                                            usuario.setFunc("Anlt");
+                                        }
+                                        else if (funcUsuario == 4)
+                                        {
+                                            if (project.getTecnico() == 0)
+                                            {
+                                                project.setTecnico(usuario.getId());
+                                                usuario.setFunc("Tecn");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //erro
+                                        }
                                         project.setProjetistas(usuario);
                                     }
                                 }
@@ -151,6 +195,26 @@ public class Manager {
 
                                     if (usuario != null)
                                     {
+                                        if (usuario.getFunc().equals("Devp"))
+                                        {
+                                            project.getDesenvolvedor().remove(usuario);
+                                            usuario.setFunc(null);
+                                        }
+                                        else if (usuario.getFunc().equals("Test"))
+                                        {
+                                            project.getTestador().remove(usuario);
+                                            usuario.setFunc(null);
+                                        }
+                                        else if (usuario.getFunc().equals("Anlt"))
+                                        {
+                                            project.getAnalista().remove(usuario);
+                                            usuario.setFunc(null);
+                                        }
+                                        else if (usuario.getFunc().equals("Tecn"))
+                                        {
+                                            project.setTecnico(0);
+                                            usuario.setFunc(null);
+                                        }
                                         project.getProjetistas().remove(usuario);
                                     }
                                 }
@@ -177,7 +241,7 @@ public class Manager {
                                     String descAtividade = input.nextLine();
 
                                     System.out.println("Digite o nome do responsavel pela atividade: ");
-                                    String responsavel = input.nextLine();
+                                    Usuario responsavel = U.BuscarUsuario(project.getProjetistas(), input);
 
                                     System.out.println ("Digite a data de inicio no formato: HH:mm dd/MM/yyyy");
                                     LocalDateTime inicio = LocalDateTime.parse(input.nextLine(), format);
@@ -187,7 +251,8 @@ public class Manager {
 
                                     if (idAtividade > 0 && descAtividade != null && inicio != null && termino != null)
                                     {
-                                        Atividade atividade = new Atividade(idAtividade, descAtividade, responsavel, inicio, termino);
+                                        
+                                        Atividade atividade = new Atividade(idAtividade, descAtividade, responsavel.getId(), responsavel, inicio, termino);
                                         project.setAtividades(atividade);
                                     }
                                 }
@@ -332,14 +397,25 @@ public class Manager {
                             }
                             else if (cmdAtividade == 2)
                             {
-                                System.out.println("Responsavel atual pela ativiadade: " +atividade.getResponsavel());
+                                System.out.print("Responsavel atual pela ativiadade: ");
+                                for (Usuario item : atividade.getUsuarios())
+                                {
+                                    if (atividade.getResponsavel() == item.getId())
+                                    {
+                                        System.out.println(item.getNome());
+                                        break;
+                                    }
+                                }
+                                
                                 System.out.println("Gostaria de alterar? 1 para sim");
                                 int decisao = U.LerInt(input);
 
                                 if (decisao == 1)
                                 {
-                                    String responsavel = input.nextLine();
-                                    atividade.setResponsavel(responsavel);
+                                    System.out.println("Digite o CPF do novo responsavel");
+                                    Usuario responsavel = U.BuscarUsuario(atividade.getUsuarios(), input);
+                                    atividade.setResponsavel(responsavel.getId());
+                                    atividade.setUsuarios(responsavel);
                                 }
                             }
                             else if (cmdAtividade == 3)
@@ -390,7 +466,7 @@ public class Manager {
                                     String descTarefa = input.nextLine();
 
                                     System.out.println("Digite o nome do profissional que realizara a tarefa: ");
-                                    String profTarefa = input.nextLine();
+                                    int profTarefa = U.LerInt(input);
 
                                     Tarefa tarefa = new Tarefa(descTarefa, profTarefa);
                                     atividade.setTarefas(tarefa);
@@ -404,11 +480,11 @@ public class Manager {
                                 for (int i = 0; i < quant; i++)
                                 {
                                     System.out.println("Digite o CPF do responsável pela tarefa que deseja remover: ");
-                                    String profTarefa = input.nextLine();
+                                    int respTarefa = U.LerInt(input);
 
                                     for (Tarefa item : atividade.getTarefas())
                                     {
-                                        if (item.getProfissional().equals(profTarefa))
+                                        if (item.getProfissional() == respTarefa)
                                         {
                                             System.out.println("Descricao da atividade: "+item.getDesc());
                                             System.out.println("Gostaria de remove-la? 1 para sim");
@@ -556,75 +632,96 @@ public class Manager {
                 
                 Usuario coordenador = U.BuscarUsuario(usuarios, input);
 
-                if (coordenador.getCoord())
+                if (coordenador != null)
                 {
-                    Projeto project = U.BuscarProjeto(projetos, input);
-
-                    if (project != null)
+                    if (coordenador.getCoord())
                     {
-                        System.out.println("Seu projeto é o : "+project.getDesc());
-                        System.out.println("Status atual: "+project.getStatus());
-                        System.out.println("Gostaria de alterar? 1 para sim");
+                        Projeto project = U.BuscarProjeto(projetos, input);
 
-                        int decisao = U.LerInt(input);
-
-                        if (decisao == 1)
+                        if (project != null)
                         {
-                            System.out.println("Escolha para qual Status gostaria de alterar: ");
-                            System.out.println("Digite 1 para 'Iniciado': ");
-                            System.out.println("Digite 2 para 'Concluido': ");
+                            System.out.println("Seu projeto é o : "+project.getDesc());
+                            System.out.println("Status atual: "+project.getStatus());
+                            System.out.println("Gostaria de alterar? 1 para sim");
 
-                            decisao = U.LerInt(input);
+                            int decisao = U.LerInt(input);
+
                             if (decisao == 1)
                             {
-                                boolean check = m.ChecarStatusDoProjeto(project);
+                                System.out.println("Escolha para qual Status gostaria de alterar: ");
+                                System.out.println("Digite 1 para 'Iniciado': ");
+                                System.out.println("Digite 2 para 'Concluido': ");
 
-                                if (check)
+                                decisao = U.LerInt(input);
+                                if (decisao == 1)
                                 {
-                                    System.out.println("Status alterado com sucesso");
-                                    project.setStatus("Em andamento");
+                                    boolean check = m.ChecarStatusDoProjeto(project);
+
+                                    if (check)
+                                    {
+                                        System.out.println("Status alterado com sucesso");
+                                        project.setStatus("Em andamento");
+                                    }
+                                    else
+                                    {
+                                        System.out.println("Adicione as infos que faltam");
+                                    }
                                 }
-                                else
+                                else if (decisao == 2)
                                 {
-                                    System.out.println("Adicione as infos que faltam");
+                                    System.out.println("Status alterado para 'Concluído'");
+                                    //Tratar, talvez uma lista
                                 }
-                            }
-                            else if (decisao == 2)
-                            {
-                                System.out.println("Status alterado para 'Concluído'");
-                                //Tratar, talvez uma lista
-                            }
-                        }    
+                            }    
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("Hi");
                     }
                 }
             }
 
-            /*else if (cmd == )
+            else if (cmd == 7)
             {
-                System.out.println("Digite o ID do projeto que deseja remover: ");
-                Projeto project = null;
-                int idProject = U.LerInt(input);
+               System.out.println("O que gostaria de consultar?");
+               System.out.println("Digite 1 para consultar um usuario");
+               System.out.println("Digite 2 para consultar um projeto");
+               System.out.println("Digite 3 para consultar um atividade");
 
-                for (Projeto item : projetos)
-                {
-                    if (idProject == item.getId())
+               int cmdConsulta = U.LerInt(input);
+
+               if (cmdConsulta == 1)
+               {
+                    System.out.println("Digite o CPF do usuario:");
+                    Usuario usuario = U.BuscarUsuario(usuarios, input);
+
+                    if (usuario != null)
                     {
-                        project = item;
+                        System.out.println("Dados do usuario encontrado: ");
+                        U.DadosUser(usuario);
                     }
-                }
+               }
+               else if (cmdConsulta == 2)
+               {
+                    System.out.println(("Digite o id do projeto onde a atividade esta localizda: "));
+                    Projeto project = U.BuscarProjeto(projetos, input);
 
-                if (project != null)
-                {
-                    projetos.remove(project);
-                    System.out.println("Projeto removido com sucesso");
-                }
-                else
-                {
-                    System.out.println("Erro: Projeto fora do sistema");
-                }
-            }*/
+                    if (project != null)
+                    {
+                        System.out.println("Digite o id da atividade: ");
+                        Atividade atividade = U.BuscarAtividade(project.getAtividades(), input);
 
-            else if (cmd == 10)
+                        if (atividade != null)
+                        {
+                            System.out.println("Dados da atividade encontrada");
+                            U.DadosAtiv(atividade);
+                        }
+                    }
+               }
+            }
+
+            else if (cmd == 100)
             {
                 for (int i = 0; i < usuarios.size(); i++)
                 {
@@ -652,6 +749,19 @@ public class Manager {
         if (projeto.getProjetistas().isEmpty())
         {
             System.out.println("Falta designar Projetistas: ");
+            falha = true;
+        }
+        if (projeto.getDesenvolvedor().isEmpty())
+        {
+            System.out.println("Falta designar 1 Desenvolvedor: ");
+            falha = true;
+        }if (projeto.getTestador().isEmpty())
+        {
+            System.out.println("Falta designar 1 Testador: ");
+            falha = true;
+        }if (projeto.getAnalista().isEmpty())
+        {
+            System.out.println("Falta designar 1 Analista: ");
             falha = true;
         }
         if (projeto.getAtividades().isEmpty())
