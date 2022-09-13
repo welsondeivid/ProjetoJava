@@ -1,11 +1,9 @@
 import java.util.Scanner;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Utilidades {
-    
-    DateTimeFormatter dataForm = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	DateTimeFormatter horaForm = DateTimeFormatter.ofPattern("HH:mm");
 	    
     public int LerInt(Scanner input)
     {
@@ -14,10 +12,9 @@ public class Utilidades {
         return num;
     }
 
-    public Usuario BuscarUsuario(ArrayList<Usuario> users, Scanner input)
+    public Usuario BuscarUsuario(ArrayList<Usuario> users, int checkId)
     {
         Usuario user = null;
-        int checkId = LerInt(input);
 
         for (Usuario item: users)
         {
@@ -31,10 +28,9 @@ public class Utilidades {
         return user;
     }
 
-    public Projeto BuscarProjeto(ArrayList<Projeto> projs, Scanner input)
+    public Projeto BuscarProjeto(ArrayList<Projeto> projs, int checkId)
     {
         Projeto proj = null;
-        int checkId = LerInt(input);
 
         for (Projeto item : projs)
         {
@@ -48,10 +44,9 @@ public class Utilidades {
         return proj;
     }
 
-    public Atividade BuscarAtividade(ArrayList<Atividade> ativs, Scanner input)
+    public Atividade BuscarAtividade(ArrayList<Atividade> ativs, int checkId)
     {
         Atividade ativ = null;
-        int checkId = LerInt(input);
 
         for (Atividade item : ativs)
         {
@@ -135,20 +130,14 @@ public class Utilidades {
         System.out.println("Atividade descrita: ");
         System.out.println(ativ.getDesc());
 
-        System.out.print("Responsavel pela atividade: ");
-        for (Usuario item : ativ.getUsuarios())
-        {
-            if (ativ.getResponsavel() == item.getId())
-            {
-                System.out.println(item.getNome());
-            }
-        }
+        System.out.print("Responsavel pela Atividade: ");
+        System.out.println(BuscarUsuario(ativ.getUsuarios(), ativ.getIdResponsavel()).getNome());
 
-        System.out.println("Hora de inicio: "+horaForm.format(ativ.getInicio()));
-        System.out.println("Data de inicio: "+dataForm.format(ativ.getInicio()));
-        
-        System.out.println("Hora de termino: "+horaForm.format(ativ.getTermino()));
-        System.out.println("Data de termino: "+dataForm.format(ativ.getTermino()));
+        System.out.println("Inicio da Atividade: ");
+        MostrarDataHora(ativ.getInicio());
+
+        System.out.println("Termino da Atividade: ");
+        MostrarDataHora(ativ.getTermino());
 
         System.out.println("Lista de usuarios: ");
         for(Usuario item : ativ.getUsuarios())
@@ -161,5 +150,62 @@ public class Utilidades {
         {
             System.out.println(item.getDesc());
         }
+    }
+
+    public void DadosProj(Projeto proj)
+    {
+        System.out.println("Projeto descrito: ");
+        System.out.println(proj.getDesc());
+
+        System.out.println("Status do Projeto: "+proj.getStatus());
+
+        System.out.println("Inicio do Projeto: ");
+        MostrarDataHora(proj.getInicio());
+        
+        System.out.println("Termino do Projeto: ");
+        MostrarDataHora(proj.getTermino());
+
+        System.out.println("Coordenador do Projeto: ");
+        System.out.println(BuscarUsuario(proj.getProjetistas(), proj.getIdCoordenador()));
+
+        System.out.println("Lista de Projetistas: ");
+        for (Usuario item : proj.getProjetistas())    System.out.println(item.getNome());
+
+        System.out.println("Lista de Desenvolvedores: ");
+        for (Usuario item : proj.getDesenvolvedores())    System.out.println(item.getNome());
+
+        System.out.println("Lista de Testadores: ");
+        for (Usuario item : proj.getTestadores())    System.out.println(item.getNome());
+
+        System.out.println("Lista de Analistas: ");
+        for (Usuario item : proj.getAnalistas())    System.out.println(item.getNome());
+
+        System.out.println("Tecnico do Projeto: ");
+        System.out.println(BuscarUsuario(proj.getProjetistas(), proj.getIdTecnico()));
+
+        System.out.println("Lista de Atividades: ");
+        for (Atividade item : proj.getAtividades()) System.out.println(item.getDesc());
+
+        System.out.println("Valor da Bolsa-Desenvolvedor: "+proj.getBolsaDesenvolvedor());
+        System.out.println("Valor da Bolsa-Testador: "+proj.getBolsaTestador());
+        System.out.println("Valor da Bolsa-Analista: "+proj.getBolsaAnalista());
+
+        System.out.println("Prazo da Bolsa-Desenvolvedor: ");
+        MostrarDataHora(proj.getTempoBolsaDesenvolvedor());
+        
+        System.out.println("Prazo da Bolsa-Testador: ");
+        MostrarDataHora(proj.getTempoBolsaTestador());
+
+        System.out.println("Prazo da Bolsa-Analista: ");
+        MostrarDataHora(proj.getTempoBolsaAnalista());
+    }
+
+    public void MostrarDataHora (LocalDateTime tempo)
+    {
+        DateTimeFormatter dataForm = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    DateTimeFormatter horaForm = DateTimeFormatter.ofPattern("HH:mm");
+
+        System.out.println("Prazo da Bolsa-Desenvolvedor: "+dataForm.format(tempo));
+        System.out.println("Hora da Bolsa-Desenvolvedor: "+horaForm.format(tempo));
     }
 }

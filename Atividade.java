@@ -8,7 +8,7 @@ public class Atividade {
 
     private int id = -1;
     private String desc = null;
-    private int responsavel = 0;
+    private int idResponsavel = 0;
     private LocalDateTime inicio = null;
     private LocalDateTime termino = null;
 
@@ -16,11 +16,11 @@ public class Atividade {
 
     private ArrayList<Tarefa> tarefas = new ArrayList<Tarefa>();
 
-    public Atividade(int id, String desc, int responsavel, Usuario user, LocalDateTime inicio, LocalDateTime termino)
+    public Atividade(int id, String desc, int idResponsavel, Usuario user, LocalDateTime inicio, LocalDateTime termino)
     {
         this.setId(id);
         this.setDesc(desc);
-        this.setResponsavel(responsavel);
+        this.setIdResponsavel(idResponsavel);
         this.setUsuarios(user);
         this.setInicio(inicio);
         this.setTermino(termino);
@@ -29,24 +29,18 @@ public class Atividade {
     public void EditarAtividade(Projeto project, Atividade atividade, Scanner input)
     {
         System.out.print("Responsavel atual pela ativiadade: ");
-        for (Usuario item : atividade.getUsuarios())
-        {
-            if (atividade.getResponsavel() == item.getId())
-            {
-                System.out.println(item.getNome());
-                break;
-            }
-        }
+        System.out.println(U.BuscarUsuario(atividade.getUsuarios(), atividade.getIdResponsavel()).getNome());
 
         System.out.println("Gostaria de alterar? 1 para sim");
         int decisao = U.LerInt(input);
 
         if (decisao == 1)
         {
-            System.out.println("Digite o CPF do novo responsavel");
-            Usuario responsavel = U.BuscarUsuario(atividade.getUsuarios(), input);
-            atividade.setResponsavel(responsavel.getId());
-            atividade.setUsuarios(responsavel);
+            System.out.println("Digite o CPF do novo idResponsavel");
+            int checkIdU = U.LerInt(input);
+            Usuario idResponsavel = U.BuscarUsuario(atividade.getUsuarios(), checkIdU);
+            atividade.setIdResponsavel(idResponsavel.getId());
+            atividade.setUsuarios(idResponsavel);
         }
 
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
@@ -55,8 +49,8 @@ public class Atividade {
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o CPF do usuario que deseja adicionar: ");
-            
-            Usuario usuario = U.BuscarUsuario(project.getProjetistas(), input);
+            int checkIdU = U.LerInt(input);
+            Usuario usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
             if (usuario != null)
             {
@@ -70,8 +64,8 @@ public class Atividade {
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o CPF do usuario que deseja remover: ");
-            
-            Usuario usuario = U.BuscarUsuario(atividade.getUsuarios(), input);
+            int checkIdU = U.LerInt(input);
+            Usuario usuario = U.BuscarUsuario(atividade.getUsuarios(), checkIdU);
 
             if (usuario != null)
             {
@@ -154,12 +148,12 @@ public class Atividade {
         this.termino = termino;
     }
 
-    public int getResponsavel() {
-        return this.responsavel;
+    public int getIdResponsavel() {
+        return this.idResponsavel;
     }
 
-    public void setResponsavel(int responsavel) {
-        this.responsavel = responsavel;
+    public void setIdResponsavel(int idResponsavel) {
+        this.idResponsavel = idResponsavel;
     }
 
     public ArrayList<Usuario> getUsuarios() {

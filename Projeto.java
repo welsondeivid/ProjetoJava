@@ -17,7 +17,7 @@ public class Projeto {
     private ArrayList<Usuario> desenvolvedores = new ArrayList<Usuario>();
     private ArrayList<Usuario> testadores = new ArrayList<Usuario>();
     private ArrayList<Usuario> analistas = new ArrayList<Usuario>();
-    private int tecnico = 0;
+    private int idTecnico = 0;
     private ArrayList <Usuario> projetistas = new ArrayList<Usuario>();
     private ArrayList <Atividade> atividades = new ArrayList<Atividade>();
 
@@ -43,8 +43,8 @@ public class Projeto {
     {
         System.out.println("Somente Pesquisadores ou Professores podem coordenar um projeto");
         System.out.println("Digite o CPF do novo coordenador do projeto: ");
-        
-        Usuario usuario = U.BuscarUsuario(usuarios, input);
+        int checkIdU = U.LerInt(input);
+        Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
 
         if (usuario != null)
         {
@@ -62,8 +62,8 @@ public class Projeto {
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o CPF do usuario que deseja adicionar: ");
-            
-            usuario = U.BuscarUsuario(usuarios, input);
+            checkIdU = U.LerInt(input);
+            usuario = U.BuscarUsuario(usuarios, checkIdU);
 
             if (usuario != null)
             {
@@ -77,23 +77,27 @@ public class Projeto {
                 if (funcUsuario == 1)
                 {
                     project.setDesenvolvedor(usuario);
+                    project.setProjetistas(usuario);
                     usuario.setFunc("Devp");
                 }
                 else if (funcUsuario == 2)
                 {
                     project.setTestador(usuario);
+                    project.setProjetistas(usuario);
                     usuario.setFunc("Test");
                 }
                 else if (funcUsuario == 3)
                 {
                     project.setAnalista(usuario);
+                    project.setProjetistas(usuario);
                     usuario.setFunc("Anlt");
                 }
                 else if (funcUsuario == 4)
                 {
-                    if (project.getTecnico() == 0)
+                    if (project.getIdTecnico() == 0)
                     {
-                        project.setTecnico(usuario.getId());
+                        project.setIdTecnico(usuario.getId());
+                        project.setProjetistas(usuario);
                         usuario.setFunc("Tecn");
                     }
                 }
@@ -111,29 +115,29 @@ public class Projeto {
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite CPF do usuario que deseja remover: ");
-            
-            usuario = U.BuscarUsuario(project.getProjetistas(), input);
+            checkIdU = U.LerInt(input);
+            usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
             if (usuario != null)
             {
                 if (usuario.getFunc().equals("Devp"))
                 {
-                    project.getDesenvolvedor().remove(usuario);
+                    project.getDesenvolvedores().remove(usuario);
                     usuario.setFunc(null);
                 }
                 else if (usuario.getFunc().equals("Test"))
                 {
-                    project.getTestador().remove(usuario);
+                    project.getTestadores().remove(usuario);
                     usuario.setFunc(null);
                 }
                 else if (usuario.getFunc().equals("Anlt"))
                 {
-                    project.getAnalista().remove(usuario);
+                    project.getAnalistas().remove(usuario);
                     usuario.setFunc(null);
                 }
                 else if (usuario.getFunc().equals("Tecn"))
                 {
-                    project.setTecnico(0);
+                    project.setIdTecnico(0);
                     usuario.setFunc(null);
                 }
                 project.getProjetistas().remove(usuario);
@@ -153,7 +157,8 @@ public class Projeto {
             String descAtividade = input.nextLine();
 
             System.out.println("Digite o CPF do responsavel pela atividade: ");
-            Usuario responsavel = U.BuscarUsuario(project.getProjetistas(), input);
+            checkIdU = U.LerInt(input);
+            Usuario responsavel = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
             System.out.println ("Digite a data de inicio no formato: HH:mm dd/MM/yyyy");
             LocalDateTime inicio = LocalDateTime.parse(input.nextLine(), format);
@@ -174,15 +179,12 @@ public class Projeto {
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o ID da atividade a ser removida: ");
-            int idAtividade = U.LerInt(input);
+            int checkIdA = U.LerInt(input);
 
-            for (Atividade item : project.getAtividades())
+            Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
+            if (atividade != null)
             {
-                if (item.getId() == idAtividade)
-                {
-                    project.getAtividades().remove(item);
-                    break;
-                }
+                project.getAtividades().remove(atividade);
             }
         }                         
 
@@ -225,32 +227,38 @@ public class Projeto {
             //erro
         }
 
-        System.out.println("Prazo atual da bolsa: " +project.getTempoBolsaDesenvolvedor());
+        System.out.println("Prazo atual da bolsa: ");
+        U.MostrarDataHora(project.getTempoBolsaDesenvolvedor());
         System.out.println("Gostaria de alterar? 1 para S, 0 para N");
         int decisao = U.LerInt(input);
 
         if (decisao == 1)
         {
+            System.out.println ("Digite a data do prazo no formato: HH:mm dd/MM/yyyy");
             LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
             project.setTempoBolsaDesenvolvedor(tempoBolsa);
         }
 
-        System.out.println("Prazo atual da bolsa: " +project.getTempoBolsaTestador());
+        System.out.println("Prazo atual da bolsa: ");
+        U.MostrarDataHora(project.getTempoBolsaTestador());
         System.out.println("Gostaria de alterar? 1 para S, 0 para N");
         decisao = U.LerInt(input);
 
         if (decisao == 1)
         {
+            System.out.println ("Digite a data do prazo no formato: HH:mm dd/MM/yyyy");
             LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
             project.setTempoBolsaTestador(tempoBolsa);
         }
 
-        System.out.println("Prazo atual da bolsa: " +project.getTempoBolsaAnalista());
+        System.out.println("Prazo atual da bolsa: ");
+        U.MostrarDataHora(project.getTempoBolsaAnalista());
         System.out.println("Gostaria de alterar? 1 para S, 0 para N");
         decisao = U.LerInt(input);
 
         if (decisao == 1)
         {
+            System.out.println ("Digite a data do prazo no formato: HH:mm dd/MM/yyyy");
             LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
             project.setTempoBolsaAnalista(tempoBolsa);
         }
@@ -304,7 +312,7 @@ public class Projeto {
         this.idCoordenador = coordenador;
     }
 
-    public ArrayList<Usuario> getDesenvolvedor() {
+    public ArrayList<Usuario> getDesenvolvedores() {
         return this.desenvolvedores;
     }
 
@@ -312,7 +320,7 @@ public class Projeto {
         desenvolvedores.add(desenvolvedor);
     }
 
-    public ArrayList<Usuario> getTestador() {
+    public ArrayList<Usuario> getTestadores() {
         return this.testadores;
     }
 
@@ -320,20 +328,20 @@ public class Projeto {
         testadores.add(testador);
     }
 
-    public ArrayList<Usuario> getAnalista() {
+    public ArrayList<Usuario> getAnalistas() {
         return this.analistas;
     }
 
     public void setAnalista(Usuario analista) {
         analistas.add(analista);
     }
-    public int getTecnico()
+    public int getIdTecnico()
     {
-        return this.tecnico;
+        return this.idTecnico;
     }
-    public void setTecnico (int tecnico)
+    public void setIdTecnico (int idTecnico)
     {
-        this.tecnico = tecnico;
+        this.idTecnico = idTecnico;
     }
     public ArrayList<Usuario> getProjetistas() {
         return this.projetistas;

@@ -87,8 +87,8 @@ public class Manager {
             else if (cmd == 3)
             {
                 System.out.println("Digite o ID do projeto que deseja editar: ");
-
-                Projeto project = U.BuscarProjeto(projetos, input);
+                int checkIdP = U.LerInt(input);
+                Projeto project = U.BuscarProjeto(projetos, checkIdP);
 
                 if (project != null)
                 {
@@ -114,8 +114,8 @@ public class Manager {
                             {
                                 System.out.println("Somente Pesquisadores ou Professores podem coordenar um projeto");
                                 System.out.println("Digite o CPF do novo coordenador do projeto: ");
-                                
-                                Usuario usuario = U.BuscarUsuario(usuarios, input);
+                                int checkIdU = U.LerInt(input);
+                                Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
                                 if (usuario != null)
                                 {
                                     if (usuario.getTipo().equals("Prof") || usuario.getTipo().equals("Pesq"))
@@ -140,7 +140,8 @@ public class Manager {
                                 for (int i = 0; i < quant; i++)
                                 {
                                     System.out.println("Digite o CPF do usuario que deseja adicionar: ");
-                                    Usuario usuario = U.BuscarUsuario(usuarios, input);
+                                    int checkIdU = U.LerInt(input);
+                                    Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
 
                                     if (usuario != null)
                                     {
@@ -154,23 +155,27 @@ public class Manager {
                                         if (funcUsuario == 1)
                                         {
                                             project.setDesenvolvedor(usuario);
+                                            project.setProjetistas(usuario);
                                             usuario.setFunc("Devp");
                                         }
                                         else if (funcUsuario == 2)
                                         {
                                             project.setTestador(usuario);
+                                            project.setProjetistas(usuario);
                                             usuario.setFunc("Test");
                                         }
                                         else if (funcUsuario == 3)
                                         {
                                             project.setAnalista(usuario);
+                                            project.setProjetistas(usuario);
                                             usuario.setFunc("Anlt");
                                         }
                                         else if (funcUsuario == 4)
                                         {
-                                            if (project.getTecnico() == 0)
+                                            if (project.getIdTecnico() == 0)
                                             {
-                                                project.setTecnico(usuario.getId());
+                                                project.setIdTecnico(usuario.getId());
+                                                project.setProjetistas(usuario);
                                                 usuario.setFunc("Tecn");
                                             }
                                         }
@@ -190,29 +195,33 @@ public class Manager {
                                 for (int i = 0; i < quant; i++)
                                 {
                                     System.out.println("Digite CPF do usuario que deseja remover: ");
-                                    
-                                    Usuario usuario = U.BuscarUsuario(project.getProjetistas(), input);
+                                    int checkIdU = U.LerInt(input);
+                                    Usuario usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
                                     if (usuario != null)
                                     {
                                         if (usuario.getFunc().equals("Devp"))
                                         {
-                                            project.getDesenvolvedor().remove(usuario);
+                                            project.getDesenvolvedores().remove(usuario);
+                                            project.getProjetistas().remove(usuario);
                                             usuario.setFunc(null);
                                         }
                                         else if (usuario.getFunc().equals("Test"))
                                         {
-                                            project.getTestador().remove(usuario);
+                                            project.getTestadores().remove(usuario);
+                                            project.getProjetistas().remove(usuario);
                                             usuario.setFunc(null);
                                         }
                                         else if (usuario.getFunc().equals("Anlt"))
                                         {
-                                            project.getAnalista().remove(usuario);
+                                            project.getAnalistas().remove(usuario);
+                                            project.getProjetistas().remove(usuario);
                                             usuario.setFunc(null);
                                         }
                                         else if (usuario.getFunc().equals("Tecn"))
                                         {
-                                            project.setTecnico(0);
+                                            project.setIdTecnico(0);
+                                            project.getProjetistas().remove(usuario);
                                             usuario.setFunc(null);
                                         }
                                         project.getProjetistas().remove(usuario);
@@ -241,7 +250,8 @@ public class Manager {
                                     String descAtividade = input.nextLine();
 
                                     System.out.println("Digite o nome do responsavel pela atividade: ");
-                                    Usuario responsavel = U.BuscarUsuario(project.getProjetistas(), input);
+                                    int checkIdU = U.LerInt(input);
+                                    Usuario responsavel = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
                                     System.out.println ("Digite a data de inicio no formato: HH:mm dd/MM/yyyy");
                                     LocalDateTime inicio = LocalDateTime.parse(input.nextLine(), format);
@@ -266,15 +276,12 @@ public class Manager {
                                 for (int i = 0; i < quant; i++)
                                 {
                                     System.out.println("Digite o ID da atividade a ser removida: ");
-                                    int idAtividade = U.LerInt(input);
+                                    int checkIdA = U.LerInt(input);
 
-                                    for (Atividade item : project.getAtividades())
+                                    Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
+                                    if (atividade != null)
                                     {
-                                        if (item.getId() == idAtividade)
-                                        {
-                                            project.getAtividades().remove(item);
-                                            break;
-                                        }
+                                        project.getAtividades().remove(atividade);
                                     }
                                 }
                             }
@@ -326,10 +333,11 @@ public class Manager {
                         }
                         else if (cmdProjeto == 8)
                         {
-                            System.out.println("Prazo atual da bolsa: " +project.getTempoBolsaDesenvolvedor());
+                            System.out.println("Prazo atual da bolsa: ");
+                            U.MostrarDataHora(project.getTempoBolsaDesenvolvedor());
                             System.out.println("Gostaria de alterar? 1 para S, 0 para N");
+                            
                             int decisao = U.LerInt(input);
-
                             if (decisao == 1)
                             {
                                 LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
@@ -338,10 +346,11 @@ public class Manager {
                         }
                         else if (cmdProjeto == 9)
                         {
-                            System.out.println("Prazo atual da bolsa: " +project.getTempoBolsaTestador());
+                            System.out.println("Prazo atual da bolsa: ");
+                            U.MostrarDataHora(project.getTempoBolsaTestador());
                             System.out.println("Gostaria de alterar? 1 para S, 0 para N");
+                            
                             int decisao = U.LerInt(input);
-
                             if (decisao == 1)
                             {
                                 LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
@@ -350,10 +359,11 @@ public class Manager {
                         }
                         else if (cmdProjeto == 10)
                         {
-                            System.out.println("Prazo atual da bolsa: " +project.getTempoBolsaAnalista());
+                            System.out.println("Prazo atual da bolsa: ");
+                            U.MostrarDataHora(project.getTempoBolsaAnalista());
                             System.out.println("Gostaria de alterar? 1 para S, 0 para N");
+                            
                             int decisao = U.LerInt(input);
-
                             if (decisao == 1)
                             {
                                 LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
@@ -374,13 +384,14 @@ public class Manager {
             else if (cmd == 4)
             {
                 System.out.println("Digite o ID do projeto onde a atividade esta localizada: ");
-                Projeto project = U.BuscarProjeto(projetos, input);
+                int checkIdP = U.LerInt(input);
+                Projeto project = U.BuscarProjeto(projetos, checkIdP);
 
                 if (project != null)
                 {
                     System.out.println("Digite o ID da atividade que deseja editar: ");
-
-                    Atividade atividade = U.BuscarAtividade(project.getAtividades(), input);
+                    int checkIdA = U.LerInt(input);
+                    Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
 
                     if (atividade != null)
                     {
@@ -398,14 +409,7 @@ public class Manager {
                             else if (cmdAtividade == 2)
                             {
                                 System.out.print("Responsavel atual pela ativiadade: ");
-                                for (Usuario item : atividade.getUsuarios())
-                                {
-                                    if (atividade.getResponsavel() == item.getId())
-                                    {
-                                        System.out.println(item.getNome());
-                                        break;
-                                    }
-                                }
+                                System.out.println(U.BuscarUsuario(atividade.getUsuarios(), atividade.getIdResponsavel()).getNome());
                                 
                                 System.out.println("Gostaria de alterar? 1 para sim");
                                 int decisao = U.LerInt(input);
@@ -413,8 +417,9 @@ public class Manager {
                                 if (decisao == 1)
                                 {
                                     System.out.println("Digite o CPF do novo responsavel");
-                                    Usuario responsavel = U.BuscarUsuario(atividade.getUsuarios(), input);
-                                    atividade.setResponsavel(responsavel.getId());
+                                    int checkIdU = U.LerInt(input);
+                                    Usuario responsavel = U.BuscarUsuario(atividade.getUsuarios(), checkIdU);
+                                    atividade.setIdResponsavel(responsavel.getId());
                                     atividade.setUsuarios(responsavel);
                                 }
                             }
@@ -426,8 +431,8 @@ public class Manager {
                                 for (int i = 0; i < quant; i++)
                                 {
                                     System.out.println("Digite o CPF do usuario que deseja adicionar: ");
-                                    
-                                    Usuario usuario = U.BuscarUsuario(project.getProjetistas(), input);
+                                    int checkIdU = U.LerInt(input);
+                                    Usuario usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
                                     if (usuario != null)
                                     {
@@ -443,8 +448,8 @@ public class Manager {
                                 for (int i = 0; i < quant; i++)
                                 {
                                     System.out.println("Digite o CPF do usuario que deseja remover: ");
-                                    
-                                    Usuario usuario = U.BuscarUsuario(atividade.getUsuarios(), input);
+                                    int checkIdU = U.LerInt(input);
+                                    Usuario usuario = U.BuscarUsuario(atividade.getUsuarios(), checkIdU);
 
                                     if (usuario != null)
                                     {
@@ -509,7 +514,8 @@ public class Manager {
             else if (cmd == 5)
             {
                 System.out.println("Digite seu CPF: ");
-                Usuario usuario = U.BuscarUsuario(usuarios, input);
+                int checkIdU = U.LerInt(input);
+                Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
 
                 if (usuario != null)
                 {
@@ -546,8 +552,8 @@ public class Manager {
                         else if (cmdUsuario == 2)
                         {
                             System.out.println("Digite o ID do projeto ao qual gostaria de associar-se: ");
-
-                            Projeto project = U.BuscarProjeto(projetos, input);
+                            int checkIdP = U.LerInt(input);
+                            Projeto project = U.BuscarProjeto(projetos, checkIdP);
 
                             if (project != null)
                             {
@@ -557,14 +563,14 @@ public class Manager {
                         else if (cmdUsuario == 3)
                         {
                             System.out.println("Digite o ID do projeto em que a atividade esta localizada: ");
-
-                            Projeto project = U.BuscarProjeto(projetos, input);
+                            int checkIdP = U.LerInt(input);
+                            Projeto project = U.BuscarProjeto(projetos, checkIdP);
 
                             if (project != null)
                             {
                                 System.out.println("Digite o ID da atividade a qual gostaria de associar-se: ");
-
-                                Atividade atividade = U.BuscarAtividade(project.getAtividades(), input);
+                                int checkIdA = U.LerInt(input);
+                                Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
 
                                 if (atividade != null)
                                 {
@@ -629,14 +635,14 @@ public class Manager {
             {
                 System.out.println("Somente Coordenadores podem alterar o Status de um projeto: ");
                 System.out.println("Digite seu CPF: ");
-                
-                Usuario coordenador = U.BuscarUsuario(usuarios, input);
+                int checkIdU = U.LerInt(input);
+                Usuario coordenador = U.BuscarUsuario(usuarios, checkIdU);
 
                 if (coordenador != null)
                 {
                     if (coordenador.getCoord())
                     {
-                        Projeto project = U.BuscarProjeto(projetos, input);
+                        Projeto project = U.BuscarProjeto(projetos, coordenador.getProjeto());
 
                         if (project != null)
                         {
@@ -694,7 +700,8 @@ public class Manager {
                if (cmdConsulta == 1)
                {
                     System.out.println("Digite o CPF do usuario:");
-                    Usuario usuario = U.BuscarUsuario(usuarios, input);
+                    int checkIdU = U.LerInt(input);
+                    Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
 
                     if (usuario != null)
                     {
@@ -705,17 +712,34 @@ public class Manager {
                else if (cmdConsulta == 2)
                {
                     System.out.println(("Digite o id do projeto onde a atividade esta localizda: "));
-                    Projeto project = U.BuscarProjeto(projetos, input);
+                    int checkIdP = U.LerInt(input);
+                    Projeto project = U.BuscarProjeto(projetos, checkIdP);
 
                     if (project != null)
                     {
                         System.out.println("Digite o id da atividade: ");
-                        Atividade atividade = U.BuscarAtividade(project.getAtividades(), input);
+                        int checkIdA = U.LerInt(input);
+                        Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
 
                         if (atividade != null)
                         {
-                            System.out.println("Dados da atividade encontrada");
+                            System.out.println("Dados da atividade encontrada: ");
                             U.DadosAtiv(atividade);
+                        }
+                    }
+               }
+               else if (cmdConsulta == 3)
+               {
+                    System.out.println(("Digite o id do projeto: "));
+                    int checkIdP = U.LerInt(input);
+                    Projeto project = U.BuscarProjeto(projetos, checkIdP);
+
+                    if (project != null)
+                    {
+                        if (project != null)
+                        {
+                            System.out.println("Dados do projeto encontrado: ");
+                            U.DadosProj(project);
                         }
                     }
                }
@@ -751,17 +775,23 @@ public class Manager {
             System.out.println("Falta designar Projetistas: ");
             falha = true;
         }
-        if (projeto.getDesenvolvedor().isEmpty())
+        if (projeto.getDesenvolvedores().isEmpty())
         {
-            System.out.println("Falta designar 1 Desenvolvedor: ");
+            System.out.println("Falta designar pelo menos 1 Desenvolvedor: ");
             falha = true;
-        }if (projeto.getTestador().isEmpty())
+        }if (projeto.getTestadores().isEmpty())
         {
-            System.out.println("Falta designar 1 Testador: ");
+            System.out.println("Falta designar pelo menos 1 Testador: ");
             falha = true;
-        }if (projeto.getAnalista().isEmpty())
+        }
+        if (projeto.getAnalistas().isEmpty())
         {
-            System.out.println("Falta designar 1 Analista: ");
+            System.out.println("Falta designar pelo menos 1 Analista: ");
+            falha = true;
+        }
+        if (projeto.getIdTecnico() == 0)
+        {
+            System.out.println("Falta designar 1 Tecnico: ");
             falha = true;
         }
         if (projeto.getAtividades().isEmpty())
