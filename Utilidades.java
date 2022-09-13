@@ -67,15 +67,15 @@ public class Utilidades {
 
         if (user.getTipo().equals("Grad"))
         {
-            System.out.print("Aluno Graduando e ");
+            System.out.print("Aluno Graduando");
         }
         else if (user.getTipo().equals("Mest"))
         {
-            System.out.print("Aluno Mestrando e ");
+            System.out.print("Aluno Mestrando");
         }
         else if (user.getTipo().equals("Dout"))
         {
-            System.out.print("Aluno Doutorando e ");
+            System.out.print("Aluno Doutorando");
         }
         else if (user.getTipo().equals("Prof"))
         {
@@ -96,35 +96,45 @@ public class Utilidades {
             }
         }
 
-        if (!user.getCoord())
+        if (!user.getCoord() &&  user.getFunc() != null)
         {
             if (user.getFunc().equals("Devp"))
             {
-                System.out.println("Desenvolvedor");
+                System.out.println(" e Desenvolvedor");
             }
             else if (user.getFunc().equals("Test"))
             {
-                System.out.println("Tecnico");
+                System.out.println(" e Tecnico");
             }
             else if (user.getFunc().equals("Anlt"))
             {
-                System.out.println("Analista");
+                System.out.println(" e Analista");
             }
             else if (user.getFunc().equals("Tecn"))
             {
-                System.out.println("Tecnico");
+                System.out.println(" e Tecnico");
             }
         }
-        System.out.println("Projeto associado: "+user.getProjeto());
-        System.out.println("Dia de ingresso: ");
-        MostrarDataHora(user.getDiaPag());
-        System.out.println("Atividade associada: "+user.getAtividade());
+        System.out.println();
 
-        System.out.println("Lista de Tarefas:");
-        for (Tarefa item : user.getTarefas())
+        if (user.getProjeto() != 0)
         {
-            System.out.println(item.getDesc());
+            System.out.println("Projeto associado: "+user.getProjeto());
+            System.out.println("Dia de ingresso: ");
+            MostrarDataHora(user.getDiaPag());
+            System.out.println("Atividade associada: "+user.getAtividade());
+
+            System.out.println("Lista de Tarefas:");
+            for (Tarefa item : user.getTarefas())
+            {
+                System.out.println(item.getDesc());
+            }
         }
+        else
+        {
+            System.out.println("Sem Projeto no momento");
+        }
+        
 
         if (user.getProjInterCam() != 0)
         {
@@ -283,7 +293,7 @@ public class Utilidades {
         DateTimeFormatter dataForm = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	    DateTimeFormatter horaForm = DateTimeFormatter.ofPattern("HH:mm");
 
-        System.out.println("Prazo da Bolsa-Desenvolvedor: "+dataForm.format(tempo));
-        System.out.println("Hora da Bolsa-Desenvolvedor: "+horaForm.format(tempo));
+        System.out.println("Data: "+dataForm.format(tempo));
+        System.out.println("Hora: "+horaForm.format(tempo));
     }
 }

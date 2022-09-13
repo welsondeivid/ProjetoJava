@@ -42,7 +42,7 @@ public class Projeto {
     public void EditarProjeto (ArrayList<Usuario> usuarios, Projeto project, Scanner input, DateTimeFormatter format)
     {
         System.out.println("Somente Pesquisadores ou Professores podem coordenar um projeto");
-        System.out.println("Digite o CPF do novo coordenador do projeto: ");
+        System.out.println("Digite o RG do novo coordenador do projeto: ");
         int checkIdU = U.LerInt(input);
         Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
 
@@ -54,6 +54,11 @@ public class Projeto {
                 usuario.setCoord(true);
                 usuario.setProjeto(project.getId());
             }
+            else
+            {
+                System.out.println("Usuario precisa ser professor ou pesquisador");
+                return;
+            }
         }
 
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
@@ -61,7 +66,7 @@ public class Projeto {
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite o CPF do usuario que deseja adicionar: ");
+            System.out.println("Digite o RG do usuario que deseja adicionar: ");
             checkIdU = U.LerInt(input);
             usuario = U.BuscarUsuario(usuarios, checkIdU);
 
@@ -111,7 +116,7 @@ public class Projeto {
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite CPF do usuario que deseja remover: ");
+            System.out.println("Digite RG do usuario que deseja remover: ");
             checkIdU = U.LerInt(input);
             usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
@@ -153,7 +158,7 @@ public class Projeto {
             System.out.println("Digite a descricao da atividade: ");
             String descAtividade = input.nextLine();
 
-            System.out.println("Digite o CPF do responsavel pela atividade: ");
+            System.out.println("Digite o RG do responsavel pela atividade: ");
             checkIdU = U.LerInt(input);
             Usuario responsavel = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 

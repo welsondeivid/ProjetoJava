@@ -38,7 +38,7 @@ public class Atividade {
 
         if (decisao == 1)
         {
-            System.out.println("Digite o CPF do novo idResponsavel");
+            System.out.println("Digite o RG do novo idResponsavel");
             int checkIdU = U.LerInt(input);
             Usuario idResponsavel = U.BuscarUsuario(atividade.getUsuarios(), checkIdU);
             atividade.setIdResponsavel(idResponsavel.getId());
@@ -50,7 +50,7 @@ public class Atividade {
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite o CPF do usuario que deseja adicionar: ");
+            System.out.println("Digite o RG do usuario que deseja adicionar: ");
             int checkIdU = U.LerInt(input);
             Usuario usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
@@ -65,7 +65,7 @@ public class Atividade {
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite o CPF do usuario que deseja remover: ");
+            System.out.println("Digite o RG do usuario que deseja remover: ");
             int checkIdU = U.LerInt(input);
             Usuario usuario = U.BuscarUsuario(atividade.getUsuarios(), checkIdU);
 
@@ -97,7 +97,7 @@ public class Atividade {
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite o CPF do responsável pela tarefa que deseja remover: ");
+            System.out.println("Digite o RG do responsável pela tarefa que deseja remover: ");
             int respTarefa = U.LerInt(input);
 
             for (Tarefa item : atividade.getTarefas())

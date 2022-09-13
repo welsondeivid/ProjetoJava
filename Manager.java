@@ -23,18 +23,8 @@ public class Manager {
         Scanner input = new Scanner(System.in);
 
         int cmd = -1;
-
-        System.out.println ("Digite 1 para: Criar um projeto");
-        System.out.println ("Digite 2 para: Cadastrar um usuario");
-        System.out.println ("Digite 3 para: Editar um projeto");
-        System.out.println ("Digite 4 para: Editar uma atividade");
-        System.out.println ("Digite 5 para: Editar um usuario");
-        System.out.println ("Digite 6 para: Alterar o status de um projeto");
-        System.out.println ("Digite 7 para: Consultar");
-        System.out.println ("Digite 8 para: Relatorio");
-        System.out.println ("Digite 9 para: Fazer o pagamento de bolsa");
-        System.out.println ("Digite 10 para: Printar");
-
+        
+        m.MenuPrincipal();
         cmd = U.LerInt(input);
 
         while (cmd != 0)
@@ -65,7 +55,7 @@ public class Manager {
                 System.out.println("Digite seu nome: ");
                 String nomeUser = input.nextLine();
                 
-                System.out.println("Digite seu cpf, usaremos como seu id: ");
+                System.out.println("Digite seu RG, usaremos como seu id: ");
                 int idUser = U.LerInt(input);
 
                 System.out.println("Digite seu email: "); //Falta Formatar
@@ -77,7 +67,7 @@ public class Manager {
                 System.out.println("Digite o seu tipo de usuario: "); // Especifique os tipos permitidos
                 for (int i = 0; i < tipos.length; i++)
                 {
-                    System.out.print(tipos[i]);
+                    System.out.println(tipos[i]);
                 }
                 String tipoUser = input.nextLine();
 
@@ -114,7 +104,7 @@ public class Manager {
                             if (decisao == 1)
                             {
                                 System.out.println("Somente Pesquisadores ou Professores podem coordenar um projeto");
-                                System.out.println("Digite o CPF do novo coordenador do projeto: ");
+                                System.out.println("Digite o RG do novo coordenador do projeto: ");
                                 int checkIdU = U.LerInt(input);
                                 Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
                                 if (usuario != null)
@@ -140,7 +130,7 @@ public class Manager {
 
                                 for (int i = 0; i < quant; i++)
                                 {
-                                    System.out.println("Digite o CPF do usuario que deseja adicionar: ");
+                                    System.out.println("Digite o RG do usuario que deseja adicionar: ");
                                     int checkIdU = U.LerInt(input);
                                     Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
 
@@ -192,7 +182,7 @@ public class Manager {
 
                                 for (int i = 0; i < quant; i++)
                                 {
-                                    System.out.println("Digite CPF do usuario que deseja remover: ");
+                                    System.out.println("Digite RG do usuario que deseja remover: ");
                                     int checkIdU = U.LerInt(input);
                                     Usuario usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
@@ -414,7 +404,7 @@ public class Manager {
 
                                 if (decisao == 1)
                                 {
-                                    System.out.println("Digite o CPF do novo responsavel");
+                                    System.out.println("Digite o RG do novo responsavel");
                                     int checkIdU = U.LerInt(input);
                                     Usuario responsavel = U.BuscarUsuario(atividade.getUsuarios(), checkIdU);
                                     atividade.setIdResponsavel(responsavel.getId());
@@ -428,7 +418,7 @@ public class Manager {
 
                                 for (int i = 0; i < quant; i++)
                                 {
-                                    System.out.println("Digite o CPF do usuario que deseja adicionar: ");
+                                    System.out.println("Digite o RG do usuario que deseja adicionar: ");
                                     int checkIdU = U.LerInt(input);
                                     Usuario usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
@@ -445,7 +435,7 @@ public class Manager {
 
                                 for (int i = 0; i < quant; i++)
                                 {
-                                    System.out.println("Digite o CPF do usuario que deseja remover: ");
+                                    System.out.println("Digite o RG do usuario que deseja remover: ");
                                     int checkIdU = U.LerInt(input);
                                     Usuario usuario = U.BuscarUsuario(atividade.getUsuarios(), checkIdU);
 
@@ -482,7 +472,7 @@ public class Manager {
 
                                 for (int i = 0; i < quant; i++)
                                 {
-                                    System.out.println("Digite o CPF do responsável pela tarefa que deseja remover: ");
+                                    System.out.println("Digite o RG do responsável pela tarefa que deseja remover: ");
                                     int respTarefa = U.LerInt(input);
 
                                     for (Tarefa item : atividade.getTarefas())
@@ -511,7 +501,7 @@ public class Manager {
 
             else if (cmd == 5)
             {
-                System.out.println("Digite seu CPF: ");
+                System.out.println("Digite seu RG: ");
                 int checkIdU = U.LerInt(input);
                 Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
 
@@ -635,7 +625,7 @@ public class Manager {
             else if (cmd == 6)
             {
                 System.out.println("Somente Coordenadores podem alterar o Status de um projeto: ");
-                System.out.println("Digite seu CPF: ");
+                System.out.println("Digite seu RG: ");
                 int checkIdU = U.LerInt(input);
                 Usuario coordenador = U.BuscarUsuario(usuarios, checkIdU);
 
@@ -703,14 +693,14 @@ public class Manager {
             {
                System.out.println("O que gostaria de consultar?");
                System.out.println("Digite 1 para consultar um usuario");
-               System.out.println("Digite 2 para consultar um projeto");
-               System.out.println("Digite 3 para consultar um atividade");
+               System.out.println("Digite 2 para consultar uma atividade");
+               System.out.println("Digite 3 para consultar um projeto");
 
                int cmdConsulta = U.LerInt(input);
 
                if (cmdConsulta == 1)
                {
-                    System.out.println("Digite o CPF do usuario:");
+                    System.out.println("Digite o RG do usuario:");
                     int checkIdU = U.LerInt(input);
                     Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
 
@@ -747,11 +737,8 @@ public class Manager {
 
                     if (project != null)
                     {
-                        if (project != null)
-                        {
-                            System.out.println("Dados do projeto encontrado: ");
-                            U.DadosProj(project);
-                        }
+                        System.out.println("Dados do projeto encontrado: ");
+                        U.DadosProj(project);
                     }
                }
             }
@@ -759,7 +746,7 @@ public class Manager {
             else if (cmd == 8)
             {
                 System.out.println("Somente Coordenadores podem checar os relatorios");
-                System.out.println("Digite seu CPF: ");
+                System.out.println("Digite seu RG: ");
                 int checkIdU = U.LerInt(input);
                 Usuario coordenador = U.BuscarUsuario(usuarios, checkIdU);
 
@@ -790,7 +777,7 @@ public class Manager {
             else if (cmd == 9)
             {
                 System.out.println("Somente Coordenadores podem fazer o pagamento");
-                System.out.println("Digite seu CPF: ");
+                System.out.println("Digite seu RG: ");
                 int checkIdU = U.LerInt(input);
                 Usuario coordenador = U.BuscarUsuario(usuarios, checkIdU);
 
@@ -882,7 +869,7 @@ public class Manager {
             else if (cmd == 10)
             {
                 System.out.println("Somente Coordenadores podem adicionar intercambistas em projetos");
-                System.out.println("Digite seu CPF: ");
+                System.out.println("Digite seu RG: ");
                 int checkIdU = U.LerInt(input);
                 Usuario coordenador = U.BuscarUsuario(usuarios, checkIdU);
                 if (coordenador != null)
@@ -891,7 +878,7 @@ public class Manager {
                     {
                         Projeto project = U.BuscarProjeto(projetos, coordenador.getProjeto());
 
-                        System.out.println("Digite o CPF do usuario que deseja adicionar:");
+                        System.out.println("Digite o RG do usuario que deseja adicionar:");
                         Usuario intercamb = U.BuscarUsuario(usuarios, U.LerInt(input));
 
                         if (intercamb != null)
@@ -934,6 +921,7 @@ public class Manager {
                 }
             }
             System.out.println("Digite o proximo comando: ");
+            m.MenuPrincipal();
             cmd = U.LerInt(input);
         }
 
@@ -1020,7 +1008,16 @@ public class Manager {
 
     public void MenuPrincipal()
     {
-
+        System.out.println ("Digite 1 para: Criar um projeto");
+        System.out.println ("Digite 2 para: Cadastrar um usuario");
+        System.out.println ("Digite 3 para: Editar um projeto");
+        System.out.println ("Digite 4 para: Editar uma atividade");
+        System.out.println ("Digite 5 para: Editar um usuario");
+        System.out.println ("Digite 6 para: Alterar o status de um projeto");
+        System.out.println ("Digite 7 para: Consultar");
+        System.out.println ("Digite 8 para: Relatorio");
+        System.out.println ("Digite 9 para: Fazer o pagamento de bolsa");
+        System.out.println ("Digite 10 para: Realizar Intercambio");
     } 
 
     public void MenuProjeto()
