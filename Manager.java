@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 //Polimento: Printar as listas para opcao
 //Login e recuperacao de senha
+//tratar os erros nos else's
 
 public class Manager {
 
