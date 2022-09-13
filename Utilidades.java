@@ -116,6 +116,8 @@ public class Utilidades {
             }
         }
         System.out.println("Projeto associado: "+user.getProjeto());
+        System.out.println("Dia de ingresso: ");
+        MostrarDataHora(user.getDiaPag());
         System.out.println("Atividade associada: "+user.getAtividade());
 
         System.out.println("Lista de Tarefas:");

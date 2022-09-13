@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Usuario
@@ -10,6 +11,7 @@ public class Usuario
     private boolean Coord = false;
 
     private int projeto = 0;
+    private LocalDateTime diaPag = null;
     private String func = null;
     private int atividade = 0;
     private ArrayList <Tarefa> tarefas = new ArrayList<Tarefa>();
@@ -77,6 +79,14 @@ public class Usuario
 
     public void setProjeto(int projeto) {
         this.projeto = projeto;
+    }
+
+    public LocalDateTime getDiaPag() {
+        return this.diaPag;
+    }
+
+    public void setDiaPag(LocalDateTime diaPag) {
+        this.diaPag = diaPag;
     }
 
     public int getAtividade() {

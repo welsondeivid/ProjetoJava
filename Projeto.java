@@ -77,19 +77,16 @@ public class Projeto {
                 if (funcUsuario == 1)
                 {
                     project.setDesenvolvedor(usuario);
-                    project.setProjetistas(usuario);
                     usuario.setFunc("Devp");
                 }
                 else if (funcUsuario == 2)
                 {
                     project.setTestador(usuario);
-                    project.setProjetistas(usuario);
                     usuario.setFunc("Test");
                 }
                 else if (funcUsuario == 3)
                 {
                     project.setAnalista(usuario);
-                    project.setProjetistas(usuario);
                     usuario.setFunc("Anlt");
                 }
                 else if (funcUsuario == 4)
@@ -97,7 +94,6 @@ public class Projeto {
                     if (project.getIdTecnico() == 0)
                     {
                         project.setIdTecnico(usuario.getId());
-                        project.setProjetistas(usuario);
                         usuario.setFunc("Tecn");
                     }
                 }
@@ -106,6 +102,7 @@ public class Projeto {
                     //erro
                 }
                 project.setProjetistas(usuario);
+                usuario.setDiaPag(LocalDateTime.now());
             }
         }
 

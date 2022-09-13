@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-//Criar Consulta
-//Printar as listas para opcao
+//Polimento: Printar as listas para opcao
 
 public class Manager {
 
@@ -31,7 +31,8 @@ public class Manager {
         System.out.println ("Digite 4 para: Editar uma atividade");
         System.out.println ("Digite 5 para: Editar um usuario");
         System.out.println ("Digite 6 para: Alterar o status de um projeto");
-        System.out.println("Digite 7 para: Consultar");
+        System.out.println ("Digite 7 para: Consultar");
+        System.out.println ("Digite 8 para: Fazer o pagamento de bolsa");
         System.out.println ("Digite 10 para: Printar");
 
         cmd = U.LerInt(input);
@@ -155,19 +156,16 @@ public class Manager {
                                         if (funcUsuario == 1)
                                         {
                                             project.setDesenvolvedor(usuario);
-                                            project.setProjetistas(usuario);
                                             usuario.setFunc("Devp");
                                         }
                                         else if (funcUsuario == 2)
                                         {
                                             project.setTestador(usuario);
-                                            project.setProjetistas(usuario);
                                             usuario.setFunc("Test");
                                         }
                                         else if (funcUsuario == 3)
                                         {
                                             project.setAnalista(usuario);
-                                            project.setProjetistas(usuario);
                                             usuario.setFunc("Anlt");
                                         }
                                         else if (funcUsuario == 4)
@@ -175,7 +173,6 @@ public class Manager {
                                             if (project.getIdTecnico() == 0)
                                             {
                                                 project.setIdTecnico(usuario.getId());
-                                                project.setProjetistas(usuario);
                                                 usuario.setFunc("Tecn");
                                             }
                                         }
@@ -184,6 +181,7 @@ public class Manager {
                                             //erro
                                         }
                                         project.setProjetistas(usuario);
+                                        usuario.setDiaPag(LocalDateTime.now());
                                     }
                                 }
                             }
@@ -558,6 +556,8 @@ public class Manager {
                             if (project != null)
                             {
                                 usuario.setProjeto(project.getId());
+                                project.setProjetistas(usuario);
+                                usuario.setDiaPag(LocalDateTime.now());
                             }
                         }
                         else if (cmdUsuario == 3)
@@ -745,6 +745,98 @@ public class Manager {
                }
             }
 
+            else if (cmd == 8)
+            {
+                System.out.println("Somente Coordenadores podem fazer o pagamento");
+                System.out.println("Digite seu CPF: ");
+                int checkIdU = U.LerInt(input);
+                Usuario coordenador = U.BuscarUsuario(usuarios, checkIdU);
+
+                if (coordenador != null)
+                {
+                    if (coordenador.getCoord())
+                    {
+                        Projeto project = U.BuscarProjeto(projetos, coordenador.getProjeto());
+                        System.out.println("Lista dos bolsistas que podem receber a bolsa: ");
+                        ArrayList <Usuario> pagar = new ArrayList<Usuario>(); 
+
+                        System.out.println("Desenvolvedores: ");
+                        LocalDateTime dtAtual = LocalDateTime.now();
+                        
+                        for (Usuario item : project.getDesenvolvedores())
+                        {
+                            LocalDateTime dtBolsista = item.getDiaPag();
+                            long dias = Duration.between(dtBolsista, dtAtual).toDays();
+
+                            if (dias >= 30)
+                            {
+                                System.out.println("Nome: "+item.getNome());
+                                System.out.println("Nome: "+item.getId());
+                                pagar.add(item);
+                            }
+                        }
+
+                        System.out.println("Testadores: ");
+                        for (Usuario item : project.getTestadores())
+                        {
+                            LocalDateTime dtBolsista = item.getDiaPag();
+                            long dias = Duration.between(dtBolsista, dtAtual).toDays();
+
+                            if (dias >= 30)
+                            {
+                                System.out.println("Nome: "+item.getNome());
+                                System.out.println("Nome: "+item.getId());
+                                pagar.add(item);
+                            }
+                        }
+
+                        System.out.println("Analistas: ");
+                        for (Usuario item : project.getAnalistas())
+                        {
+                            LocalDateTime dtBolsista = item.getDiaPag();
+                            long dias = Duration.between(dtBolsista, dtAtual).toDays();
+
+                            if (dias >= 30)
+                            {
+                                System.out.println("Nome: "+item.getNome());
+                                System.out.println("Nome: "+item.getId());
+                                pagar.add(item);
+                            }
+                        }
+
+                        System.out.println("Gostaria de fazer o pagamento?");
+                        System.out.println("0 para: nenhum");
+                        System.out.println("1 para: todos");
+                        System.out.println("2 para: alguns");
+
+                        int cmdPag = U.LerInt(input);
+
+                        if (cmdPag == 1)
+                        {
+                            for (Usuario item : pagar)
+                            {
+                                item.setDiaPag(LocalDateTime.now());
+                            }
+
+                            System.out.println("Pagamento Realizado a todos");
+                        }
+                        else if (cmdPag == 2)
+                        {
+                            for (Usuario item : pagar)
+                            {
+                                System.out.println("Gostaria de pagar? 1 para sim");
+                                System.out.println(item.getNome());
+                                System.out.println(item.getId());
+
+                                int num = U.LerInt(input);
+                                if (num == 1)   item.setDiaPag(LocalDateTime.now());
+                            } 
+                        }
+                        pagar = null;
+                    }
+                }
+            }
+            
             else if (cmd == 100)
             {
                 for (int i = 0; i < usuarios.size(); i++)
