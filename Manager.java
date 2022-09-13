@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 //Polimento: Printar as listas para opcao
+//Login e recuperacao de senha
 
 public class Manager {
 
@@ -18,8 +19,6 @@ public class Manager {
         String[] tipos = {"Grad", "Mest", "Dout", "Prof", "Pesq"};
 
         DateTimeFormatter format = DateTimeFormatter.ofPattern ("HH:mm dd/MM/yyyy");
-        //DateTimeFormatter dataForm = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	    //DateTimeFormatter horaForm = DateTimeFormatter.ofPattern("HH:mm");
 	    
         Scanner input = new Scanner(System.in);
 
@@ -32,7 +31,8 @@ public class Manager {
         System.out.println ("Digite 5 para: Editar um usuario");
         System.out.println ("Digite 6 para: Alterar o status de um projeto");
         System.out.println ("Digite 7 para: Consultar");
-        System.out.println ("Digite 8 para: Fazer o pagamento de bolsa");
+        System.out.println ("Digite 8 para: Relatorio");
+        System.out.println ("Digite 9 para: Fazer o pagamento de bolsa");
         System.out.println ("Digite 10 para: Printar");
 
         cmd = U.LerInt(input);
@@ -583,11 +583,6 @@ public class Manager {
                         {
                             System.out.println("Atividades atribuidas: ");
 
-                            /*for (Tarefa item : usuario.getTarefas())
-                            {
-                                System.out.println(item.getDesc());
-                            }*/
-
                             Tarefa item = null;
                             for (int i = 1; i <= usuario.getTarefas().size(); i++)
                             {
@@ -596,34 +591,40 @@ public class Manager {
                             }
 
                             System.out.println("Digite o indice da tarefa que deseja mudar o status: ");
-                            int indTarefa = U.LerInt(input) - 1;
+                            int indTarefa = 0;
 
-                            if (indTarefa > 0 && indTarefa < usuario.getTarefas().size())
+                            while (indTarefa != -1)
                             {
-                                item = usuario.getTarefas().get(indTarefa);
-                            }
-                            else
-                            {
-                                item = null;
-                            }
-
-                            if (item != null)
-                            {
-                                System.out.println("Tarefa selecionada: "+item.getDesc());
-
-                                System.out.println("Digite 0 para escolher de novo");
-                                System.out.println("Digite 1 para marcar como Iniciada");
-                                System.out.println("Digite 2 para marcar como Finalizada");
-
-                                int decisao = U.LerInt(input);
-
-                                if (decisao == 1)
+                                indTarefa = U.LerInt(input) - 1;
+                                if (indTarefa >= 0 && indTarefa < usuario.getTarefas().size())
                                 {
-                                    item.setDesc("Iniciada");
+                                    item = usuario.getTarefas().get(indTarefa);
                                 }
-                                else if (decisao == 2)
+                                else
                                 {
-                                    item.setDesc("Finalizada");
+                                    item = null;
+                                }
+
+                                if (item != null)
+                                {
+                                    System.out.println("Tarefa selecionada: "+item.getDesc());
+
+                                    System.out.println("Digite 0 para escolher de novo");
+                                    System.out.println("Digite 1 para marcar como Iniciada");
+                                    System.out.println("Digite 2 para marcar como Finalizada");
+
+                                    int decisao = U.LerInt(input);
+
+                                    if (decisao == 1)
+                                    {
+                                        item.setDesc("Iniciada");
+                                        System.out.println("Status Atualizado");
+                                    }
+                                    else if (decisao == 2)
+                                    {
+                                        System.out.println("Status Atualizado");
+                                        item.setDesc("Finalizada");
+                                    }
                                 }
                             }
                         }
@@ -675,7 +676,17 @@ public class Manager {
                                 }
                                 else if (decisao == 2)
                                 {
-                                    System.out.println("Status alterado para 'Concluído'");
+                                    ArrayList<Atividade> ativs = new ArrayList<Atividade>();
+
+                                    for (Atividade item : project.getAtividades())
+                                    {
+                                        if (!item.getStatus().equals("Concluida"))  ativs.add(item);
+                                    }
+                                    if (ativs.isEmpty()) 
+                                    {
+                                        System.out.println("Status alterado para 'Concluído'");
+                                        project.setStatus("Concluído");
+                                    }
                                     //Tratar, talvez uma lista
                                 }
                             }    
@@ -747,6 +758,37 @@ public class Manager {
 
             else if (cmd == 8)
             {
+                System.out.println("Somente Coordenadores podem checar os relatorios");
+                System.out.println("Digite seu CPF: ");
+                int checkIdU = U.LerInt(input);
+                Usuario coordenador = U.BuscarUsuario(usuarios, checkIdU);
+
+                if (coordenador != null)
+                {
+                    if (coordenador.getCoord())
+                    {
+                        System.out.println("Digite 1 para: Relatorio de Projeto");
+                        System.out.println("Digite 2 para: Relatorio de Atividade");
+
+                        int decisao = U.LerInt(input);
+                        Projeto project = U.BuscarProjeto(projetos, coordenador.getProjeto());
+                        
+                        if (decisao == 1)
+                        {
+                            U.RelatorioProj(project);
+                        }
+                        else if (decisao == 2)
+                        {
+                            System.out.println("Digite o id da atividade desejada: ");
+                            int checkIdA = U.LerInt(input);
+                            U.RelatorioAtiv(U.BuscarAtividade(project.getAtividades(), checkIdA));
+                        }
+                    }
+                }
+            }
+            
+            else if (cmd == 9)
+            {
                 System.out.println("Somente Coordenadores podem fazer o pagamento");
                 System.out.println("Digite seu CPF: ");
                 int checkIdU = U.LerInt(input);
@@ -757,11 +799,11 @@ public class Manager {
                     if (coordenador.getCoord())
                     {
                         Projeto project = U.BuscarProjeto(projetos, coordenador.getProjeto());
-                        System.out.println("Lista dos bolsistas que podem receber a bolsa: ");
-                        ArrayList <Usuario> pagar = new ArrayList<Usuario>(); 
-
-                        System.out.println("Desenvolvedores: ");
+                        ArrayList <Usuario> pagar = new ArrayList<Usuario>();
                         LocalDateTime dtAtual = LocalDateTime.now();
+
+                        System.out.println("Lista dos bolsistas que podem receber a bolsa: ");
+                        System.out.println("Desenvolvedores: ");
                         
                         for (Usuario item : project.getDesenvolvedores())
                         {
@@ -836,16 +878,61 @@ public class Manager {
                     }
                 }
             }
-            
-            else if (cmd == 100)
+
+            else if (cmd == 10)
             {
-                for (int i = 0; i < usuarios.size(); i++)
+                System.out.println("Somente Coordenadores podem adicionar intercambistas em projetos");
+                System.out.println("Digite seu CPF: ");
+                int checkIdU = U.LerInt(input);
+                Usuario coordenador = U.BuscarUsuario(usuarios, checkIdU);
+                if (coordenador != null)
                 {
-                    System.out.println(usuarios.get(i).getId());
-                    System.out.println(usuarios.get(i).getNome());
+                    if (coordenador.getCoord())
+                    {
+                        Projeto project = U.BuscarProjeto(projetos, coordenador.getProjeto());
+
+                        System.out.println("Digite o CPF do usuario que deseja adicionar:");
+                        Usuario intercamb = U.BuscarUsuario(usuarios, U.LerInt(input));
+
+                        if (intercamb != null)
+                        {
+                            if (intercamb.getProjInterCam() == 0)
+                            {
+                                Projeto projInterCam = U.BuscarProjeto(projetos, intercamb.getProjeto());
+                                if (projInterCam != null)
+                                {
+                                    if (projInterCam != project)
+                                    {
+                                        System.out.println("Para qual atividade ele sera atribuido?");
+                                        int checkIdA = U.LerInt(input);
+                                        Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
+
+                                        if (atividade != null)
+                                        {
+                                            atividade.setUsuarios(intercamb);
+                                            project.setIntercambista(intercamb);
+                                            intercamb.setProjInterCam(project.getId());
+                                            intercamb.setAtivInterCam(atividade.getId());
+                                        }
+                                    }
+                                    else
+                                    {
+                                        System.out.println("Usuario ja esta alocado nesse projeto");
+                                    }
+                                }
+                                else
+                                {
+                                    System.out.println("Usuario sem projeto alocado, incapaz de fazer intercambio");
+                                }
+                            }
+                            else
+                            {
+                                System.out.println("Usuario ja faz intercambio");
+                            }
+                        }
+                    }
                 }
             }
-
             System.out.println("Digite o proximo comando: ");
             cmd = U.LerInt(input);
         }

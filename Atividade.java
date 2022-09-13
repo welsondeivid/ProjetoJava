@@ -13,8 +13,9 @@ public class Atividade {
     private LocalDateTime termino = null;
 
     private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
-
     private ArrayList<Tarefa> tarefas = new ArrayList<Tarefa>();
+
+    private String status = null;
 
     public Atividade(int id, String desc, int idResponsavel, Usuario user, LocalDateTime inicio, LocalDateTime termino)
     {
@@ -24,6 +25,7 @@ public class Atividade {
         this.setUsuarios(user);
         this.setInicio(inicio);
         this.setTermino(termino);
+        this.setStatus("Iniciada");
     }
 
     public void EditarAtividade(Projeto project, Atividade atividade, Scanner input)
@@ -170,5 +172,15 @@ public class Atividade {
 
     public void setTarefas(Tarefa tarefa) {
         tarefas.add(tarefa);
+    }
+
+    public String getStatus()
+    {
+        return this.status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
     }
 }

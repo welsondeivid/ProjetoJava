@@ -11,9 +11,11 @@ public class Usuario
     private boolean Coord = false;
 
     private int projeto = 0;
+    private int projInterCam = 0;
     private LocalDateTime diaPag = null;
     private String func = null;
     private int atividade = 0;
+    private int ativInterCam = 0;
     private ArrayList <Tarefa> tarefas = new ArrayList<Tarefa>();
 
     public Usuario(String nome, String email, String senha, String tipo, int id)
@@ -73,6 +75,14 @@ public class Usuario
         this.func = func;
     }
 
+    public int getProjInterCam() {
+        return this.projInterCam;
+    }
+
+    public void setProjInterCam(int projInterCam) {
+        this.projInterCam = projInterCam;
+    }
+
     public int getProjeto() {
         return this.projeto;
     }
@@ -95,6 +105,14 @@ public class Usuario
 
     public void setAtividade(int atividade) {
         this.atividade = atividade;
+    }
+
+    public int getAtivInterCam() {
+        return this.ativInterCam;
+    }
+
+    public void setAtivInterCam(int ativInterCam) {
+        this.ativInterCam = ativInterCam;
     }
 
     public ArrayList<Tarefa> getTarefas() {

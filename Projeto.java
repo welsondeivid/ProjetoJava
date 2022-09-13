@@ -17,6 +17,8 @@ public class Projeto {
     private ArrayList<Usuario> desenvolvedores = new ArrayList<Usuario>();
     private ArrayList<Usuario> testadores = new ArrayList<Usuario>();
     private ArrayList<Usuario> analistas = new ArrayList<Usuario>();
+    private ArrayList<Usuario> intercambistas = new ArrayList<Usuario>();
+
     private int idTecnico = 0;
     private ArrayList <Usuario> projetistas = new ArrayList<Usuario>();
     private ArrayList <Atividade> atividades = new ArrayList<Atividade>();
@@ -27,8 +29,6 @@ public class Projeto {
     private LocalDateTime tempoBolsaDesenvolvedor = null;
     private LocalDateTime tempoBolsaTestador = null;
     private LocalDateTime tempoBolsaAnalista = null;
-
-    //Scanner input = new Scanner(System.in);
 
     public Projeto (int id, String desc, LocalDateTime inicio, LocalDateTime termino, String status)
     {
@@ -332,6 +332,7 @@ public class Projeto {
     public void setAnalista(Usuario analista) {
         analistas.add(analista);
     }
+
     public int getIdTecnico()
     {
         return this.idTecnico;
@@ -340,6 +341,15 @@ public class Projeto {
     {
         this.idTecnico = idTecnico;
     }
+
+    public ArrayList<Usuario> getIntercambistas() {
+        return this.intercambistas;
+    }
+
+    public void setIntercambista(Usuario intercambista) {
+        intercambistas.add(intercambista);
+    }
+
     public ArrayList<Usuario> getProjetistas() {
         return this.projetistas;
     }
