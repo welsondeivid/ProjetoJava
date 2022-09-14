@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 //Polimento: Printar as listas para opcao
 //Login e recuperacao de senha
 //tratar os erros nos else's
+//
 
 public class Manager {
 
@@ -44,10 +45,20 @@ public class Manager {
                 System.out.println ("Digite a data de termino no formato: HH:mm dd/MM/yyyy");
                 LocalDateTime termino = LocalDateTime.parse(input.nextLine(), format);
 
-                if (idProject > 0 && descProject != null && inicio != null && termino != null)
+                System.out.println("Defina o Coordenador do projeto, somente Professor/Pesquisador");
+                int idCoord = U.LerInt(input);
+
+                if (U.BuscarUsuario(usuarios, idCoord) != null)
                 {
-                    Projeto project = new Projeto(idProject, descProject, inicio, termino, "Em processo de criacao");
-                    projetos.add(project);
+                    if (idProject > 0 && descProject != null && inicio != null && termino != null)
+                    {
+                        Projeto project = new Projeto(idProject, descProject, inicio, termino, "Em processo de criacao", idCoord);
+                        projetos.add(project);
+                    }
+                }
+                else
+                {
+                    System.out.println("Usuario Nao pode ser Coordenador");
                 }
             }
 
@@ -279,7 +290,7 @@ public class Manager {
                         {
                             System.out.println("Valor atual da bolsa: " +project.getBolsaDesenvolvedor());
                             System.out.println("Digite o novo valor, -1 para manter");
-                            float bolsa = input.nextFloat();
+                            float bolsa = U.LerFloat(input);
 
                             if (bolsa > -1)
                             {
@@ -294,7 +305,7 @@ public class Manager {
                         {
                             System.out.println("Valor atual da bolsa: " +project.getBolsaTestador());
                             System.out.println("Digite o novo valor, -1 para manter");
-                            float bolsa = input.nextFloat();
+                            float bolsa = U.LerFloat(input);
 
                             if (bolsa > -1)
                             {
@@ -309,7 +320,7 @@ public class Manager {
                         {
                             System.out.println("Valor atual da bolsa: " +project.getBolsaAnalista());
                             System.out.println("Digite o novo valor, -1 para manter");
-                            float bolsa = input.nextFloat();
+                            float bolsa = U.LerFloat(input);
 
                             if (bolsa > -1)
                             {
@@ -572,20 +583,22 @@ public class Manager {
 
                         else if (cmdUsuario == 4)
                         {
-                            System.out.println("Atividades atribuidas: ");
+                            System.out.println("Tarefas atribuidas: ");
 
                             Tarefa item = null;
-                            for (int i = 1; i <= usuario.getTarefas().size(); i++)
+                            for (int i = 0; i <= usuario.getTarefas().size(); i++)
                             {
                                 item = usuario.getTarefas().get(i);
-                                System.out.println(i+":"+item.getDesc());
+                                System.out.println((i+1)+":"+item.getDesc());
                             }
 
-                            System.out.println("Digite o indice da tarefa que deseja mudar o status: ");
                             int indTarefa = 0;
 
                             while (indTarefa != -1)
                             {
+                                System.out.println("Digite o indice da tarefa que deseja mudar o status: ");
+                                System.out.println("-1 para sair");
+
                                 indTarefa = U.LerInt(input) - 1;
                                 if (indTarefa >= 0 && indTarefa < usuario.getTarefas().size())
                                 {
@@ -616,6 +629,10 @@ public class Manager {
                                         System.out.println("Status Atualizado");
                                         item.setDesc("Finalizada");
                                     }
+                                }
+                                else
+                                {
+                                    System.out.println("Indice invalido");
                                 }
                             }
                         }

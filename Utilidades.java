@@ -11,6 +11,12 @@ public class Utilidades {
         input.nextLine();
         return num;
     }
+    public float LerFloat(Scanner input)
+    {
+        float num = input.nextFloat();
+        input.nextLine();
+        return num;
+    }   
 
     public Usuario BuscarUsuario(ArrayList<Usuario> users, int checkId)
     {
@@ -143,7 +149,10 @@ public class Utilidades {
         }
         else
         {
-            System.out.println("Disponivel para intercambio");
+            if (!user.getTipo().equals("Prof") && !user.getTipo().equals("Pesq"))
+            {
+                System.out.println("Disponivel para intercambio");
+            }
         }
     }
 
@@ -213,7 +222,6 @@ public class Utilidades {
                 System.out.println("Desc: "+item.getDesc());
                 System.out.println("Responsavel: "+BuscarUsuario (ativ.getUsuarios(), item.getProfissional()));
             }
-            System.out.println("Status da atividade: "+ativ.getStatus());
         }
     }
 
@@ -290,10 +298,17 @@ public class Utilidades {
 
     public void MostrarDataHora (LocalDateTime tempo)
     {
-        DateTimeFormatter dataForm = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	    DateTimeFormatter horaForm = DateTimeFormatter.ofPattern("HH:mm");
+        if (tempo != null)
+        {
+            DateTimeFormatter dataForm = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	        DateTimeFormatter horaForm = DateTimeFormatter.ofPattern("HH:mm");
 
-        System.out.println("Data: "+dataForm.format(tempo));
-        System.out.println("Hora: "+horaForm.format(tempo));
+            System.out.println("Data: "+dataForm.format(tempo));
+            System.out.println("Hora: "+horaForm.format(tempo));
+        }
+        else
+        {
+            System.out.println("Falta Definir");
+        }
     }
 }

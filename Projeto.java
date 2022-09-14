@@ -30,7 +30,7 @@ public class Projeto {
     private LocalDateTime tempoBolsaTestador = null;
     private LocalDateTime tempoBolsaAnalista = null;
 
-    public Projeto (int id, String desc, LocalDateTime inicio, LocalDateTime termino, String status)
+    public Projeto (int id, String desc, LocalDateTime inicio, LocalDateTime termino, String status, int idCoord)
     {
         this.setId(id);
         this.setDesc(desc);
@@ -38,6 +38,7 @@ public class Projeto {
         this.setTermino(termino);
         this.setStatus(status);
     }
+
 
     public void EditarProjeto (ArrayList<Usuario> usuarios, Projeto project, Scanner input, DateTimeFormatter format)
     {
@@ -192,7 +193,7 @@ public class Projeto {
 
         System.out.println("Valor atual da Bolsa-Desenvolvedor: " +project.getBolsaDesenvolvedor());
         System.out.println("Digite o novo valor, -1 para manter");
-        float bolsa = input.nextFloat();
+        float bolsa = U.LerFloat(input);
 
         if (bolsa > -1)
         {
@@ -205,7 +206,7 @@ public class Projeto {
 
         System.out.println("Valor atual da Bolsa-Testador: " +project.getBolsaTestador());
         System.out.println("Digite o novo valor, -1 para manter");
-        bolsa = input.nextFloat();
+        bolsa = U.LerFloat(input);
 
         if (bolsa > -1)
         {
@@ -218,7 +219,7 @@ public class Projeto {
 
         System.out.println("Valor atual da bolsa: " +project.getBolsaAnalista());
         System.out.println("Digite o novo valor, -1 para manter");
-        bolsa = input.nextFloat();
+        bolsa = U.LerFloat(input);
 
         if (bolsa > -1)
         {
