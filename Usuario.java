@@ -7,9 +7,9 @@ public class Usuario
     private String nome = null;
     private String email = null;
     private String senha = null;
+
     private String tipo = null;
     private boolean Coord = false;
-
     private int projeto = 0;
     private int projInterCam = 0;
     private LocalDateTime diaPag = null;

@@ -258,8 +258,6 @@ public class Utilidades {
         System.out.println("Coordenador do Projeto: ");
         System.out.println(BuscarUsuario(proj.getProjetistas(), proj.getIdCoordenador()));
 
-        //System.out.println("Lista de Projetistas: ");
-        //for (Usuario item : proj.getProjetistas())    System.out.println(item.getNome());
 
         System.out.println("Lista de Desenvolvedores: ");
         for (Usuario item : proj.getDesenvolvedores())    System.out.println(item.getNome());
