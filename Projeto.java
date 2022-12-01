@@ -1,6 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 import java.time.format.DateTimeFormatter;
 
 public class Projeto {
@@ -39,39 +40,71 @@ public class Projeto {
         this.setStatus(status);
     }
 
-
     public void EditarProjeto (ArrayList<Usuario> usuarios, Projeto project, Scanner input, DateTimeFormatter format)
     {
         System.out.println("Somente Pesquisadores ou Professores podem coordenar um projeto");
+        DesignarCoordenador(usuarios, input, project);
+
+        AdicionarUsuarios(usuarios, input, project);
+
+        RemoverUsuarios(this.projetistas, input, project);
+
+        AdicionarAtividades(format, input, project);
+
+        RemoverAtividades(input, project);                       
+
+        DefinirBolsa("Desenvolvedor", project, input);
+
+        DefinirBolsa("Testador", project, input);
+
+        DefinirBolsa("Analista", project, input);
+
+        DefinirPrazoBolsa("Desenvolvedor", project, input, format);
+
+        DefinirPrazoBolsa("Testador", project, input, format);
+
+        DefinirPrazoBolsa("Analista", project, input, format);
+    }
+
+    public void DesignarCoordenador(ArrayList<Usuario> usuarios, Scanner input, Projeto project)
+    {
         System.out.println("Digite o RG do novo coordenador do projeto: ");
         int checkIdU = U.LerInt(input);
         Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
 
         if (usuario != null)
         {
-            if (usuario.getTipo().equals("Prof") || usuario.getTipo().equals("Pesq"))
+            if (usuario instanceof Docente)
             {
+                Docente doce = (Docente)usuario;
+                doce.setCoord(true);
                 project.setIdCoordenador(usuario.getId());
-                usuario.setCoord(true);
                 usuario.setProjeto(project.getId());
             }
             else
             {
-                System.out.println("Usuario precisa ser professor ou pesquisador");
-                return;
+                System.out.println("Usuario precisa ser Docente");
             }
         }
+    }
 
+    public void AdicionarUsuarios(ArrayList<Usuario> usuarios, Scanner input, Projeto project)
+    {
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
         int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o RG do usuario que deseja adicionar: ");
-            checkIdU = U.LerInt(input);
-            usuario = U.BuscarUsuario(usuarios, checkIdU);
+            int checkIdU = U.LerInt(input);
+            Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
+            Docente doce = null;
 
-            if (usuario != null)
+            if (usuario instanceof Docente)
+            {
+                doce = (Docente)usuario;
+            }
+            if (usuario != null || doce != null && !doce.getCoord())
             {
                 System.out.println("Designe a funcao dele no projeto: ");
                 System.out.println("Digite 1 para: Desenvolvedor");
@@ -108,18 +141,28 @@ public class Projeto {
                     //erro
                 }
                 project.setProjetistas(usuario);
-                usuario.setDiaPag(LocalDateTime.now());
+                usuario.setDiaIngresso(LocalDateTime.now());
+                usuario.setProjeto(project.getId());
+
+                if (usuario instanceof Discente)
+                {
+                    Discente disc = (Discente)usuario;
+                    disc.setDiaPag(LocalDateTime.now());
+                }
             }
         }
+    }
 
+    public void RemoverUsuarios(ArrayList<Usuario> usuarios, Scanner input, Projeto project)
+    {
         System.out.println("Qual sera a quantidade de usuarios removidos?");
-        quant = U.LerInt(input);
+        int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite RG do usuario que deseja remover: ");
-            checkIdU = U.LerInt(input);
-            usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
+            int checkIdU = U.LerInt(input);
+            Usuario usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
             if (usuario != null)
             {
@@ -143,11 +186,29 @@ public class Projeto {
                     project.setIdTecnico(0);
                     usuario.setFunc(null);
                 }
+
                 project.getProjetistas().remove(usuario);
+                usuario.setProjeto(0);
+
+                Atividade ativ = U.BuscarAtividade(project.getAtividades(), usuario.getId());
+                ativ.getUsuarios().remove(usuario);
+                usuario.setAtividade(0);
+                
+                usuario.getTarefas().clear();
+
+                if (usuario instanceof Discente)
+                {
+                    Discente disc = (Discente)usuario;
+                    disc.setDiaPag(null);
+                }
             }
         }
+    }
+
+    public void AdicionarAtividades(DateTimeFormatter format, Scanner input, Projeto project)
+    {
         System.out.println("Qual sera a quantidade de atividades adicionadas?");
-        quant = U.LerInt(input);
+        int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
@@ -160,7 +221,7 @@ public class Projeto {
             String descAtividade = input.nextLine();
 
             System.out.println("Digite o RG do responsavel pela atividade: ");
-            checkIdU = U.LerInt(input);
+            int checkIdU = U.LerInt(input);
             Usuario responsavel = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
             System.out.println ("Digite a data de inicio no formato: HH:mm dd/MM/yyyy");
@@ -175,9 +236,12 @@ public class Projeto {
                 project.setAtividades(atividade);
             }
         }
+    }
 
+    public void RemoverAtividades(Scanner input, Projeto project)
+    {
         System.out.println("Qual sera a quantidade de atividades removidas?");
-        quant = U.LerInt(input);
+        int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
@@ -187,83 +251,105 @@ public class Projeto {
             Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
             if (atividade != null)
             {
+                for (Usuario item : atividade.getUsuarios())
+                {
+                    item.setAtividade(0);
+                    item.getTarefas().clear();
+                }
+                atividade.getUsuarios().clear();
                 project.getAtividades().remove(atividade);
+                atividade.getTarefas().clear();
+                atividade = null;
             }
-        }                         
-
-        System.out.println("Valor atual da Bolsa-Desenvolvedor: " +project.getBolsaDesenvolvedor());
-        System.out.println("Digite o novo valor, -1 para manter");
-        float bolsa = U.LerFloat(input);
-
-        if (bolsa > -1)
-        {
-            project.setBolsaDesenvolvedor(bolsa);
         }
-        else if (bolsa < -1)
+    }
+
+    public void DefinirBolsa(String tipoBolsa, Projeto project, Scanner input)
+    {
+        System.out.println("Digite o novo valor para a bolsa, -1 para manter");
+
+        float bolsa = -1;
+        System.out.print("Valor atual da Bolsa-"+tipoBolsa+": ");
+
+        if (tipoBolsa.equals("Desenvolvedor"))
+        {
+            System.out.println(project.getBolsaDesenvolvedor());
+            
+            bolsa = U.LerFloat(input);
+
+            if (bolsa > -1)
+            {
+                project.setBolsaDesenvolvedor(bolsa);
+            }
+        }
+        else if (tipoBolsa.equals("Testador"))
+        {
+            System.out.println(+project.getBolsaTestador());
+
+            bolsa = U.LerFloat(input);
+
+            if (bolsa > -1)
+            {
+                project.setBolsaTestador(bolsa);
+            }
+        }
+        else if (tipoBolsa.equals("Analista"))
+        {
+            System.out.println(project.getBolsaAnalista());
+            
+            bolsa = U.LerFloat(input);
+
+            if (bolsa > -1)
+            {
+                project.setBolsaAnalista(bolsa);
+            }
+        }
+    
+        if (bolsa < -1)
         {
             //erro
         }
-
-        System.out.println("Valor atual da Bolsa-Testador: " +project.getBolsaTestador());
-        System.out.println("Digite o novo valor, -1 para manter");
-        bolsa = U.LerFloat(input);
-
-        if (bolsa > -1)
-        {
-            project.setBolsaTestador(bolsa);
-        }
-        else if (bolsa < -1)
-        {
-            //erro
-        }
-
-        System.out.println("Valor atual da bolsa: " +project.getBolsaAnalista());
-        System.out.println("Digite o novo valor, -1 para manter");
-        bolsa = U.LerFloat(input);
-
-        if (bolsa > -1)
-        {
-            project.setBolsaAnalista(bolsa);
-        }
-        else if (bolsa < -1)
-        {
-            //erro
-        }
-
+    }
+    
+    public void DefinirPrazoBolsa(String tipoBolsa, Projeto project, Scanner input, DateTimeFormatter format)
+    {
+        System.out.println("Defina um novo prazo para as bolsas, 1 para mudar");
         System.out.println("Prazo atual da bolsa: ");
-        U.MostrarDataHora(project.getTempoBolsaDesenvolvedor());
-        System.out.println("Gostaria de alterar? 1 para S, 0 para N");
+
         int decisao = U.LerInt(input);
 
-        if (decisao == 1)
+        if (tipoBolsa.equals("Desenvolvedor"))
         {
-            System.out.println ("Digite a data do prazo no formato: HH:mm dd/MM/yyyy");
-            LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
-            project.setTempoBolsaDesenvolvedor(tempoBolsa);
+            U.MostrarDataHora(project.getTempoBolsaDesenvolvedor());
+
+            if (decisao == 1)
+            {
+                System.out.println ("Digite a data do prazo no formato: HH:mm dd/MM/yyyy");
+                LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
+                project.setTempoBolsaDesenvolvedor(tempoBolsa);
+            }
         }
-
-        System.out.println("Prazo atual da bolsa: ");
-        U.MostrarDataHora(project.getTempoBolsaTestador());
-        System.out.println("Gostaria de alterar? 1 para S, 0 para N");
-        decisao = U.LerInt(input);
-
-        if (decisao == 1)
+        else if (tipoBolsa.equals("Testador"))
         {
-            System.out.println ("Digite a data do prazo no formato: HH:mm dd/MM/yyyy");
-            LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
-            project.setTempoBolsaTestador(tempoBolsa);
+            U.MostrarDataHora(project.getTempoBolsaTestador());
+
+            if (decisao == 1)
+            {
+                System.out.println ("Digite a data do prazo no formato: HH:mm dd/MM/yyyy");
+                LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
+                project.setTempoBolsaTestador(tempoBolsa);
+            }
         }
-
-        System.out.println("Prazo atual da bolsa: ");
-        U.MostrarDataHora(project.getTempoBolsaAnalista());
-        System.out.println("Gostaria de alterar? 1 para S, 0 para N");
-        decisao = U.LerInt(input);
-
-        if (decisao == 1)
+        else if (tipoBolsa.equals("Analista"))
         {
-            System.out.println ("Digite a data do prazo no formato: HH:mm dd/MM/yyyy");
-            LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
-            project.setTempoBolsaAnalista(tempoBolsa);
+            U.MostrarDataHora(project.getTempoBolsaAnalista());
+
+            if (decisao == 1)
+            {
+                System.out.println ("Digite a data do prazo no formato: HH:mm dd/MM/yyyy");
+                LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
+                project.setTempoBolsaAnalista(tempoBolsa);
+            }
         }
     }
 
@@ -343,6 +429,7 @@ public class Projeto {
     {
         return this.idTecnico;
     }
+    
     public void setIdTecnico (int idTecnico)
     {
         this.idTecnico = idTecnico;

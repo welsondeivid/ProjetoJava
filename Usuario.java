@@ -1,21 +1,20 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Usuario
+public abstract class Usuario
 {
+    Utilidades U = new Utilidades();
+
     private int id = -1;
     private String nome = null;
     private String email = null;
     private String senha = null;
-
     private String tipo = null;
-    private boolean Coord = false;
+
     private int projeto = 0;
-    private int projInterCam = 0;
-    private LocalDateTime diaPag = null;
+    private LocalDateTime diaIngresso = null;
     private String func = null;
     private int atividade = 0;
-    private int ativInterCam = 0;
     private ArrayList <Tarefa> tarefas = new ArrayList<Tarefa>();
 
     public Usuario(String nome, String email, String senha, String tipo, int id)
@@ -75,14 +74,6 @@ public class Usuario
         this.func = func;
     }
 
-    public int getProjInterCam() {
-        return this.projInterCam;
-    }
-
-    public void setProjInterCam(int projInterCam) {
-        this.projInterCam = projInterCam;
-    }
-
     public int getProjeto() {
         return this.projeto;
     }
@@ -91,12 +82,12 @@ public class Usuario
         this.projeto = projeto;
     }
 
-    public LocalDateTime getDiaPag() {
-        return this.diaPag;
+    public LocalDateTime getDiaIngresso() {
+        return this.diaIngresso;
     }
 
-    public void setDiaPag(LocalDateTime diaPag) {
-        this.diaPag = diaPag;
+    public void setDiaIngresso(LocalDateTime diaIngresso) {
+        this.diaIngresso = diaIngresso;
     }
 
     public int getAtividade() {
@@ -107,14 +98,6 @@ public class Usuario
         this.atividade = atividade;
     }
 
-    public int getAtivInterCam() {
-        return this.ativInterCam;
-    }
-
-    public void setAtivInterCam(int ativInterCam) {
-        this.ativInterCam = ativInterCam;
-    }
-
     public ArrayList<Tarefa> getTarefas() {
         return this.tarefas;
     }
@@ -123,11 +106,44 @@ public class Usuario
         tarefas.add(tarefa);
     }
 
-    public boolean getCoord() {
-        return this.Coord;
-    }
+    @Override
+    public String toString()
+    {
+        String funcao = "";
+        if (this.getFunc() != null)
+        {
+            funcao = "Funcao no Projeto: ";
+            if (this.getFunc().equals("Devp"))          funcao.concat("Desenvolvedor");
+            
+            else if (this.getFunc().equals("Test"))     funcao.concat("Testador");
 
-    public void setCoord(boolean Coord) {
-        this.Coord = Coord;
+            else if (this.getFunc().equals("Anlt"))     funcao.concat("Analista");
+
+            else if (this.getFunc().equals("Tecn"))     funcao.concat("Tecnico");
+        }
+
+        String dataHora = null, taskLists = "Ainda nao designadas";
+        if (this.getProjeto() != 0) // se for code smells, iniciar strings vazias e juntar em 1 return
+        {
+            dataHora = U.MostrarDataHora(this.getDiaIngresso());
+
+            if (this.getTarefas() != null) //try
+            {
+                for (Tarefa item : this.getTarefas())
+                {
+                    taskLists.concat(item.getDesc()+"\n");
+                }
+            }
+            return  "Nome: "+this.getNome()+"\n"+
+                    "Email: "+this.getEmail()+"\n"+
+                    "Projeto Associado: "+this.getProjeto()+"\n"+
+                    "Dia de ingresso: "+dataHora+"\n"+
+                    "Atividade associada: "+this.getAtividade()+"\n"+
+                    "Lista de Tarefas: "+"\n"+taskLists+
+                    funcao+"\n";
+        }
+        return  "Nome: "+this.getNome()+"\n"+
+                "Email: "+this.getEmail()+"\n"+
+                "Sem projeto associado no momento";
     }
 }

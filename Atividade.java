@@ -30,21 +30,39 @@ public class Atividade {
 
     public void EditarAtividade(Projeto project, Atividade atividade, Scanner input)
     {
-        System.out.print("Responsavel atual pela ativiadade: ");
-        System.out.println(U.BuscarUsuario(atividade.getUsuarios(), atividade.getIdResponsavel()).getNome());
+        DefinirResponsavel(atividade, input);
+
+        AdicionarUsuarios(project, atividade, input);
+
+        RemoverUsuarios(atividade, input);
+
+        AdicionarTarefas(atividade, input);
+
+        RemoverTarefas(atividade, input);
+    }
+
+    public void DefinirResponsavel(Atividade atividade, Scanner input)
+    {
+        Usuario respAtual = U.BuscarUsuario(atividade.getUsuarios(), atividade.getIdResponsavel());
+
+        System.out.print("Responsavel atual pela atividade: ");
+        System.out.println(respAtual.getNome());
 
         System.out.println("Gostaria de alterar? 1 para sim");
         int decisao = U.LerInt(input);
 
         if (decisao == 1)
         {
-            System.out.println("Digite o RG do novo idResponsavel");
+            System.out.println("Digite o RG do novo Responsavel");
             int checkIdU = U.LerInt(input);
             Usuario idResponsavel = U.BuscarUsuario(atividade.getUsuarios(), checkIdU);
             atividade.setIdResponsavel(idResponsavel.getId());
             atividade.setUsuarios(idResponsavel);
         }
-
+    }
+    
+    public void AdicionarUsuarios(Projeto project, Atividade atividade, Scanner input)
+    {
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
         int quant = U.LerInt(input);
 
@@ -59,9 +77,12 @@ public class Atividade {
                 atividade.setUsuarios(usuario);
             }
         }
-
+    }
+    
+    public void RemoverUsuarios(Atividade atividade, Scanner input)
+    {
         System.out.println("Qual sera a quantidade de usuarios removidos? 0 para nenhum");
-        quant = U.LerInt(input);
+        int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
@@ -71,12 +92,17 @@ public class Atividade {
 
             if (usuario != null)
             {
+                usuario.setAtividade(0);
+                usuario.getTarefas().clear();
                 atividade.getUsuarios().remove(usuario);
             }
         }
+    }
 
+    public void AdicionarTarefas(Atividade atividade, Scanner input)
+    {
         System.out.println("Qual sera a quantidade de tarefas adicionadas? 0 para nenhuma: ");
-        quant = U.LerInt(input);
+        int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
@@ -85,20 +111,29 @@ public class Atividade {
             System.out.println("Digite a descricao da tarefa: ");
             String descTarefa = input.nextLine();
 
-            System.out.println("Digite o nome do profissional que realizara a tarefa: ");
+            System.out.println("Digite o RG do profissional que realizara a tarefa: ");
             int respTarefa = U.LerInt(input);
+            Usuario user = U.BuscarUsuario(atividade.getUsuarios(), respTarefa);
 
-            Tarefa tarefa = new Tarefa(descTarefa, respTarefa);
-            atividade.setTarefas(tarefa);
+            if (user != null)
+            {
+                Tarefa tarefa = new Tarefa(descTarefa, respTarefa);
+                user.setTarefas(tarefa);
+                atividade.setTarefas(tarefa);
+            }
         }
-
+    }
+    
+    public void RemoverTarefas(Atividade atividade, Scanner input)
+    {
         System.out.println("Qual sera a quantidade de tarefas removidas? 0 para nenhuma");
-        quant = U.LerInt(input);
+        int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o RG do responsável pela tarefa que deseja remover: ");
             int respTarefa = U.LerInt(input);
+            Usuario responsavel = U.BuscarUsuario(atividade.getUsuarios(), respTarefa);
 
             for (Tarefa item : atividade.getTarefas())
             {
@@ -111,6 +146,8 @@ public class Atividade {
                     if (dec == 1)
                     {
                         atividade.getTarefas().remove(item);
+                        responsavel.getTarefas().remove(item);
+                        item = null;
                         break;
                     }
                 }

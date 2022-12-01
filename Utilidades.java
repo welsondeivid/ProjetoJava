@@ -68,7 +68,8 @@ public class Utilidades {
 
     public void DadosUser(Usuario user)
     {
-        System.out.println("Nome: "+user.getNome());
+        System.out.println(user);
+        /*System.out.println("Nome: "+user.getNome());
         System.out.println("Email: "+user.getEmail());
 
         if (user.getTipo().equals("Grad"))
@@ -153,7 +154,7 @@ public class Utilidades {
             {
                 System.out.println("Disponivel para intercambio");
             }
-        }
+        }*/
     }
 
     public void DadosAtiv(Atividade ativ)
@@ -294,19 +295,33 @@ public class Utilidades {
         MostrarDataHora(proj.getTempoBolsaAnalista());
     }
 
-    public void MostrarDataHora (LocalDateTime tempo)
+    public String MostrarDataHora (LocalDateTime tempo)
     {
         if (tempo != null)
         {
             DateTimeFormatter dataForm = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	        DateTimeFormatter horaForm = DateTimeFormatter.ofPattern("HH:mm");
 
-            System.out.println("Data: "+dataForm.format(tempo));
-            System.out.println("Hora: "+horaForm.format(tempo));
+            return  "Data: "+dataForm.format(tempo)+"\n"+
+                    "Hora: "+horaForm.format(tempo);
         }
         else
         {
-            System.out.println("Falta Definir");
+            return "Falta Definir";
         }
+    }
+
+    public String ChecarTipoUsuario (String tipo)
+    {
+        if (tipo.equals("Grad") || tipo.equals("Mest") || tipo.equals("Dout"))
+        {
+            return "Disc";
+        }
+        else if (tipo.equals("Prof") || tipo.equals("Pesq"))
+        {
+            return "Doce";
+        }
+
+        return null;
     }
 }
