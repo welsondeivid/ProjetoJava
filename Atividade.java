@@ -28,22 +28,22 @@ public class Atividade {
         this.setStatus("Iniciada");
     }
 
-    public void EditarAtividade(Projeto project, Atividade atividade, Scanner input)
+    public void EditarAtividade(Projeto project, Scanner input)
     {
-        DefinirResponsavel(atividade, input);
+        DefinirResponsavel(input);
 
-        AdicionarUsuarios(project, atividade, input);
+        AdicionarUsuarios(project, input);
 
-        RemoverUsuarios(atividade, input);
+        RemoverUsuarios(input);
 
-        AdicionarTarefas(atividade, input);
+        AdicionarTarefas(input);
 
-        RemoverTarefas(atividade, input);
+        RemoverTarefas(input);
     }
 
-    public void DefinirResponsavel(Atividade atividade, Scanner input)
+    public void DefinirResponsavel(Scanner input)
     {
-        Usuario respAtual = U.BuscarUsuario(atividade.getUsuarios(), atividade.getIdResponsavel());
+        Usuario respAtual = U.BuscarUsuario(this.getUsuarios(), this.getIdResponsavel());
 
         System.out.print("Responsavel atual pela atividade: ");
         System.out.println(respAtual.getNome());
@@ -54,16 +54,18 @@ public class Atividade {
         if (decisao == 1)
         {
             System.out.println("Digite o RG do novo Responsavel");
+            U.ListarUsers(this.getUsuarios());
             int checkIdU = U.LerInt(input);
-            Usuario idResponsavel = U.BuscarUsuario(atividade.getUsuarios(), checkIdU);
-            atividade.setIdResponsavel(idResponsavel.getId());
-            atividade.setUsuarios(idResponsavel);
+            Usuario idResponsavel = U.BuscarUsuario(this.getUsuarios(), checkIdU);
+            this.setIdResponsavel(idResponsavel.getId());
+            this.setUsuarios(idResponsavel);
         }
     }
     
-    public void AdicionarUsuarios(Projeto project, Atividade atividade, Scanner input)
+    public void AdicionarUsuarios(Projeto project,Scanner input)
     {
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
+        U.ListarUsers(project.getProjetistas());
         int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
@@ -74,32 +76,33 @@ public class Atividade {
 
             if (usuario != null)
             {
-                atividade.setUsuarios(usuario);
+                this.setUsuarios(usuario);
             }
         }
     }
     
-    public void RemoverUsuarios(Atividade atividade, Scanner input)
+    public void RemoverUsuarios(Scanner input)
     {
         System.out.println("Qual sera a quantidade de usuarios removidos? 0 para nenhum");
+        U.ListarUsers(this.getUsuarios());
         int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o RG do usuario que deseja remover: ");
             int checkIdU = U.LerInt(input);
-            Usuario usuario = U.BuscarUsuario(atividade.getUsuarios(), checkIdU);
+            Usuario usuario = U.BuscarUsuario(this.getUsuarios(), checkIdU);
 
             if (usuario != null)
             {
                 usuario.setAtividade(0);
                 usuario.getTarefas().clear();
-                atividade.getUsuarios().remove(usuario);
+                this.getUsuarios().remove(usuario);
             }
         }
     }
 
-    public void AdicionarTarefas(Atividade atividade, Scanner input)
+    public void AdicionarTarefas(Scanner input)
     {
         System.out.println("Qual sera a quantidade de tarefas adicionadas? 0 para nenhuma: ");
         int quant = U.LerInt(input);
@@ -113,18 +116,18 @@ public class Atividade {
 
             System.out.println("Digite o RG do profissional que realizara a tarefa: ");
             int respTarefa = U.LerInt(input);
-            Usuario user = U.BuscarUsuario(atividade.getUsuarios(), respTarefa);
+            Usuario user = U.BuscarUsuario(this.getUsuarios(), respTarefa);
 
             if (user != null)
             {
                 Tarefa tarefa = new Tarefa(descTarefa, respTarefa);
                 user.setTarefas(tarefa);
-                atividade.setTarefas(tarefa);
+                this.setTarefas(tarefa);
             }
         }
     }
     
-    public void RemoverTarefas(Atividade atividade, Scanner input)
+    public void RemoverTarefas(Scanner input)
     {
         System.out.println("Qual sera a quantidade de tarefas removidas? 0 para nenhuma");
         int quant = U.LerInt(input);
@@ -132,10 +135,12 @@ public class Atividade {
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o RG do responsável pela tarefa que deseja remover: ");
+            U.ListarTasks(this.getTarefas());
+            
             int respTarefa = U.LerInt(input);
-            Usuario responsavel = U.BuscarUsuario(atividade.getUsuarios(), respTarefa);
+            Usuario responsavel = U.BuscarUsuario(this.getUsuarios(), respTarefa);
 
-            for (Tarefa item : atividade.getTarefas())
+            for (Tarefa item : this.getTarefas())
             {
                 if (item.getProfissional() == respTarefa)
                 {
@@ -145,7 +150,7 @@ public class Atividade {
                     int dec = U.LerInt(input);
                     if (dec == 1)
                     {
-                        atividade.getTarefas().remove(item);
+                        this.getTarefas().remove(item);
                         responsavel.getTarefas().remove(item);
                         item = null;
                         break;
@@ -219,5 +224,16 @@ public class Atividade {
     public void setStatus(String status)
     {
         this.status = status;
+    }
+
+    @Override
+    public String toString()
+    {
+        String respNome = U.BuscarUsuario(this.getUsuarios(), this.getIdResponsavel()).getNome();
+        
+        return  "Atividade descrita: "+this.getDesc()+"\n"+
+                "Responsavel pela Atividade: "+respNome+"\n"+
+                "Inicio da Atividade: "+this.getInicio()+"\n"+
+                "Termino da Atividade: "+this.getTermino()+"\n";
     }
 }

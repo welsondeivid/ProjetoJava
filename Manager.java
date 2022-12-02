@@ -4,6 +4,8 @@ import java.util.Scanner;
 //Polimento: Printar as listas para opcao
 //Login e recuperacao de senha
 //tratar os erros nos else's
+//Sempre que houver uma leitura do teclado para escolha, transformar em um Menu
+//Em cada for com if (obj != null), tratar o else
 
 public class Manager {
 
@@ -74,7 +76,7 @@ public class Manager {
                 System.out.println("Digite sua senha: "); //Crie uma confirmação
                 String senhaUser = input.nextLine();
 
-                System.out.println("Digite o seu tipo de usuario: "); // Especifique os tipos permitidos
+                System.out.println("Digite o seu tipo de usuario: ");
                 for (int i = 0; i < tipos.length; i++)
                 {
                     System.out.println(tipos[i]);
@@ -131,8 +133,7 @@ public class Manager {
                 }
                 else
                 {
-                    System.out.println("Campos diferentes de qualquer usuario no sitema");
-                    System.out.println("Tente de novo");
+                    System.out.println("ID do usuario fora no sitema");
                 }
             }
 

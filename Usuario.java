@@ -5,6 +5,7 @@ import java.util.Scanner;
 public abstract class Usuario
 {
     Utilidades U = new Utilidades();
+    Menu menu = new Menu();
 
     private int id = -1;
     private String nome = null;
@@ -27,7 +28,7 @@ public abstract class Usuario
         setId(id);
     }
 
-    public void AlterarSenha (Usuario user, Scanner input)
+    public void AlterarSenha (Scanner input)
     {
         System.out.println("Sua senha atual é "+this.senha);
         System.out.println("Gostaria de mudar? 1 para sim");
@@ -93,9 +94,7 @@ public abstract class Usuario
             {
                 System.out.println("Tarefa selecionada: "+item.getDesc());
 
-                System.out.println("Digite 0 para escolher de novo");
-                System.out.println("Digite 1 para marcar como Iniciada");
-                System.out.println("Digite 2 para marcar como Finalizada");
+                menu.MenuEditarTarefa();
 
                 int decisao = U.LerInt(input);
 

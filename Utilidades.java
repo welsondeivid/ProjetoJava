@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -64,6 +65,67 @@ public class Utilidades {
         }
 
         return ativ;
+    }
+
+    public void ListarTasks (ArrayList<Tarefa> tasks)
+    {
+        for (Tarefa item : tasks)
+        {
+            System.out.println(item.getDesc());
+            System.out.println(item.getStatus());
+            System.out.println(item.getProfissional());
+        }
+    }
+    
+    public void ListarUsers(ArrayList<Usuario> users)
+    {
+        for (Usuario item : users)
+        {
+            System.out.println(item.getNome());
+            System.out.println(item.getId());
+        }
+    }
+
+    public void ListarDocentes (ArrayList<Usuario> users)
+    {
+        for (Usuario item : users)
+        {
+            if (item instanceof Docente)
+            {
+                System.out.println(item.getNome());
+                System.out.println(item.getId());
+            }
+        }
+    }
+
+    public void ListarDiscentes (ArrayList<Usuario> users)
+    {
+        for (Usuario item : users)
+        {
+            if (item instanceof Discente)
+            {
+                System.out.println(item.getNome());
+                System.out.println(item.getId());
+            }
+        }
+    }
+    
+    public void ListarAtivs(ArrayList<Atividade> ativs)
+    {
+        for (Atividade item : ativs)
+        {
+            System.out.println(item.getDesc());
+            System.out.println(item.getId());
+        }
+    }
+
+    public void ListarProjs(ArrayList<Projeto> projs)
+    {
+        for (Projeto item : projs)
+        {
+            System.out.println(item.getDesc());
+            System.out.println(item.getId());
+        }
     }
 
     public void DadosUser(Usuario user)
@@ -159,7 +221,8 @@ public class Utilidades {
 
     public void DadosAtiv(Atividade ativ)
     {
-        System.out.println("Atividade descrita: ");
+        System.out.println(ativ);
+        /*System.out.println("Atividade descrita: ");
         System.out.println(ativ.getDesc());
 
         System.out.print("Responsavel pela Atividade: ");
@@ -169,7 +232,25 @@ public class Utilidades {
         MostrarDataHora(ativ.getInicio());
 
         System.out.println("Termino da Atividade: ");
-        MostrarDataHora(ativ.getTermino());
+        MostrarDataHora(ativ.getTermino());*/
+    }
+
+    public void DadosProj(Projeto proj)
+    {
+        System.out.println(proj);
+        /*System.out.println("Projeto descrito: ");
+        System.out.println(proj.getDesc());
+
+        System.out.print("Status do Projeto: "+proj.getStatus());
+
+        System.out.println("Inicio do Projeto: ");
+        MostrarDataHora(proj.getInicio());
+        
+        System.out.println("Termino do Projeto: ");
+        MostrarDataHora(proj.getTermino());
+
+        System.out.println("Coordenador do Projeto: ");
+        System.out.println(BuscarUsuario(proj.getProjetistas(), proj.getIdCoordenador()).getNome());*/
     }
 
     public void RelatorioAtiv (Atividade ativ)
@@ -226,23 +307,6 @@ public class Utilidades {
         }
     }
 
-    public void DadosProj(Projeto proj)
-    {
-        System.out.println("Projeto descrito: ");
-        System.out.println(proj.getDesc());
-
-        System.out.println("Status do Projeto: "+proj.getStatus());
-
-        System.out.println("Inicio do Projeto: ");
-        MostrarDataHora(proj.getInicio());
-        
-        System.out.println("Termino do Projeto: ");
-        MostrarDataHora(proj.getTermino());
-
-        System.out.println("Coordenador do Projeto: ");
-        System.out.println(BuscarUsuario(proj.getProjetistas(), proj.getIdCoordenador()));
-    }
-
     public void RelatorioProj(Projeto proj)
     {
         System.out.println("Projeto descrito: ");
@@ -295,7 +359,7 @@ public class Utilidades {
         MostrarDataHora(proj.getTempoBolsaAnalista());
     }
 
-    public String MostrarDataHora (LocalDateTime tempo)
+    public String MostrarDataHora(LocalDateTime tempo)
     {
         if (tempo != null)
         {
@@ -311,6 +375,31 @@ public class Utilidades {
         }
     }
 
+    public ArrayList<Discente> ChecarPagamento(ArrayList<Usuario> users, String func)
+    {
+        ArrayList <Discente> pagar = new ArrayList<Discente>();
+        System.out.println(func);
+        LocalDateTime dtAtual = LocalDateTime.now();
+
+        for (Usuario item : users)
+        {
+            if (item instanceof Discente)
+            {
+                Discente permitido = (Discente)item;
+                LocalDateTime dtBolsista = permitido.getDiaPag();
+                long dias = Duration.between(dtBolsista, dtAtual).toDays();
+
+                if (dias >= 30)
+                {
+                    System.out.println("Nome: "+item.getNome());
+                    System.out.println("Nome: "+item.getId());
+                    pagar.add(permitido);
+                }
+            }
+        }
+        return pagar;
+    }
+    
     public String ChecarTipoUsuario (String tipo)
     {
         if (tipo.equals("Grad") || tipo.equals("Mest") || tipo.equals("Dout"))

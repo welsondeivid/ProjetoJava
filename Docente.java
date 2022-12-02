@@ -11,11 +11,15 @@ public class Docente extends Usuario{
 
     public void IngressarProjeto(Projeto project)
     {
-        if (project != null)
+        if (project != null && this.getProjeto() == 0)
         {
             this.setProjeto(project.getId());
             project.setProjetistas(this);
             this.setDiaIngresso(LocalDateTime.now());
+        }
+        else
+        {
+            System.out.println("Usuario ja se encontra em projeto");
         }
     }
     

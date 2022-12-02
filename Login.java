@@ -1,7 +1,6 @@
 import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.Duration;
 import java.util.ArrayList;
 
 public class Login
@@ -35,6 +34,8 @@ public class Login
 
                     if (project != null && user.getId() == project.getIdCoordenador())
                     {
+                        System.out.println("Coordenador identificado");
+
                         menu.MenuProjeto();
 
                         int cmdProjeto = -1;
@@ -45,64 +46,68 @@ public class Login
 
                             if (cmdProjeto == 1)
                             {
-                                project.EditarProjeto(m.getUsuarios(), project, input, format);
+                                project.EditarProjeto(m.getUsuarios(), input, format);
                             }
                             else if (cmdProjeto == 2)
                             {
-                                project.DesignarCoordenador(m.getUsuarios(), input, project);
+                                project.DesignarCoordenador(m.getUsuarios(), input);
                             }
                             else if (cmdProjeto == 3)
                             {
-                                System.out.println ("Deseja 1 = Adicionar ou 2 = Remover ?");
+                                menu.MenuAddRemove();
                                 int num = U.LerInt(input);
 
                                 if (num == 1)
                                 {
-                                    project.AdicionarUsuarios(m.getUsuarios(), input, project);
+                                    project.AdicionarUsuarios(m.getUsuarios(), input);
                                 }
                                 else if (num == 2)
                                 {
-                                    project.RemoverUsuarios(project.getProjetistas(), input, project);
+                                    project.RemoverUsuarios(project.getProjetistas(), input);
                                 }
                             }
                             else if (cmdProjeto == 4)
                             {
-                                System.out.println ("Deseja 1 = Adicionar ou 2 = Remover ?");
+                                project.RemoverIntercambista(input);
+                            }
+                            else if (cmdProjeto == 5)
+                            {
+                                menu.MenuAddRemove();
                                 int num = U.LerInt(input);
 
                                 if (num == 1)
                                 {
-                                    project.AdicionarAtividades(format, input, project);
+                                    project.AdicionarAtividades(format, input);
                                 }
                                 else if (num == 2)
                                 {
 
-                                    project.RemoverAtividades(input, project);
+                                    project.RemoverAtividades(input);
                                 }
-                            }
-                            else if (cmdProjeto == 5)
-                            {
-                                project.DefinirBolsa("Desenvolvedor", project, input);
                             }
                             else if (cmdProjeto == 6)
                             {
-                                project.DefinirBolsa("Testador", project, input);
+                                project.DefinirBolsa("Desenvolvedor", input);
                             }
                             else if (cmdProjeto == 7)
                             {
-                                project.DefinirBolsa("Analista", project, input); 
+                                project.DefinirBolsa("Testador", input);
                             }
                             else if (cmdProjeto == 8)
                             {
-                                project.DefinirPrazoBolsa("Desenvolvedor", project, input, format);
+                                project.DefinirBolsa("Analista", input); 
                             }
                             else if (cmdProjeto == 9)
                             {
-                                project.DefinirPrazoBolsa("Testador", project, input, format);
+                                project.DefinirPrazoBolsa("Desenvolvedor", input, format);
                             }
                             else if (cmdProjeto == 10)
                             {
-                                project.DefinirPrazoBolsa("Analista", project, input, format);
+                                project.DefinirPrazoBolsa("Testador", input, format);
+                            }
+                            else if (cmdProjeto == 11)
+                            {
+                                project.DefinirPrazoBolsa("Analista", input, format);
                             }
                             
                             menu.MenuProjeto();
@@ -137,27 +142,27 @@ public class Login
                                 {
                                     if (cmdAtividade == 1)
                                     {
-                                        atividade.EditarAtividade(project, atividade, input);
+                                        atividade.EditarAtividade(project, input);
                                     }
                                     else if (cmdAtividade == 2)
                                     {
-                                        atividade.DefinirResponsavel(atividade, input);
+                                        atividade.DefinirResponsavel(input);
                                     }
                                     if (cmdAtividade == 3)
                                     {
-                                        atividade.AdicionarUsuarios(project, atividade, input);
+                                        atividade.AdicionarUsuarios(project, input);
                                     }
                                     else if (cmdAtividade == 4)
                                     {
-                                        atividade.RemoverUsuarios(atividade, input);
+                                        atividade.RemoverUsuarios(input);
                                     }
                                     else if (cmdAtividade == 5)
                                     {
-                                        atividade.AdicionarTarefas(atividade, input);
+                                        atividade.AdicionarTarefas(input);
                                     }
                                     else if (cmdAtividade == 6)
                                     {
-                                        atividade.RemoverTarefas(atividade, input);
+                                        atividade.RemoverTarefas(input);
                                     }
                                 }
                             }
@@ -178,23 +183,23 @@ public class Login
 
                             if (cmdUsuario == 1)
                             {
-                                user.AlterarSenha(user, input);
+                                user.AlterarSenha(input);
                             }
                             else if (cmdUsuario == 2)
                             {
                                 System.out.println("Digite o ID do projeto ao qual gostaria de ingressar: ");
+                                U.ListarProjs(m.getProjetos());
                                 int checkIdP = U.LerInt(input);
+
                                 Projeto project = U.BuscarProjeto(m.getProjetos(), checkIdP);
 
                                 user.IngressarProjeto(project);
                             }
                             else if (cmdUsuario == 3)
                             {
-                                System.out.println("Digite o ID do projeto em que a atividade esta localizada: ");
-                                int checkIdP = U.LerInt(input);
-                                Projeto project = U.BuscarProjeto(m.getProjetos(), checkIdP);
-
-                                user.IngressarAtividade(project, input);
+                                Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
+                                
+                                if (project != null )   user.IngressarAtividade(project, input);
                             }
 
                             else if (cmdUsuario == 4)
@@ -205,7 +210,7 @@ public class Login
                     }
                 }
                 
-                else if (cmdLogin == 5) // continuar daqui
+                else if (cmdLogin == 5) // continue daqui, procurar por possiveis listas e menus
                 {
                     System.out.println("Somente Coordenadores podem alterar o Status de um projeto: ");
 
@@ -256,69 +261,76 @@ public class Login
                                         System.out.println("Status alterado para 'Concluído'");
                                         project.setStatus("Concluído");
                                     }
-                                    //Tratar, talvez uma lista
+                                    else
+                                    {
+                                        System.out.println("Alguma(s) atividades ainda não foram concluídas");
+                                        for (Atividade item : ativs)
+                                        {
+                                            System.out.println(item.getId()+": "+item.getDesc());
+                                        }
+                                    }
                                 }
                             }    
                         }
                     }
                     else
                     {
-                        System.out.println("Hi");
+                        System.out.println("Erro: usuario nao é coordenador");
                     }
                 }
 
                 else if (cmdLogin == 6)
                 {
-                System.out.println("O que gostaria de consultar?");
-                System.out.println("Digite 1 para consultar um usuario");
-                System.out.println("Digite 2 para consultar uma atividade");
-                System.out.println("Digite 3 para consultar um projeto");
+                    System.out.println("O que gostaria de consultar?");
+                    System.out.println("Digite 1 para consultar um usuario");
+                    System.out.println("Digite 2 para consultar uma atividade");
+                    System.out.println("Digite 3 para consultar um projeto");
 
-                int cmdConsulta = U.LerInt(input);
+                    int cmdConsulta = U.LerInt(input);
 
-                if (cmdConsulta == 1)
-                {
-                        System.out.println("Digite o RG do usuario:");
-                        int checkIdU = U.LerInt(input);
-                        Usuario usuario = U.BuscarUsuario(m.getUsuarios(), checkIdU);
+                    if (cmdConsulta == 1)
+                    {
+                            System.out.println("Digite o RG do usuario:");
+                            int checkIdU = U.LerInt(input);
+                            Usuario usuario = U.BuscarUsuario(m.getUsuarios(), checkIdU);
 
-                        if (usuario != null)
-                        {
-                            System.out.println("Dados do usuario encontrado: ");
-                            U.DadosUser(usuario);
-                        }
-                }
-                else if (cmdConsulta == 2)
-                {
-                        System.out.println(("Digite o id do projeto onde a atividade esta localizda: "));
-                        int checkIdP = U.LerInt(input);
-                        Projeto project = U.BuscarProjeto(m.getProjetos(), checkIdP);
-
-                        if (project != null)
-                        {
-                            System.out.println("Digite o id da atividade: ");
-                            int checkIdA = U.LerInt(input);
-                            Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
-
-                            if (atividade != null)
+                            if (usuario != null)
                             {
-                                System.out.println("Dados da atividade encontrada: ");
-                                U.DadosAtiv(atividade);
+                                System.out.println("Dados do usuario encontrado: ");
+                                U.DadosUser(usuario);
                             }
-                        }
-                }
-                else if (cmdConsulta == 3)
-                {
-                        System.out.println(("Digite o id do projeto: "));
-                        int checkIdP = U.LerInt(input);
-                        Projeto project = U.BuscarProjeto(m.getProjetos(), checkIdP);
+                    }
+                    else if (cmdConsulta == 2)
+                    {
+                            System.out.println(("Digite o id do projeto onde a atividade esta localizda: "));
+                            int checkIdP = U.LerInt(input);
+                            Projeto project = U.BuscarProjeto(m.getProjetos(), checkIdP);
 
-                        if (project != null)
-                        {
-                            System.out.println("Dados do projeto encontrado: ");
-                            U.DadosProj(project);
-                        }
-                }
+                            if (project != null)
+                            {
+                                System.out.println("Digite o id da atividade: ");
+                                int checkIdA = U.LerInt(input);
+                                Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
+
+                                if (atividade != null)
+                                {
+                                    System.out.println("Dados da atividade encontrada: ");
+                                    U.DadosAtiv(atividade);
+                                }
+                            }
+                    }
+                    else if (cmdConsulta == 3)
+                    {
+                            System.out.println(("Digite o id do projeto: "));
+                            int checkIdP = U.LerInt(input);
+                            Projeto project = U.BuscarProjeto(m.getProjetos(), checkIdP);
+
+                            if (project != null)
+                            {
+                                System.out.println("Dados do projeto encontrado: ");
+                                U.DadosProj(project);
+                            }
+                    }
                 }
 
                 else if (cmdLogin == 7)
@@ -327,39 +339,42 @@ public class Login
                     System.out.println("Somente Coordenadores podem checar os relatorios das atividades de um projeto");
                     System.out.println("Responsaveis podem checar o relatorio de sua propria atividade");
                     
-                    Usuario userCheck = U.BuscarUsuario(m.getUsuarios(), user.getId());
+                    Docente userCheck = user;
                     Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
 
-                    if (userCheck != null && userCheck instanceof Docente)
+                    if (userCheck.getCoord())
                     {
-                        Docente usuario = (Docente)user;
-                        if (usuario.getCoord())
-                        {
-                            System.out.println("Digite 1 para: Relatorio de Projeto");
-                            System.out.println("Digite 2 para: Relatorios das Atividades");
+                        System.out.println("Coordenador identificado");
 
-                            int decisao = U.LerInt(input);
-                            
-                            if (decisao == 1)
+                        System.out.println("Digite 1 para: Relatorio de Projeto");
+                        System.out.println("Digite 2 para: Relatorios das Atividades");
+
+                        int decisao = U.LerInt(input);
+                        
+                        if (decisao == 1)
+                        {
+                            U.RelatorioProj(project);
+                        }
+                        else if (decisao == 2)
+                        {     
+                            for (Atividade item : project.getAtividades())
                             {
-                                U.RelatorioProj(project);
-                            }
-                            else if (decisao == 2)
-                            {     
-                                for (Atividade item : project.getAtividades())
-                                {
-                                    U.RelatorioAtiv(item);
-                                }                    
-                            }
+                                U.RelatorioAtiv(item);
+                            }                    
+                        }
+                    }
+                    else
+                    {
+                        Atividade atividade = U.BuscarAtividade(project.getAtividades(), userCheck.getAtividade());
+
+                        if (atividade != null && user.getId() == atividade.getIdResponsavel())
+                        {
+                            System.out.println("Responsavel identificado");
+                            U.RelatorioAtiv(atividade);
                         }
                         else
                         {
-                            Atividade atividade = U.BuscarAtividade(project.getAtividades(), usuario.getAtividade());
-
-                            if (atividade != null && user.getId() == atividade.getIdResponsavel())
-                            {
-                                U.RelatorioAtiv(atividade);
-                            }
+                            System.out.println("Erro: Sem acesso permitido para relatorios");
                         }
                     }
                 }
@@ -367,154 +382,105 @@ public class Login
                 else if (cmdLogin == 8)
                 {
                     System.out.println("Somente Coordenadores podem fazer o pagamento");
-                    Usuario coord = U.BuscarUsuario(m.getUsuarios(), user.getId());
+                    Docente coordenador = user;
 
-                    if (coord != null && coord instanceof Docente)
+                    if (coordenador.getCoord())
                     {
-                        Docente coordenador = (Docente)coord;
-                        if (coordenador.getCoord())
+                        System.out.println("Coordenador identificado");
+
+                        Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
+                        ArrayList <Discente> pagar = new ArrayList<Discente>();
+
+                        System.out.println("Lista dos bolsistas que podem receber a bolsa: ");
+
+                        pagar.addAll(U.ChecarPagamento(project.getDesenvolvedores(), "Desenvolvedores: \n"));
+                        
+                        pagar.addAll(U.ChecarPagamento(project.getTestadores(), "Testadores:  \n"));
+                        
+                        pagar.addAll(U.ChecarPagamento(project.getAnalistas(), "Analistas:  \n"));
+
+                        System.out.println("Gostaria de fazer o pagamento?");
+                        System.out.println("0 para: nenhum");
+                        System.out.println("1 para: todos");
+                        System.out.println("2 para: alguns");
+
+                        int cmdPag = U.LerInt(input);
+
+                        if (cmdPag == 1)
                         {
-                            Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
-                            ArrayList <Discente> pagar = new ArrayList<Discente>();
-                            LocalDateTime dtAtual = LocalDateTime.now();
-
-                            System.out.println("Lista dos bolsistas que podem receber a bolsa: ");
-                            System.out.println("Desenvolvedores: ");
-                            
-                            for (Usuario item : project.getDesenvolvedores())
+                            for (Discente item : pagar)
                             {
-                                if (item instanceof Discente)
-                                {
-                                    Discente permitido = (Discente)item;
-                                    LocalDateTime dtBolsista = permitido.getDiaPag();
-                                    long dias = Duration.between(dtBolsista, dtAtual).toDays();
-
-                                    if (dias >= 30)
-                                    {
-                                        System.out.println("Nome: "+item.getNome());
-                                        System.out.println("Nome: "+item.getId());
-                                        pagar.add(permitido);
-                                    }
-                                }
+                                item.setDiaPag(LocalDateTime.now());
                             }
 
-                            System.out.println("Testadores: ");
-                            for (Usuario item : project.getTestadores())
-                            {
-                                if (item instanceof Discente)
-                                {
-                                    Discente permitido = (Discente)item;
-                                    LocalDateTime dtBolsista = permitido.getDiaPag();
-                                    long dias = Duration.between(dtBolsista, dtAtual).toDays();
-
-                                    if (dias >= 30)
-                                    {
-                                        System.out.println("Nome: "+item.getNome());
-                                        System.out.println("Nome: "+item.getId());
-                                        pagar.add(permitido);
-                                    }
-                                }
-                            }
-
-                            System.out.println("Analistas: ");
-                            for (Usuario item : project.getAnalistas())
-                            {
-                                if (item instanceof Discente)
-                                {
-                                    Discente permitido = (Discente)item;
-                                    LocalDateTime dtBolsista = permitido.getDiaPag();
-                                    long dias = Duration.between(dtBolsista, dtAtual).toDays();
-
-                                    if (dias >= 30)
-                                    {
-                                        System.out.println("Nome: "+item.getNome());
-                                        System.out.println("Nome: "+item.getId());
-                                        pagar.add(permitido);
-                                    }
-                                }
-                            }
-
-                            System.out.println("Gostaria de fazer o pagamento?");
-                            System.out.println("0 para: nenhum");
-                            System.out.println("1 para: todos");
-                            System.out.println("2 para: alguns");
-
-                            int cmdPag = U.LerInt(input);
-
-                            if (cmdPag == 1)
-                            {
-                                for (Discente item : pagar)
-                                {
-                                    item.setDiaPag(LocalDateTime.now());
-                                }
-
-                                System.out.println("Pagamento Realizado a todos");
-                            }
-                            else if (cmdPag == 2)
-                            {
-                                for (Discente item : pagar)
-                                {
-                                    System.out.println("Gostaria de pagar? 1 para sim");
-                                    System.out.println(item.getNome());
-                                    System.out.println(item.getId());
-
-                                    int num = U.LerInt(input);
-                                    if (num == 1)   item.setDiaPag(LocalDateTime.now());
-                                } 
-                            }
-                            pagar = null;
+                            System.out.println("Pagamento Realizado a todos");
                         }
+                        else if (cmdPag == 2)
+                        {
+                            for (Discente item : pagar)
+                            {
+                                System.out.println("Gostaria de pagar? 1 para sim");
+                                System.out.println(item.getNome());
+                                System.out.println(item.getId());
+
+                                int num = U.LerInt(input);
+                                if (num == 1)   item.setDiaPag(LocalDateTime.now());
+                            } 
+                        }
+                        pagar = null;
                     }
                 }
 
                 else if (cmdLogin == 9)
                 {
                     System.out.println("Somente Coordenadores podem adicionar intercambistas em projetos");
-                    Usuario coordenador = U.BuscarUsuario(m.getUsuarios(), user.getId());
-                    if (coordenador != null)
+                    Docente coordenador = user;
+                    
+                    if (coordenador.getCoord())
                     {
-                        if (coordenador.getCoord())
+                        System.out.println("Coordenador identificado");
+                        Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
+
+                        System.out.println("Digite o RG do usuario que deseja adicionar:");
+                        Usuario checkUser = U.BuscarUsuario(m.getUsuarios(), U.LerInt(input));
+
+                        if (checkUser != null && checkUser instanceof Discente)
                         {
-                            Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
+                            Discente intercamb = (Discente)checkUser;
 
-                            System.out.println("Digite o RG do usuario que deseja adicionar:");
-                            Usuario intercamb = U.BuscarUsuario(m.getUsuarios(), U.LerInt(input));
-
-                            if (intercamb != null)
+                            if (intercamb.getProjInterCam() == 0)
                             {
-                                if (intercamb.getProjInterCam() == 0)
+                                Projeto projInterCam = U.BuscarProjeto(m.getProjetos(), intercamb.getProjeto());
+                                
+                                if (projInterCam != null)
                                 {
-                                    Projeto projInterCam = U.BuscarProjeto(m.getProjetos(), intercamb.getProjeto());
-                                    if (projInterCam != null)
+                                    if (projInterCam != project)
                                     {
-                                        if (projInterCam != project)
-                                        {
-                                            System.out.println("Para qual atividade ele sera atribuido?");
-                                            int checkIdA = U.LerInt(input);
-                                            Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
+                                        System.out.println("Para qual atividade ele sera atribuido?");
+                                        int checkIdA = U.LerInt(input);
+                                        Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
 
-                                            if (atividade != null)
-                                            {
-                                                atividade.setUsuarios(intercamb);
-                                                project.setIntercambista(intercamb);
-                                                intercamb.setProjInterCam(project.getId());
-                                                intercamb.setAtivInterCam(atividade.getId());
-                                            }
-                                        }
-                                        else
+                                        if (atividade != null)
                                         {
-                                            System.out.println("Usuario ja esta alocado nesse projeto");
+                                            atividade.setUsuarios(intercamb);
+                                            project.setIntercambista(intercamb);
+                                            intercamb.setProjInterCam(project.getId());
+                                            intercamb.setAtivInterCam(atividade.getId());
                                         }
                                     }
                                     else
                                     {
-                                        System.out.println("Usuario sem projeto alocado, incapaz de fazer intercambio");
+                                        System.out.println("Usuario ja esta alocado nesse projeto");
                                     }
                                 }
                                 else
                                 {
-                                    System.out.println("Usuario ja faz intercambio");
+                                    System.out.println("Usuario sem projeto alocado, incapaz de fazer intercambio");
                                 }
+                            }
+                            else
+                            {
+                                System.out.println("Usuario ja faz intercambio");
                             }
                         }
                     }
@@ -529,10 +495,17 @@ public class Login
         }
     }
 
-    public void CriarProjeto(Scanner input)
+    public void CriarProjeto(Scanner input) //falar com yuri
     {
         System.out.println("Digite o ID do projeto: ");
         int idProject = U.LerInt(input);
+
+        if (U.BuscarProjeto(m.getProjetos(), idProject) != null)
+        {
+            System.out.println("ID de projeto ja consta no sistema");
+            System.out.println("Falha ao criar projeto");
+            return;
+        }
 
         System.out.println("Digite a descricao do projeto: ");
         String descProject = input.nextLine();
