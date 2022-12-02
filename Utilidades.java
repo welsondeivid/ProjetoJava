@@ -67,6 +67,61 @@ public class Utilidades {
         return ativ;
     }
 
+    public void Consultar (Scanner input, ArrayList<Projeto> projs, ArrayList<Usuario> users)
+    {
+        int cmdConsulta = LerInt(input);
+
+        if (cmdConsulta == 1)
+        {
+                System.out.println("Digite o RG do usuario:");
+                ListarUsers (users);
+
+                int checkIdU = LerInt(input);
+                Usuario usuario = BuscarUsuario(users, checkIdU);
+
+                if (usuario != null)
+                {
+                    System.out.println("Dados do usuario encontrado: ");
+                    DadosUser(usuario);
+                }
+        }
+        else if (cmdConsulta == 2)
+        {
+                System.out.println(("Digite o id do projeto onde a atividade esta localizda: "));
+                ListarProjs(projs);
+
+                int checkIdP = LerInt(input);
+                Projeto project = BuscarProjeto(projs, checkIdP);
+
+                if (project != null)
+                {
+                    System.out.println("Digite o id da atividade: ");
+                    ListarAtivs(project.getAtividades());
+
+                    int checkIdA = LerInt(input);
+                    Atividade atividade = BuscarAtividade(project.getAtividades(), checkIdA);
+
+                    if (atividade != null)
+                    {
+                        System.out.println("Dados da atividade encontrada: ");
+                        DadosAtiv(atividade);
+                    }
+                }
+        }
+        else if (cmdConsulta == 3)
+        {
+                System.out.println(("Digite o id do projeto: "));
+                int checkIdP = LerInt(input);
+                Projeto project = BuscarProjeto(projs, checkIdP);
+
+                if (project != null)
+                {
+                    System.out.println("Dados do projeto encontrado: ");
+                    DadosProj(project);
+                }
+        }
+    }
+    
     public void ListarTasks (ArrayList<Tarefa> tasks)
     {
         for (Tarefa item : tasks)

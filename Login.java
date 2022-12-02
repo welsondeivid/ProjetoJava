@@ -19,6 +19,7 @@ public class Login
             Docente user = (Docente)userLog;
             while (cmdLogin != 0)
             {
+                menu.MenuUsuarioDocente();
                 cmdLogin = U.LerInt(input);
 
                 if (cmdLogin == 1)
@@ -178,7 +179,7 @@ public class Login
 
                         while (cmdUsuario != 0)
                         {
-                            menu.MenuEditarUsuario();
+                            menu.MenuEditarUsuario(true);
                             cmdUsuario = U.LerInt(input);
 
                             if (cmdUsuario == 1)
@@ -186,6 +187,10 @@ public class Login
                                 user.AlterarSenha(input);
                             }
                             else if (cmdUsuario == 2)
+                            {
+                                user.EditarTarefas(input);
+                            }
+                            else if (cmdUsuario == 3)
                             {
                                 System.out.println("Digite o ID do projeto ao qual gostaria de ingressar: ");
                                 U.ListarProjs(m.getProjetos());
@@ -195,27 +200,24 @@ public class Login
 
                                 user.IngressarProjeto(project);
                             }
-                            else if (cmdUsuario == 3)
+                            else if (cmdUsuario == 4)
                             {
                                 Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
                                 
                                 if (project != null )   user.IngressarAtividade(project, input);
                             }
-
-                            else if (cmdUsuario == 4)
-                            {
-                                user.EditarTarefas(input);
-                            }
                         }
                     }
                 }
                 
-                else if (cmdLogin == 5) // continue daqui, procurar por possiveis listas e menus
+                else if (cmdLogin == 5)
                 {
                     System.out.println("Somente Coordenadores podem alterar o Status de um projeto: ");
 
                     if (user.getCoord())
                     {
+                        System.out.println("Coordenador identificado");
+
                         Docente coordenador = user;
                         Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
 
@@ -230,8 +232,7 @@ public class Login
                             if (decisao == 1)
                             {
                                 System.out.println("Escolha para qual Status gostaria de alterar: ");
-                                System.out.println("Digite 1 para 'Iniciado': ");
-                                System.out.println("Digite 2 para 'Concluido': ");
+                                menu.MenuStatusProjeto();
 
                                 decisao = U.LerInt(input);
                                 if (decisao == 1)
@@ -282,56 +283,10 @@ public class Login
                 else if (cmdLogin == 6)
                 {
                     System.out.println("O que gostaria de consultar?");
-                    System.out.println("Digite 1 para consultar um usuario");
-                    System.out.println("Digite 2 para consultar uma atividade");
-                    System.out.println("Digite 3 para consultar um projeto");
+                    menu.MenuConsulta();
 
-                    int cmdConsulta = U.LerInt(input);
-
-                    if (cmdConsulta == 1)
-                    {
-                            System.out.println("Digite o RG do usuario:");
-                            int checkIdU = U.LerInt(input);
-                            Usuario usuario = U.BuscarUsuario(m.getUsuarios(), checkIdU);
-
-                            if (usuario != null)
-                            {
-                                System.out.println("Dados do usuario encontrado: ");
-                                U.DadosUser(usuario);
-                            }
-                    }
-                    else if (cmdConsulta == 2)
-                    {
-                            System.out.println(("Digite o id do projeto onde a atividade esta localizda: "));
-                            int checkIdP = U.LerInt(input);
-                            Projeto project = U.BuscarProjeto(m.getProjetos(), checkIdP);
-
-                            if (project != null)
-                            {
-                                System.out.println("Digite o id da atividade: ");
-                                int checkIdA = U.LerInt(input);
-                                Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
-
-                                if (atividade != null)
-                                {
-                                    System.out.println("Dados da atividade encontrada: ");
-                                    U.DadosAtiv(atividade);
-                                }
-                            }
-                    }
-                    else if (cmdConsulta == 3)
-                    {
-                            System.out.println(("Digite o id do projeto: "));
-                            int checkIdP = U.LerInt(input);
-                            Projeto project = U.BuscarProjeto(m.getProjetos(), checkIdP);
-
-                            if (project != null)
-                            {
-                                System.out.println("Dados do projeto encontrado: ");
-                                U.DadosProj(project);
-                            }
-                    }
-                }
+                    U.Consultar(input, m.getProjetos(), m.getUsuarios());            
+                }                
 
                 else if (cmdLogin == 7)
                 {
@@ -346,8 +301,7 @@ public class Login
                     {
                         System.out.println("Coordenador identificado");
 
-                        System.out.println("Digite 1 para: Relatorio de Projeto");
-                        System.out.println("Digite 2 para: Relatorios das Atividades");
+                        menu.MenuRelatorio();
 
                         int decisao = U.LerInt(input);
                         
@@ -400,9 +354,7 @@ public class Login
                         pagar.addAll(U.ChecarPagamento(project.getAnalistas(), "Analistas:  \n"));
 
                         System.out.println("Gostaria de fazer o pagamento?");
-                        System.out.println("0 para: nenhum");
-                        System.out.println("1 para: todos");
-                        System.out.println("2 para: alguns");
+                        menu.MenuPagamento();
 
                         int cmdPag = U.LerInt(input);
 
@@ -486,13 +438,74 @@ public class Login
                     }
                 }
                 System.out.println("Digite o proximo comando: ");
-                menu.MenuUsuarioDocente();
             }
         }
         else if (userLog instanceof Discente)
         {
             Discente user = (Discente)userLog;
+            while (cmdLogin != 0)
+            {
+                menu.MenuUsuarioDiscente();
+                cmdLogin = U.LerInt(input);
+
+                if (cmdLogin == 1)
+                {
+                    if (user != null)
+                    {
+                        int cmdUsuario = -1;
+
+                        while (cmdUsuario != 0)
+                        {
+                            menu.MenuEditarUsuario(true);
+                            cmdUsuario = U.LerInt(input);
+
+                            if (cmdUsuario == 1)
+                            {
+                                user.AlterarSenha(input);
+                            }
+                            else if (cmdUsuario == 2)
+                            {
+                                user.EditarTarefas(input);
+                            }
+                        }
+                    }
+                }
+                else if (cmdLogin == 2)
+                {
+                    System.out.println("O que gostaria de consultar?");
+                    menu.MenuConsulta();
+
+                    U.Consultar(input, m.getProjetos(), m.getUsuarios());
+                }
+                else if (cmdLogin == 3)
+                {
+                    System.out.print("Um Discente apenas tem acesso a um relatorio de atividade se for o respnsavel");
+                    
+                    Projeto proj = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
+
+                    if (proj != null)
+                    {
+                        Atividade ativ = U.BuscarAtividade(proj.getAtividades(), user.getAtividade());
+
+                        if (ativ != null && ativ.getIdResponsavel() == user.getId())
+                        {
+                            System.out.println("Acesso liberado");
+                            U.RelatorioAtiv(ativ);
+                        }
+                        else
+                        {
+                            System.out.println("Acesso negado: Usuario nao eh o responsavel");
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("Usuario nao esta alocado em um projeto");
+                    }
+                }
+            }
         }
+    
+        return;
     }
 
     public void CriarProjeto(Scanner input) //falar com yuri

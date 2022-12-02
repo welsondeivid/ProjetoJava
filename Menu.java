@@ -38,15 +38,19 @@ public class Menu {
         System.out.println("Digite 4 para: Adicionar ou remover tarefas da atividade");
     }
 
-    public void MenuEditarUsuario()
+    public void MenuEditarUsuario(boolean liberado)
     {
         System.out.println("O que deseja editar? ");
 
         System.out.println("Digite 0  para: Sair");
         System.out.println("Digite 1  para: Alterar a senha");
-        System.out.println("Digite 2  para: Ingressar em um projeto");
-        System.out.println("Digite 3  para: Ingressar em uma atividade");
-        System.out.println("Digite 4  para: Alterar o status de uma tarefa");
+        System.out.println("Digite 2  para: Alterar o status de uma tarefa");
+        
+        if (liberado)
+        {
+            System.out.println("Digite 3  para: Ingressar em um projeto");
+            System.out.println("Digite 4  para: Ingressar em uma atividade");
+        }
     }
     
     public void MenuEditarTarefa()
@@ -83,7 +87,33 @@ public class Menu {
         System.out.println("Digite 1  para: Adicionar");
         System.out.println("Digite 2  para: Remover");
     }
+    
+    public void MenuStatusProjeto()
+    {
+        System.out.println("Digite 1 para 'Iniciado': ");
+        System.out.println("Digite 2 para 'Concluido': ");
+    }
 
+    public void MenuConsulta()
+    {
+        System.out.println("Digite 1 para consultar um usuario");
+        System.out.println("Digite 2 para consultar uma atividade");
+        System.out.println("Digite 3 para consultar um projeto");
+    }
+
+    public void MenuRelatorio()
+    {
+        System.out.println("Digite 1 para: Relatorio de Projeto");
+        System.out.println("Digite 2 para: Relatorios das Atividades");
+    }
+    
+    public void MenuPagamento()
+    {
+        System.out.println("0 para: nenhum");
+        System.out.println("1 para: todos");
+        System.out.println("2 para: alguns");
+    }
+    
     public void MenuFuncUsuario()
     {
         System.out.println("Digite 1  para: Desenvolvedor");

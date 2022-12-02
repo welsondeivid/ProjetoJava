@@ -142,6 +142,7 @@ public class Manager {
         }
         input.close();
     }
+    
     public boolean ChecarStatusDoProjeto (Projeto projeto)
     {
         boolean falha = false;
