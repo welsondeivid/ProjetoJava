@@ -1,5 +1,6 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public abstract class Usuario
 {
@@ -26,6 +27,96 @@ public abstract class Usuario
         setId(id);
     }
 
+    public void AlterarSenha (Usuario user, Scanner input)
+    {
+        System.out.println("Sua senha atual é "+this.senha);
+        System.out.println("Gostaria de mudar? 1 para sim");
+
+        int decisao = U.LerInt(input);
+
+        if (decisao == 1)
+        {
+            System.out.println("Digite a nova senha: ");
+            String novaSenha = input.nextLine();
+
+            // tratamento de erro senha, vazia
+            this.senha = novaSenha;
+        }
+    }
+    
+    public abstract void IngressarProjeto(Projeto project);
+
+    public void IngressarAtividade(Projeto project, Scanner input)
+    {
+        if (project != null)
+        {
+            System.out.println("Digite o ID da atividade a qual gostaria de associar-se: ");
+            int checkIdA = U.LerInt(input);
+            Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
+
+            if (atividade != null)
+            {
+                this.setAtividade(atividade.getId());
+            }
+        }
+    }
+
+    public void EditarTarefas(Scanner input)
+    {
+        System.out.println("Tarefas atribuidas: ");
+
+        Tarefa item = null;
+        for (int i = 0; i <= this.getTarefas().size(); i++)
+        {
+            item = this.getTarefas().get(i);
+            System.out.println((i+1)+":"+item.getDesc());
+        }
+
+        int indTarefa = 0;
+
+        while (indTarefa != -1)
+        {
+            System.out.println("Digite o indice da tarefa que deseja mudar o status: ");
+            System.out.println("-1 para sair");
+
+            indTarefa = U.LerInt(input) - 1;
+            if (indTarefa >= 0 && indTarefa < this.getTarefas().size())
+            {
+                item = this.getTarefas().get(indTarefa);
+            }
+            else
+            {
+                item = null;
+            }
+
+            if (item != null)
+            {
+                System.out.println("Tarefa selecionada: "+item.getDesc());
+
+                System.out.println("Digite 0 para escolher de novo");
+                System.out.println("Digite 1 para marcar como Iniciada");
+                System.out.println("Digite 2 para marcar como Finalizada");
+
+                int decisao = U.LerInt(input);
+
+                if (decisao == 1)
+                {
+                    item.setDesc("Iniciada");
+                    System.out.println("Status Atualizado");
+                }
+                else if (decisao == 2)
+                {
+                    System.out.println("Status Atualizado");
+                    item.setDesc("Finalizada");
+                }
+            }
+            else
+            {
+                System.out.println("Indice invalido");
+            }
+        }
+    }
+    
     public int getId() {
         return this.id;
     }

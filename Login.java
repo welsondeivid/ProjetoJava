@@ -11,12 +11,13 @@ public class Login
     Manager m = new Manager();
     Menu menu = new Menu();
 
-    public void LoginOn(Scanner input, Usuario user)
+    public void LoginOn(Scanner input, Usuario userLog)
     {
         int cmdLogin = -1;
 
-        if (user instanceof Docente)
+        if (userLog instanceof Docente)
         {
+            Docente user = (Docente)userLog;
             while (cmdLogin != 0)
             {
                 cmdLogin = U.LerInt(input);
@@ -164,53 +165,28 @@ public class Login
                     }
                 }
 
-                //Continuar a partir daqui
                 else if (cmdLogin == 4)
                 {
                     if (user != null)
                     {
-                        System.out.println("O que deseja editar? ");
-
-                        System.out.println("Digite 0  para sair: ");
-                        System.out.println("Digite 1 para alterar a senha: ");
-                        System.out.println("Digite 2  para se associar a um projeto: ");
-                        System.out.println("Digite 3  para se associar a uma atividade: ");
-                        System.out.println("Digite 4 para alterar o status de uma tarefa: ");
-
                         int cmdUsuario = -1;
 
                         while (cmdUsuario != 0)
                         {
+                            menu.MenuEditarUsuario();
                             cmdUsuario = U.LerInt(input);
 
                             if (cmdUsuario == 1)
                             {
-                                System.out.println("Sua senha atual é "+user.getSenha());
-                                System.out.println("Gostaria de mudar? 1 para sim");
-
-                                int decisao = U.LerInt(input);
-
-                                if (decisao == 1)
-                                {
-                                    System.out.println("Digite a nova senha: ");
-                                    String novaSenha = input.nextLine();
-
-                                    // tratamento de erro senha, vazia
-                                    user.setSenha(novaSenha);
-                                }
+                                user.AlterarSenha(user, input);
                             }
                             else if (cmdUsuario == 2)
                             {
-                                System.out.println("Digite o ID do projeto ao qual gostaria de associar-se: ");
+                                System.out.println("Digite o ID do projeto ao qual gostaria de ingressar: ");
                                 int checkIdP = U.LerInt(input);
                                 Projeto project = U.BuscarProjeto(m.getProjetos(), checkIdP);
 
-                                if (project != null)
-                                {
-                                    user.setProjeto(project.getId());
-                                    project.setProjetistas(user);
-                                    user.setDiaPag(LocalDateTime.now());
-                                }
+                                user.IngressarProjeto(project);
                             }
                             else if (cmdUsuario == 3)
                             {
@@ -218,142 +194,76 @@ public class Login
                                 int checkIdP = U.LerInt(input);
                                 Projeto project = U.BuscarProjeto(m.getProjetos(), checkIdP);
 
-                                if (project != null)
-                                {
-                                    System.out.println("Digite o ID da atividade a qual gostaria de associar-se: ");
-                                    int checkIdA = U.LerInt(input);
-                                    Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
-
-                                    if (atividade != null)
-                                    {
-                                        user.setAtividade(atividade.getId());
-                                    }
-                                }
+                                user.IngressarAtividade(project, input);
                             }
 
                             else if (cmdUsuario == 4)
                             {
-                                System.out.println("Tarefas atribuidas: ");
-
-                                Tarefa item = null;
-                                for (int i = 0; i <= user.getTarefas().size(); i++)
-                                {
-                                    item = user.getTarefas().get(i);
-                                    System.out.println((i+1)+":"+item.getDesc());
-                                }
-
-                                int indTarefa = 0;
-
-                                while (indTarefa != -1)
-                                {
-                                    System.out.println("Digite o indice da tarefa que deseja mudar o status: ");
-                                    System.out.println("-1 para sair");
-
-                                    indTarefa = U.LerInt(input) - 1;
-                                    if (indTarefa >= 0 && indTarefa < user.getTarefas().size())
-                                    {
-                                        item = user.getTarefas().get(indTarefa);
-                                    }
-                                    else
-                                    {
-                                        item = null;
-                                    }
-
-                                    if (item != null)
-                                    {
-                                        System.out.println("Tarefa selecionada: "+item.getDesc());
-
-                                        System.out.println("Digite 0 para escolher de novo");
-                                        System.out.println("Digite 1 para marcar como Iniciada");
-                                        System.out.println("Digite 2 para marcar como Finalizada");
-
-                                        int decisao = U.LerInt(input);
-
-                                        if (decisao == 1)
-                                        {
-                                            item.setDesc("Iniciada");
-                                            System.out.println("Status Atualizado");
-                                        }
-                                        else if (decisao == 2)
-                                        {
-                                            System.out.println("Status Atualizado");
-                                            item.setDesc("Finalizada");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        System.out.println("Indice invalido");
-                                    }
-                                }
+                                user.EditarTarefas(input);
                             }
                         }
                     }
                 }
                 
-                else if (cmdLogin == 5)
+                else if (cmdLogin == 5) // continuar daqui
                 {
                     System.out.println("Somente Coordenadores podem alterar o Status de um projeto: ");
-                    Usuario coord = U.BuscarUsuario(m.getUsuarios(), user.getId());
 
-                    if (coord != null && coord instanceof Docente)
+                    if (user.getCoord())
                     {
-                        Docente coordenador = (Docente)coord;
+                        Docente coordenador = user;
+                        Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
 
-                        if (coordenador.getCoord())
+                        if (project != null && project.getIdCoordenador() == coordenador.getProjeto())
                         {
-                            Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
+                            System.out.println("Seu projeto é o : "+project.getDesc());
+                            System.out.println("Status atual: "+project.getStatus());
+                            System.out.println("Gostaria de alterar? 1 para sim");
 
-                            if (project != null && project.getIdCoordenador() == coordenador.getProjeto())
+                            int decisao = U.LerInt(input);
+
+                            if (decisao == 1)
                             {
-                                System.out.println("Seu projeto é o : "+project.getDesc());
-                                System.out.println("Status atual: "+project.getStatus());
-                                System.out.println("Gostaria de alterar? 1 para sim");
+                                System.out.println("Escolha para qual Status gostaria de alterar: ");
+                                System.out.println("Digite 1 para 'Iniciado': ");
+                                System.out.println("Digite 2 para 'Concluido': ");
 
-                                int decisao = U.LerInt(input);
-
+                                decisao = U.LerInt(input);
                                 if (decisao == 1)
                                 {
-                                    System.out.println("Escolha para qual Status gostaria de alterar: ");
-                                    System.out.println("Digite 1 para 'Iniciado': ");
-                                    System.out.println("Digite 2 para 'Concluido': ");
+                                    boolean check = m.ChecarStatusDoProjeto(project);
 
-                                    decisao = U.LerInt(input);
-                                    if (decisao == 1)
+                                    if (check)
                                     {
-                                        boolean check = m.ChecarStatusDoProjeto(project);
-
-                                        if (check)
-                                        {
-                                            System.out.println("Status alterado com sucesso");
-                                            project.setStatus("Em andamento");
-                                        }
-                                        else
-                                        {
-                                            System.out.println("Adicione as infos que faltam");
-                                        }
+                                        System.out.println("Status alterado com sucesso");
+                                        project.setStatus("Em andamento");
                                     }
-                                    else if (decisao == 2)
+                                    else
                                     {
-                                        ArrayList<Atividade> ativs = new ArrayList<Atividade>();
-
-                                        for (Atividade item : project.getAtividades())
-                                        {
-                                            if (!item.getStatus().equals("Concluida"))  ativs.add(item);
-                                        }
-                                        if (ativs.isEmpty()) 
-                                        {
-                                            System.out.println("Status alterado para 'Concluído'");
-                                            project.setStatus("Concluído");
-                                        }
-                                        //Tratar, talvez uma lista
+                                        System.out.println("Adicione as infos que faltam");
                                     }
-                                }    
-                            }
+                                }
+                                else if (decisao == 2)
+                                {
+                                    ArrayList<Atividade> ativs = new ArrayList<Atividade>();
+
+                                    for (Atividade item : project.getAtividades())
+                                    {
+                                        if (!item.getStatus().equals("Concluida"))  ativs.add(item);
+                                    }
+                                    if (ativs.isEmpty()) 
+                                    {
+                                        System.out.println("Status alterado para 'Concluído'");
+                                        project.setStatus("Concluído");
+                                    }
+                                    //Tratar, talvez uma lista
+                                }
+                            }    
                         }
-                        else
-                        {
-                            System.out.println("Hi");
-                        }
+                    }
+                    else
+                    {
+                        System.out.println("Hi");
                     }
                 }
 
@@ -613,9 +523,9 @@ public class Login
                 menu.MenuUsuarioDocente();
             }
         }
-        else if (user instanceof Discente)
+        else if (userLog instanceof Discente)
         {
-
+            Discente user = (Discente)userLog;
         }
     }
 

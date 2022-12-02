@@ -36,6 +36,17 @@ public class Menu {
         System.out.println("Digite 4 para adicionar ou remover tarefas da atividade: ");
     }
 
+    public void MenuEditarUsuario()
+    {
+        System.out.println("O que deseja editar? ");
+
+        System.out.println("Digite 0  para sair: ");
+        System.out.println("Digite 1 para alterar a senha: ");
+        System.out.println("Digite 2  para ingressar em um projeto: ");
+        System.out.println("Digite 3  para ingressar em uma atividade: ");
+        System.out.println("Digite 4 para alterar o status de uma tarefa: ");
+    }
+    
     public void MenuUsuarioDocente()
     {
         System.out.println ("Digite 0  para: Sair");

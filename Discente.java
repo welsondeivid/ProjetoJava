@@ -11,6 +11,17 @@ public class Discente extends Usuario{
         super(nome, email, senha, tipo, id);
     }
 
+    public void IngressarProjeto(Projeto project)
+    {
+        if (project != null)
+        {
+            this.setProjeto(project.getId());
+            project.setProjetistas(this);
+            this.setDiaIngresso(LocalDateTime.now());
+            this.setDiaPag(LocalDateTime.now());
+        }
+    }
+    
     public int getProjInterCam() {
         return this.projInterCam;
     }

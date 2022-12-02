@@ -1,3 +1,5 @@
+import java.time.LocalDateTime;
+
 public class Docente extends Usuario{
     
     private boolean coord = false;
@@ -7,6 +9,16 @@ public class Docente extends Usuario{
         super(nome, email, senha, tipo, id);
     }
 
+    public void IngressarProjeto(Projeto project)
+    {
+        if (project != null)
+        {
+            this.setProjeto(project.getId());
+            project.setProjetistas(this);
+            this.setDiaIngresso(LocalDateTime.now());
+        }
+    }
+    
     public boolean getCoord() {
         return this.coord;
     }
