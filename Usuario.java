@@ -28,7 +28,7 @@ public abstract class Usuario
         setId(id);
     }
 
-    public void AlterarSenha (Scanner input)
+    public void AlterarSenha (Scanner input) throws Exception
     {
         System.out.println("Sua senha atual é "+this.senha);
         System.out.println("Gostaria de mudar? 1 para sim");

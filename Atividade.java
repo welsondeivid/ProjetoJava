@@ -62,7 +62,7 @@ public class Atividade implements Lista{
         }
     }
     
-    public void AdicionarUsuarios(Projeto project,Scanner input)
+    public void AdicionarUsuarios(Projeto project,Scanner input) //Continue Daqui
     {
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
         ListarUsers(project.getProjetistas());
@@ -74,9 +74,15 @@ public class Atividade implements Lista{
             int checkIdU = U.LerInt(input);
             Usuario usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
-            if (usuario != null)
+            if (usuario.getAtividade() == 0)
             {
                 this.setUsuarios(usuario);
+                usuario.setAtividade(this.getId());
+            }
+            else
+            {
+                System.out.println("Usuario ja esta alocado em uma atividade\ntente outro usuario\n");
+                i--;
             }
         }
     }
@@ -93,12 +99,9 @@ public class Atividade implements Lista{
             int checkIdU = U.LerInt(input);
             Usuario usuario = U.BuscarUsuario(this.getUsuarios(), checkIdU);
 
-            if (usuario != null)
-            {
-                usuario.setAtividade(0);
-                usuario.getTarefas().clear();
-                this.getUsuarios().remove(usuario);
-            }
+            usuario.setAtividade(0);
+            usuario.getTarefas().clear();
+            this.getUsuarios().remove(usuario);
         }
     }
 

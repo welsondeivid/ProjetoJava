@@ -32,13 +32,15 @@ public class Projeto implements Lista{
     private LocalDateTime tempoBolsaTestador = null;
     private LocalDateTime tempoBolsaAnalista = null;
 
-    public Projeto (int id, String desc, LocalDateTime inicio, LocalDateTime termino, String status, int idCoord)
+    public Projeto (int id, String desc, LocalDateTime inicio, LocalDateTime termino, String status, Usuario Coord)
     {
         this.setId(id);
         this.setDesc(desc);
         this.setInicio(inicio);
         this.setTermino(termino);
         this.setStatus(status);
+        this.setIdCoordenador(Coord.getId());
+        this.setProjetistas(Coord);
     }
 
     public void EditarProjeto (ArrayList<Usuario> usuarios, Scanner input, DateTimeFormatter format)
@@ -436,8 +438,8 @@ public class Projeto implements Lista{
         return this.idCoordenador;
     }
 
-    public void setIdCoordenador(int coordenador) {
-        this.idCoordenador = coordenador;
+    public void setIdCoordenador(int idCoordenador) {
+        this.idCoordenador = idCoordenador;
     }
 
     public ArrayList<Usuario> getDesenvolvedores() {

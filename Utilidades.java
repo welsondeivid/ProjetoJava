@@ -6,106 +6,79 @@ import java.util.ArrayList;
 
 public class Utilidades implements Lista{
 	    
-    public int LerInt(Scanner input)
+    public int LerInt(Scanner input) 
     {
-        int num = Integer.parseInt(input.next());
-        input.nextLine();
+        int num = -1;
+        try 
+        {
+            num = input.nextInt();
+        } 
+        catch (Exception e)
+        {
+            throw new RuntimeException("Digite um valor inteiro\n");      
+        }
+        finally
+        {
+            input.nextLine();
+        }        
         return num;
     }
     
     public float LerFloat(Scanner input)
     {
-        float num = input.nextFloat();
-        input.nextLine();
+        float num = -1.0f;
+        try
+        {
+            num = input.nextFloat();
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Digite um valor real\n");
+        }
+        finally
+        {
+            input.nextLine();
+        }
         return num;
     }   
 
-    public void CriarProjeto(Scanner input, ArrayList<Projeto> projs, ArrayList<Usuario> users, DateTimeFormatter format)
-    {
-        System.out.println("Digite o ID do projeto: ");
-        int idProject = LerInt(input);
-
-        if (BuscarProjeto(projs, idProject) != null)
-        {
-            System.out.println("ID de projeto ja consta no sistema");
-            System.out.println("Falha ao criar projeto");
-            return;
-        }
-
-        System.out.println("Digite a descricao do projeto: ");
-        String descProject = input.nextLine();
-
-        System.out.println ("Digite a data de inicio no formato: HH:mm dd/MM/yyyy");
-        LocalDateTime inicio = LocalDateTime.parse(input.nextLine(), format);
-
-        System.out.println ("Digite a data de termino no formato: HH:mm dd/MM/yyyy");
-        LocalDateTime termino = LocalDateTime.parse(input.nextLine(), format);
-
-        System.out.println("Defina o Coordenador do projeto, somente Professor/Pesquisador");
-        int idCoord = LerInt(input);
-
-        Usuario userCoord = BuscarUsuario(users, idCoord);
-
-        if (userCoord != null && userCoord instanceof Docente)
-        {
-            if (idProject > 0 && descProject != null && inicio != null && termino != null)
-            {
-                Projeto project = new Projeto(idProject, descProject, inicio, termino, "Em processo de criacao", idCoord);
-                projs.add(project);
-            }
-        }
-        else
-        {
-            System.out.println("Discente Nao pode ser Coordenador");
-        }
-    }
-
     public Usuario BuscarUsuario(ArrayList<Usuario> users, int checkId)
     {
-        Usuario user = null;
-
         for (Usuario item: users)
         {
             if (checkId == item.getId())
             {
-                user = item;
-                break;
+                return item;
             }
         }
 
-        return user;
+        throw new RuntimeException("Usuario fora do sistema");
     }
 
     public Projeto BuscarProjeto(ArrayList<Projeto> projs, int checkId)
     {
-        Projeto proj = null;
-
         for (Projeto item : projs)
         {
             if (checkId == item.getId())
             {
-                proj = item;
-                break;
+                return item;
             } 
         }
 
-        return proj;
+        throw new RuntimeException("Projeto fora do sistema");
     }
 
     public Atividade BuscarAtividade(ArrayList<Atividade> ativs, int checkId)
     {
-        Atividade ativ = null;
-
         for (Atividade item : ativs)
         {
             if (checkId == item.getId())
             {
-                ativ = item;
-                break;
+                return item;
             }    
         }
 
-        return ativ;
+        throw new RuntimeException("Atividade fora do sistema");
     }
 
     public void Consultar (Scanner input, ArrayList<Projeto> projs, ArrayList<Usuario> users)
@@ -185,7 +158,15 @@ public class Utilidades implements Lista{
     @Override
     public void ListarDocentes (ArrayList<Usuario> users)
     {
-        
+        System.out.println("        Lista de Docentes disponiveis");
+        for (Usuario item : users)
+        {
+            if (item instanceof Docente)
+            {
+                System.out.println("Nome: "+item.getNome());
+                System.out.println("ID: "+item.getId());
+            }
+        }
     }
 
     @Override
@@ -219,126 +200,16 @@ public class Utilidades implements Lista{
     public void DadosUser(Usuario user)
     {
         System.out.println(user);
-        /*System.out.println("Nome: "+user.getNome());
-        System.out.println("Email: "+user.getEmail());
-
-        if (user.getTipo().equals("Grad"))
-        {
-            System.out.print("Aluno Graduando");
-        }
-        else if (user.getTipo().equals("Mest"))
-        {
-            System.out.print("Aluno Mestrando");
-        }
-        else if (user.getTipo().equals("Dout"))
-        {
-            System.out.print("Aluno Doutorando");
-        }
-        else if (user.getTipo().equals("Prof"))
-        {
-            System.out.print("Professor ");
-
-            if(user.getCoord())
-            {
-                System.out.println("Coordenador");
-            }
-        }
-        else if (user.getTipo().equals("Pesq"))
-        {
-            System.out.print("Pesquisador ");
-
-            if(user.getCoord())
-            {
-                System.out.println("Coordenador");
-            }
-        }
-
-        if (!user.getCoord() &&  user.getFunc() != null)
-        {
-            if (user.getFunc().equals("Devp"))
-            {
-                System.out.println(" e Desenvolvedor");
-            }
-            else if (user.getFunc().equals("Test"))
-            {
-                System.out.println(" e Tecnico");
-            }
-            else if (user.getFunc().equals("Anlt"))
-            {
-                System.out.println(" e Analista");
-            }
-            else if (user.getFunc().equals("Tecn"))
-            {
-                System.out.println(" e Tecnico");
-            }
-        }
-        System.out.println();
-
-        if (user.getProjeto() != 0)
-        {
-            System.out.println("Projeto associado: "+user.getProjeto());
-            System.out.println("Dia de ingresso: ");
-            MostrarDataHora(user.getDiaPag());
-            System.out.println("Atividade associada: "+user.getAtividade());
-
-            System.out.println("Lista de Tarefas:");
-            for (Tarefa item : user.getTarefas())
-            {
-                System.out.println(item.getDesc());
-            }
-        }
-        else
-        {
-            System.out.println("Sem Projeto no momento");
-        }
-        
-
-        if (user.getProjInterCam() != 0)
-        {
-            System.out.println("Faz intercambio no projeto: "+user.getProjInterCam());
-            System.out.println("Designado para a atividade: "+user.getAtivInterCam());
-        }
-        else
-        {
-            if (!user.getTipo().equals("Prof") && !user.getTipo().equals("Pesq"))
-            {
-                System.out.println("Disponivel para intercambio");
-            }
-        }*/
     }
 
     public void DadosAtiv(Atividade ativ)
     {
         System.out.println(ativ);
-        /*System.out.println("Atividade descrita: ");
-        System.out.println(ativ.getDesc());
-
-        System.out.print("Responsavel pela Atividade: ");
-        System.out.println(BuscarUsuario(ativ.getUsuarios(), ativ.getIdResponsavel()).getNome());
-
-        System.out.println("Inicio da Atividade: ");
-        MostrarDataHora(ativ.getInicio());
-
-        System.out.println("Termino da Atividade: ");
-        MostrarDataHora(ativ.getTermino());*/
     }
 
     public void DadosProj(Projeto proj)
     {
         System.out.println(proj);
-        /*System.out.println("Projeto descrito: ");
-        System.out.println(proj.getDesc());
-
-        System.out.print("Status do Projeto: "+proj.getStatus());
-
-        System.out.println("Inicio do Projeto: ");
-        MostrarDataHora(proj.getInicio());
-        
-        System.out.println("Termino do Projeto: ");
-        MostrarDataHora(proj.getTermino());
-
-        System.out.println("Coordenador do Projeto: ");
-        System.out.println(BuscarUsuario(proj.getProjetistas(), proj.getIdCoordenador()).getNome());*/
     }
 
     public void RelatorioAtiv (Atividade ativ)
@@ -403,13 +274,14 @@ public class Utilidades implements Lista{
         System.out.println("Status do Projeto: "+proj.getStatus());
 
         System.out.println("Inicio do Projeto: ");
-        MostrarDataHora(proj.getInicio());
+        System.out.println(MostrarDataHora(proj.getInicio()));
         
         System.out.println("Termino do Projeto: ");
-        MostrarDataHora(proj.getTermino());
+        System.out.println(MostrarDataHora(proj.getTermino()));
 
         System.out.println("Coordenador do Projeto: ");
-        System.out.println(BuscarUsuario(proj.getProjetistas(), proj.getIdCoordenador()));
+        String fodase = BuscarUsuario(proj.getProjetistas(), proj.getIdCoordenador()).getNome();
+        System.out.println(fodase);
 
 
         System.out.println("Lista de Desenvolvedores: ");
@@ -499,6 +371,6 @@ public class Utilidades implements Lista{
             return "Doce";
         }
 
-        return null;
+        throw new RuntimeException("Erro: Tipo Invalido");
     }
 }

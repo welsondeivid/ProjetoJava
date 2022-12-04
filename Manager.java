@@ -11,6 +11,7 @@ public class Manager {
 
     public static void main (String[] args) {
         
+        Erros erro = new Erros();
         Utilidades U = new Utilidades();
         Manager m = new Manager();
         Menu menu = new Menu();
@@ -20,128 +21,154 @@ public class Manager {
         Scanner input = new Scanner(System.in);
 
         int cmd = -1;
-
+        
         while (cmd != 0)
         {
-            menu.MenuPrincipal();
-
-            cmd = U.LerInt(input);
-
-            if (cmd == 1)
+            try
             {
-                int id = 0;
-                String senha = null;
-                System.out.println("\t\tLOGIN NO SISTEMA");
+                menu.MenuPrincipal();
+                cmd = U.LerInt(input);
 
-                System.out.print("Digite seu ID: ");
-                id = U.LerInt(input);
-
-                System.out.print("Digite sua senha: ");
-                senha = input.nextLine();
-
-                Usuario loginUser = U.BuscarUsuario(m.getUsuarios(), id);
-
-                if (loginUser != null)
+                if (cmd == 1)
                 {
-                    if (senha.equals(loginUser.getSenha()))
+                    int id = 0;
+                    String senha = null;
+                    System.out.println("\t\tLOGIN NO SISTEMA");
+
+                    System.out.print("Digite seu ID: ");
+                    id = U.LerInt(input);
+
+                    System.out.print("Digite sua senha: ");
+                    senha = input.nextLine();
+
+                    Usuario loginUser = U.BuscarUsuario(m.getUsuarios(), id);
+
+                    if (loginUser != null)
                     {
-                        System.out.println();
-                        Login log = new Login();
-                        System.out.println("Login realizado com Sucesso\n");
-                        
-                        log.LoginOn(input, loginUser, m.getUsuarios(), m.getProjetos());
+                        if (senha.equals(loginUser.getSenha()))
+                        {
+                            System.out.println();
+                            Login log = new Login();
+                            System.out.println("Login realizado com Sucesso\n");
+                            
+                            log.LoginOn(input, loginUser, m);
+                        }
+                        else
+                        {
+                            throw new RuntimeException ("Senha incorreta");
+                        }
                     }
                     else
                     {
-                        System.out.println("Senha incorreta");
+                        throw new RuntimeException("Id fora do sistema");
                     }
                 }
-                else
+                else if (cmd == 2)
                 {
-                    System.out.println("Id fora do sistema");
-                }
-            }
-            else if (cmd == 2)
-            {
-                System.out.println("Digite seu nome: ");
-                String nomeUser = input.nextLine();
-                
-                System.out.println("Digite seu RG, usaremos como seu id: ");
-                int idUser = U.LerInt(input);
+                    System.out.println("Digite seu nome: ");
+                    String nomeUser = input.nextLine();
+                    
+                    erro.CheckErros(nomeUser, "nome");
+                    
+                    System.out.println("Digite seu RG, usaremos como seu id: ");
+                    int idUser = U.LerInt(input);
+                    
+                    try {
 
-                System.out.println("Digite seu email: "); //Falta Formatar
-                String emailUser = input.nextLine();
+                        U.BuscarUsuario(m.getUsuarios(), idUser);
+                        System.out.println("ID ja consta no sistema\nFalha no cadastro");
+                        continue;
 
-                System.out.println("Digite sua senha: "); //Crie uma confirmação
-                String senhaUser = input.nextLine();
+                    } catch (Exception e) {
+                        
+                       System.out.println("ID valido");
+                    }
 
-                System.out.println("Digite o seu tipo de usuario: ");
-                for (int i = 0; i < tipos.length; i++)
-                {
-                    System.out.println(tipos[i]);
-                }
-                String tipoUser = input.nextLine();
+                    System.out.println("Digite seu email: "); //Falta Formatar
+                    String emailUser = input.nextLine();
+                    erro.CheckErros(nomeUser, "nome");
 
-                Usuario usuario = null;
-                
-                if (U.ChecarTipoUsuario(tipoUser).equals("Disc"))
-                {
-                    usuario = new Discente(nomeUser, emailUser, senhaUser, tipoUser, idUser);
-                }
-                else if (U.ChecarTipoUsuario(tipoUser).equals("Doce"))
-                {
-                    usuario = new Docente(nomeUser, emailUser, senhaUser, tipoUser, idUser);
-                }
-                
-                m.getUsuarios().add(usuario);
-                
-            }
+                    System.out.println("Digite sua senha: "); //Crie uma confirmação
+                    String senhaUser = input.nextLine();
+                    erro.CheckErros(nomeUser, "senha");
 
-            else if (cmd == 3)
-            {
-                System.out.println("Para recuperar a senha preencha os campos abaixo");
-
-                System.out.print("Seu nome: ");
-                String nome = input.nextLine();
-
-                System.out.print("Seu Id: ");
-                int id = U.LerInt(input);
-
-                System.out.print("Seu email: ");
-                String email = input.nextLine();
-
-                Usuario user = U.BuscarUsuario(m.getUsuarios(), id);
-
-                if (user != null)
-                {
-                    if (nome.equals(user.getNome()) && email.equals(user.getEmail()))
+                    System.out.println("Digite o seu tipo de usuario: ");
+                    for (int i = 0; i < tipos.length; i++)
                     {
-                        System.out.println("Digite a nova senha: ");
-                        {
-                            String novaSenha = input.nextLine();
+                        System.out.println(tipos[i]);
+                    }
+                    String tipoUser = input.nextLine();
 
-                            if (!novaSenha.equals(user.getSenha()))
+                    Usuario usuario = null;
+                    
+                    if (U.ChecarTipoUsuario(tipoUser).equals("Disc"))
+                    {
+                        usuario = new Discente(nomeUser, emailUser, senhaUser, tipoUser, idUser);
+                    }
+                    else if (U.ChecarTipoUsuario(tipoUser).equals("Doce"))
+                    {
+                        usuario = new Docente(nomeUser, emailUser, senhaUser, tipoUser, idUser);
+                    }
+                    
+                    m.getUsuarios().add(usuario);
+
+                    for (Usuario item: m.getUsuarios())
+                    {
+                        System.out.println("Depois de ADD"+item.getId());
+                    }
+                }
+
+                else if (cmd == 3)
+                {
+                    System.out.println("Para recuperar a senha preencha os campos abaixo");
+
+                    System.out.print("Seu nome: ");
+                    String nome = input.nextLine();
+
+                    System.out.print("Seu Id: ");
+                    int id = U.LerInt(input);
+
+                    System.out.print("Seu email: ");
+                    String email = input.nextLine();
+
+                    Usuario user = U.BuscarUsuario(m.getUsuarios(), id);
+
+                    if (user != null)
+                    {
+                        if (nome.equals(user.getNome()) && email.equals(user.getEmail()))
+                        {
+                            System.out.println("Digite a nova senha: ");
                             {
-                                user.setSenha(novaSenha);
-                                System.out.println("Senha alterada com sucesso");
-                            }
-                            else
-                            {
-                                System.out.println("Erro, senha igual a anterior");
+                                String novaSenha = input.nextLine();
+
+                                if (!novaSenha.equals(user.getSenha()))
+                                {
+                                    user.setSenha(novaSenha);
+                                    System.out.println("Senha alterada com sucesso");
+                                }
+                                else
+                                {
+                                    System.out.println("Erro, senha igual a anterior");
+                                }
                             }
                         }
                     }
+                    else
+                    {
+                        throw new RuntimeException("Usuario fora do sistema");
+                    }
                 }
-                else
-                {
-                    System.out.println("ID do usuario fora no sitema");
-                }
+            }
+            catch (Exception e)
+            {
+                System.out.println(e.getMessage());
             }
         }
         
         input.close();
     }
 
+    
     public boolean ChecarStatusDoProjeto (Projeto projeto)
     {
         boolean falha = false;

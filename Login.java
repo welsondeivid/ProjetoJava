@@ -7,10 +7,9 @@ public class Login implements Lista
 {
     DateTimeFormatter format = DateTimeFormatter.ofPattern ("HH:mm dd/MM/yyyy");
     Utilidades U = new Utilidades();
-    Manager m = new Manager();
     Menu menu = new Menu();
 
-    public void LoginOn(Scanner input, Usuario userLog, ArrayList<Usuario> usersMain, ArrayList<Projeto> projsMain)
+    public void LoginOn(Scanner input, Usuario userLog, Manager m) throws Exception
     {
         int cmdLogin = -1;
 
@@ -24,14 +23,14 @@ public class Login implements Lista
 
                 if (cmdLogin == 1)
                 {   
-                    U.CriarProjeto(input, projsMain, usersMain, format);
+                    CriarProjeto(U, input, format, m);
                 }
 
                 else if (cmdLogin == 2)
                 {
                     System.out.println("Somente Coordenadores podem editar projetos e somente o proprio");
                     
-                    Projeto project = U.BuscarProjeto(projsMain, user.getProjeto());
+                    Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
 
                     if (project != null && user.getId() == project.getIdCoordenador())
                     {
@@ -47,11 +46,11 @@ public class Login implements Lista
 
                             if (cmdProjeto == 1)
                             {
-                                project.EditarProjeto(usersMain, input, format);
+                                project.EditarProjeto(m.getUsuarios(), input, format);
                             }
                             else if (cmdProjeto == 2)
                             {
-                                project.DesignarCoordenador(usersMain, input);
+                                project.DesignarCoordenador(m.getUsuarios(), input);
                             }
                             else if (cmdProjeto == 3)
                             {
@@ -60,7 +59,7 @@ public class Login implements Lista
 
                                 if (num == 1)
                                 {
-                                    project.AdicionarUsuarios(usersMain, input);
+                                    project.AdicionarUsuarios(m.getUsuarios(), input);
                                 }
                                 else if (num == 2)
                                 {
@@ -123,7 +122,7 @@ public class Login implements Lista
 
                 else if (cmdLogin == 3)
                 {
-                    Projeto project = U.BuscarProjeto(projsMain, user.getProjeto());
+                    Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
 
                     if (project != null)
                     {
@@ -193,16 +192,16 @@ public class Login implements Lista
                             else if (cmdUsuario == 3)
                             {
                                 System.out.println("Digite o ID do projeto ao qual gostaria de ingressar: ");
-                                ListarProjs(projsMain);
+                                ListarProjs(m.getProjetos());
                                 int checkIdP = U.LerInt(input);
 
-                                Projeto project = U.BuscarProjeto(projsMain, checkIdP);
+                                Projeto project = U.BuscarProjeto(m.getProjetos(), checkIdP);
 
                                 user.IngressarProjeto(project);
                             }
                             else if (cmdUsuario == 4)
                             {
-                                Projeto project = U.BuscarProjeto(projsMain, user.getProjeto());
+                                Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
                                 
                                 if (project != null )   user.IngressarAtividade(project, input);
                             }
@@ -219,7 +218,7 @@ public class Login implements Lista
                         System.out.println("Coordenador identificado");
 
                         Docente coordenador = user;
-                        Projeto project = U.BuscarProjeto(projsMain, coordenador.getProjeto());
+                        Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
 
                         if (project != null && project.getIdCoordenador() == coordenador.getProjeto())
                         {
@@ -285,7 +284,7 @@ public class Login implements Lista
                     System.out.println("O que gostaria de consultar?");
                     menu.MenuConsulta();
 
-                    U.Consultar(input, projsMain, usersMain);            
+                    U.Consultar(input, m.getProjetos(), m.getUsuarios());            
                 }                
 
                 else if (cmdLogin == 7)
@@ -295,7 +294,7 @@ public class Login implements Lista
                     System.out.println("Responsaveis podem checar o relatorio de sua propria atividade");
                     
                     Docente userCheck = user;
-                    Projeto project = U.BuscarProjeto(projsMain, user.getProjeto());
+                    Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
 
                     if (userCheck.getCoord())
                     {
@@ -342,7 +341,7 @@ public class Login implements Lista
                     {
                         System.out.println("Coordenador identificado");
 
-                        Projeto project = U.BuscarProjeto(projsMain, coordenador.getProjeto());
+                        Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
                         ArrayList <Discente> pagar = new ArrayList<Discente>();
 
                         System.out.println("Lista dos bolsistas que podem receber a bolsa: ");
@@ -391,10 +390,10 @@ public class Login implements Lista
                     if (coordenador.getCoord())
                     {
                         System.out.println("Coordenador identificado");
-                        Projeto project = U.BuscarProjeto(projsMain, coordenador.getProjeto());
+                        Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
 
                         System.out.println("Digite o RG do usuario que deseja adicionar:");
-                        Usuario checkUser = U.BuscarUsuario(usersMain, U.LerInt(input));
+                        Usuario checkUser = U.BuscarUsuario(m.getUsuarios(), U.LerInt(input));
 
                         if (checkUser != null && checkUser instanceof Discente)
                         {
@@ -402,7 +401,7 @@ public class Login implements Lista
 
                             if (intercamb.getProjInterCam() == 0)
                             {
-                                Projeto projInterCam = U.BuscarProjeto(projsMain, intercamb.getProjeto());
+                                Projeto projInterCam = U.BuscarProjeto(m.getProjetos(), intercamb.getProjeto());
                                 
                                 if (projInterCam != null)
                                 {
@@ -475,13 +474,13 @@ public class Login implements Lista
                     System.out.println("O que gostaria de consultar?");
                     menu.MenuConsulta();
 
-                    U.Consultar(input, projsMain, usersMain);
+                    U.Consultar(input, m.getProjetos(), m.getUsuarios());
                 }
                 else if (cmdLogin == 3)
                 {
                     System.out.print("Um Discente apenas tem acesso a um relatorio de atividade se for o respnsavel");
                     
-                    Projeto proj = U.BuscarProjeto(projsMain, user.getProjeto());
+                    Projeto proj = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
 
                     if (proj != null)
                     {
@@ -548,5 +547,51 @@ public class Login implements Lista
     public void ListarDiscentes(ArrayList<Usuario> users) {
         
         
+    }
+
+    public void CriarProjeto(Utilidades U, Scanner input, DateTimeFormatter format, Manager m)
+    {
+        System.out.println("Digite o ID do projeto: ");
+        int idProject = U.LerInt(input);
+
+        try {
+            U.BuscarProjeto(m.getProjetos(), idProject);
+        } catch (Exception e) {
+            System.out.println("ID disponivel");
+        }
+
+        System.out.println("Digite a descricao do projeto: ");
+        String descProject = input.nextLine();
+
+        System.out.println ("Digite a data de inicio no formato: HH:mm dd/MM/yyyy");
+        LocalDateTime inicio = LocalDateTime.parse(input.nextLine(), format);
+
+        System.out.println ("Digite a data de termino no formato: HH:mm dd/MM/yyyy");
+        LocalDateTime termino = LocalDateTime.parse(input.nextLine(), format);
+
+        System.out.println("Defina o Coordenador do projeto, somente Professor/Pesquisador");
+        U.ListarDocentes(m.getUsuarios());
+        int idCoord = U.LerInt(input);
+
+        Usuario userCoord = U.BuscarUsuario(m.getUsuarios(), idCoord);
+
+        if (userCoord != null && userCoord instanceof Docente)
+        {
+            Docente user = (Docente)userCoord;
+
+            if (idProject > 0 && descProject != null && inicio != null && termino != null)
+            {
+                Projeto project = new Projeto(idProject, descProject, inicio, termino, "Em processo de criacao", user);
+                
+                user.setProjeto(idProject);
+                user.setCoord(true);
+                user.setDiaIngresso(LocalDateTime.now());
+                m.getProjetos().add(project);
+            }
+        }
+        else
+        {
+            System.out.println("Discente nao pode ser Coordenador");
+        }
     }
 }
