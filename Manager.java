@@ -1,10 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-//Polimento: Printar as listas para opcao
-//Login e recuperacao de senha
 //tratar os erros nos else's
-//Sempre que houver uma leitura do teclado para escolha, transformar em um Menu
 //Em cada for com if (obj != null), tratar o else
 
 public class Manager {
@@ -22,14 +19,14 @@ public class Manager {
 	    
         Scanner input = new Scanner(System.in);
 
-        menu.MenuPrincipal();
-
         int cmd = -1;
-
-        cmd = U.LerInt(input);
 
         while (cmd != 0)
         {
+            menu.MenuPrincipal();
+
+            cmd = U.LerInt(input);
+
             if (cmd == 1)
             {
                 int id = 0;
@@ -50,7 +47,9 @@ public class Manager {
                     {
                         System.out.println();
                         Login log = new Login();
-                        log.LoginOn(input, loginUser);
+                        System.out.println("Login realizado com Sucesso\n");
+                        
+                        log.LoginOn(input, loginUser, m.getUsuarios(), m.getProjetos());
                     }
                     else
                     {
@@ -93,7 +92,9 @@ public class Manager {
                 {
                     usuario = new Docente(nomeUser, emailUser, senhaUser, tipoUser, idUser);
                 }
+                
                 m.getUsuarios().add(usuario);
+                
             }
 
             else if (cmd == 3)
@@ -136,13 +137,11 @@ public class Manager {
                     System.out.println("ID do usuario fora no sitema");
                 }
             }
-
-            menu.MenuPrincipal();
-            cmd = U.LerInt(input);
         }
+        
         input.close();
     }
-    
+
     public boolean ChecarStatusDoProjeto (Projeto projeto)
     {
         boolean falha = false;
@@ -225,7 +224,6 @@ public class Manager {
     {
         return usuarios;
     }
-
     public ArrayList<Projeto> getProjetos()
     {
         return projetos;

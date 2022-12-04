@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import java.time.format.DateTimeFormatter;
 
-public class Projeto {
+public class Projeto implements Lista{
 
     Utilidades U = new Utilidades();
     Menu menu = new Menu();
@@ -69,9 +69,8 @@ public class Projeto {
 
     public void DesignarCoordenador(ArrayList<Usuario> usuarios, Scanner input)
     {
-        U.ListarDocentes(usuarios);
-
         System.out.println("Digite o RG do novo coordenador do projeto: ");
+        ListarDocentes(usuarios);
 
         int checkIdU = U.LerInt(input);
         Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
@@ -95,7 +94,7 @@ public class Projeto {
     public void AdicionarUsuarios(ArrayList<Usuario> usuarios, Scanner input)
     {
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
-        U.ListarUsers(usuarios);
+        ListarUsers(usuarios);
         int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
@@ -159,7 +158,7 @@ public class Projeto {
     public void RemoverUsuarios(ArrayList<Usuario> usuarios, Scanner input)
     {
         System.out.println("Qual sera a quantidade de usuarios removidos?");
-        U.ListarUsers(usuarios);
+        ListarUsers(usuarios);
         int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
@@ -212,7 +211,7 @@ public class Projeto {
     public void RemoverIntercambista(Scanner input)
     {
         System.out.println("Lista de Intercambistas atuais: ");
-        U.ListarUsers(this.getIntercambistas());
+        ListarUsers(this.getIntercambistas());
 
         System.out.println("Qual sera a quantidade de usuarios removidos?");
 
@@ -280,7 +279,7 @@ public class Projeto {
     public void RemoverAtividades(Scanner input)
     {
         System.out.println("Qual sera a quantidade de atividades removidas?");
-        U.ListarAtivs(this.getAtividades());
+        ListarAtivs(this.getAtividades());
         int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
@@ -557,5 +556,60 @@ public class Projeto {
                 "Inicio do Projeto: "+this.getInicio()+"\n"+
                 "Termino do Projeto: "+this.getTermino()+"\n"+
                 "Coordenador do Projeto: "+coordNome+"\n";
+    }
+
+    @Override
+    public void ListarProjs(ArrayList<Projeto> projs)
+    {
+        
+    }
+
+    @Override
+    public void ListarAtivs(ArrayList<Atividade> ativs)
+    {
+        System.out.println("        Lista de atividades disponiveis");
+        for (Atividade item : ativs)
+        {
+            System.out.println("Descricao: "+item.getDesc());
+            System.out.println("ID da atividade: "+item.getId());
+        }
+    }
+
+    @Override
+    public void ListarTasks(ArrayList<Tarefa> tasks)
+    {
+        
+    }
+
+    @Override
+    public void ListarUsers(ArrayList<Usuario> users)
+    {
+        System.out.println("        Lista de usuarios disponiveis");
+        for (Usuario item : users)
+        {
+            System.out.println("Nome: "+item.getNome());
+            System.out.println("ID: "+item.getId());
+        }
+    }
+
+    @Override
+    public void ListarDocentes(ArrayList<Usuario> users)
+    {
+        System.out.println("        Lista de Docentes disponiveis");
+        for (Usuario item : users)
+        {
+            if (item instanceof Docente)
+            {
+                System.out.println("Nome: "+item.getNome());
+                System.out.println("ID: "+item.getId());
+                System.out.println("Email: "+item.getEmail());
+            }
+        }
+    }
+
+    @Override
+    public void ListarDiscentes(ArrayList<Usuario> users)
+    {
+        
     }
 }

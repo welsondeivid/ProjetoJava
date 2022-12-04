@@ -79,7 +79,7 @@ public class Menu {
         System.out.println("Digite 0  para: Sair");
         System.out.println("Digite 1  para: Editar um usuario");
         System.out.println("Digite 2  para: Consultar");
-        System.out.println("Digite 3  para: Relatorio"); //somente se for responsavel de uma atividade
+        System.out.println("Digite 3  para: Relatorio");
     }
 
     public void MenuAddRemove()

@@ -11,6 +11,7 @@ public class Discente extends Usuario{
         super(nome, email, senha, tipo, id);
     }
 
+    @Override
     public void IngressarProjeto(Projeto project)
     {
         if (project != null && this.getProjeto() == 0)
@@ -82,12 +83,12 @@ public class Discente extends Usuario{
 
         if (this.getProjInterCam() != 0)
         {
-            intercambista = "Faz intercambio no projeto: "+this.getProjInterCam()+"\n";
+            intercambista = "\nFaz intercambio no projeto: "+this.getProjInterCam()+"\n";
             intercambista.concat("Designado para a atividade: "+this.getAtivInterCam()+"\n");
         }
         else
         {
-            intercambista = "Disponivel para intercambio\n";
+            intercambista = "\nDisponivel para intercambio\n";
         }
 
         return tipo +"\n"+ super.toString() + intercambista;

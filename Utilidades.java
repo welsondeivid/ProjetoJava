@@ -4,20 +4,61 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class Utilidades {
+public class Utilidades implements Lista{
 	    
     public int LerInt(Scanner input)
     {
-        int num = input.nextInt();
+        int num = Integer.parseInt(input.next());
         input.nextLine();
         return num;
     }
+    
     public float LerFloat(Scanner input)
     {
         float num = input.nextFloat();
         input.nextLine();
         return num;
     }   
+
+    public void CriarProjeto(Scanner input, ArrayList<Projeto> projs, ArrayList<Usuario> users, DateTimeFormatter format)
+    {
+        System.out.println("Digite o ID do projeto: ");
+        int idProject = LerInt(input);
+
+        if (BuscarProjeto(projs, idProject) != null)
+        {
+            System.out.println("ID de projeto ja consta no sistema");
+            System.out.println("Falha ao criar projeto");
+            return;
+        }
+
+        System.out.println("Digite a descricao do projeto: ");
+        String descProject = input.nextLine();
+
+        System.out.println ("Digite a data de inicio no formato: HH:mm dd/MM/yyyy");
+        LocalDateTime inicio = LocalDateTime.parse(input.nextLine(), format);
+
+        System.out.println ("Digite a data de termino no formato: HH:mm dd/MM/yyyy");
+        LocalDateTime termino = LocalDateTime.parse(input.nextLine(), format);
+
+        System.out.println("Defina o Coordenador do projeto, somente Professor/Pesquisador");
+        int idCoord = LerInt(input);
+
+        Usuario userCoord = BuscarUsuario(users, idCoord);
+
+        if (userCoord != null && userCoord instanceof Docente)
+        {
+            if (idProject > 0 && descProject != null && inicio != null && termino != null)
+            {
+                Projeto project = new Projeto(idProject, descProject, inicio, termino, "Em processo de criacao", idCoord);
+                projs.add(project);
+            }
+        }
+        else
+        {
+            System.out.println("Discente Nao pode ser Coordenador");
+        }
+    }
 
     public Usuario BuscarUsuario(ArrayList<Usuario> users, int checkId)
     {
@@ -111,6 +152,8 @@ public class Utilidades {
         else if (cmdConsulta == 3)
         {
                 System.out.println(("Digite o id do projeto: "));
+                ListarProjs(projs);
+
                 int checkIdP = LerInt(input);
                 Projeto project = BuscarProjeto(projs, checkIdP);
 
@@ -122,64 +165,54 @@ public class Utilidades {
         }
     }
     
+    @Override
     public void ListarTasks (ArrayList<Tarefa> tasks)
     {
-        for (Tarefa item : tasks)
-        {
-            System.out.println(item.getDesc());
-            System.out.println(item.getStatus());
-            System.out.println(item.getProfissional());
-        }
+        
     }
     
+    @Override
     public void ListarUsers(ArrayList<Usuario> users)
     {
+        System.out.println("        Lista de usuarios disponiveis");
         for (Usuario item : users)
         {
-            System.out.println(item.getNome());
-            System.out.println(item.getId());
+            System.out.println("Nome: "+item.getNome());
+            System.out.println("ID: "+item.getId());
         }
     }
 
+    @Override
     public void ListarDocentes (ArrayList<Usuario> users)
     {
-        for (Usuario item : users)
-        {
-            if (item instanceof Docente)
-            {
-                System.out.println(item.getNome());
-                System.out.println(item.getId());
-            }
-        }
+        
     }
 
+    @Override
     public void ListarDiscentes (ArrayList<Usuario> users)
     {
-        for (Usuario item : users)
-        {
-            if (item instanceof Discente)
-            {
-                System.out.println(item.getNome());
-                System.out.println(item.getId());
-            }
-        }
+        
     }
     
+    @Override
     public void ListarAtivs(ArrayList<Atividade> ativs)
     {
+        System.out.println("        Lista de atividades disponiveis");
         for (Atividade item : ativs)
         {
-            System.out.println(item.getDesc());
-            System.out.println(item.getId());
+            System.out.println("Descricao: "+item.getDesc());
+            System.out.println("ID da atividade: "+item.getId());
         }
     }
 
+    @Override
     public void ListarProjs(ArrayList<Projeto> projs)
     {
+        System.out.println("        Lista de projetos disponiveis");
         for (Projeto item : projs)
         {
-            System.out.println(item.getDesc());
-            System.out.println(item.getId());
+            System.out.println("Descricao: "+item.getDesc());
+            System.out.println("ID do projeto: "+item.getId());
         }
     }
 

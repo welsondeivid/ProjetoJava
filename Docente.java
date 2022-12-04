@@ -9,6 +9,7 @@ public class Docente extends Usuario{
         super(nome, email, senha, tipo, id);
     }
 
+    @Override
     public void IngressarProjeto(Projeto project)
     {
         if (project != null && this.getProjeto() == 0)
@@ -49,6 +50,6 @@ public class Docente extends Usuario{
             tipo.concat("Coordenador");
         }
 
-        return tipo + super.toString();
+        return tipo + "\n"+super.toString();
     }
 }

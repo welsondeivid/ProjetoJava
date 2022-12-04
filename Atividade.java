@@ -2,7 +2,7 @@ import java.time.LocalDateTime;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-public class Atividade {
+public class Atividade implements Lista{
     
     Utilidades U = new Utilidades();
 
@@ -54,7 +54,7 @@ public class Atividade {
         if (decisao == 1)
         {
             System.out.println("Digite o RG do novo Responsavel");
-            U.ListarUsers(this.getUsuarios());
+            ListarUsers(this.getUsuarios());
             int checkIdU = U.LerInt(input);
             Usuario idResponsavel = U.BuscarUsuario(this.getUsuarios(), checkIdU);
             this.setIdResponsavel(idResponsavel.getId());
@@ -65,7 +65,7 @@ public class Atividade {
     public void AdicionarUsuarios(Projeto project,Scanner input)
     {
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
-        U.ListarUsers(project.getProjetistas());
+        ListarUsers(project.getProjetistas());
         int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
@@ -84,7 +84,7 @@ public class Atividade {
     public void RemoverUsuarios(Scanner input)
     {
         System.out.println("Qual sera a quantidade de usuarios removidos? 0 para nenhum");
-        U.ListarUsers(this.getUsuarios());
+        ListarUsers(this.getUsuarios());
         int quant = U.LerInt(input);
 
         for (int i = 0; i < quant; i++)
@@ -135,7 +135,7 @@ public class Atividade {
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o RG do responsável pela tarefa que deseja remover: ");
-            U.ListarTasks(this.getTarefas());
+            ListarTasks(this.getTarefas());
             
             int respTarefa = U.LerInt(input);
             Usuario responsavel = U.BuscarUsuario(this.getUsuarios(), respTarefa);
@@ -159,7 +159,7 @@ public class Atividade {
             }
         }
     }
-
+    
     public int getId() {
         return this.id;
     }
@@ -235,5 +235,50 @@ public class Atividade {
                 "Responsavel pela Atividade: "+respNome+"\n"+
                 "Inicio da Atividade: "+this.getInicio()+"\n"+
                 "Termino da Atividade: "+this.getTermino()+"\n";
+    }
+
+    @Override
+    public void ListarProjs(ArrayList<Projeto> projs) {
+        
+    }
+
+    @Override
+    public void ListarAtivs(ArrayList<Atividade> ativs) {
+        
+    }
+
+    @Override
+    public void ListarTasks(ArrayList<Tarefa> tasks)
+    {
+        System.out.println("        Lista de tarefas disponiveis");
+        for (Tarefa item : tasks)
+        {
+            System.out.println("Descricao: "+item.getDesc());
+            System.out.println("Status da tarefa: "+item.getStatus());
+            System.out.println("ID do responsavel: "+item.getProfissional()+"\n");
+        }
+    }
+
+    @Override
+    public void ListarUsers(ArrayList<Usuario> users)
+    {
+        System.out.println("        Lista de usuarios disponiveis");
+        for (Usuario item : users)
+        {
+            System.out.println("Nome: "+item.getNome());
+            System.out.println("ID: "+item.getId());
+        }
+    }
+
+    @Override
+    public void ListarDocentes(ArrayList<Usuario> users) {
+        
+        
+    }
+
+    @Override
+    public void ListarDiscentes(ArrayList<Usuario> users) {
+        
+        
     }
 }
