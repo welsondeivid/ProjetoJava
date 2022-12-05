@@ -52,7 +52,7 @@ public class Utilidades implements Lista{
             }
         }
 
-        throw new RuntimeException("Usuario fora do sistema");
+        throw new RuntimeException("Usuario fora do sistema\n");
     }
 
     public Projeto BuscarProjeto(ArrayList<Projeto> projs, int checkId)
@@ -65,7 +65,7 @@ public class Utilidades implements Lista{
             } 
         }
 
-        throw new RuntimeException("Projeto fora do sistema");
+        throw new RuntimeException("Projeto fora do sistema\n");
     }
 
     public Atividade BuscarAtividade(ArrayList<Atividade> ativs, int checkId)
@@ -78,7 +78,7 @@ public class Utilidades implements Lista{
             }    
         }
 
-        throw new RuntimeException("Atividade fora do sistema");
+        throw new RuntimeException("Atividade fora do sistema\n");
     }
 
     public void Consultar (Scanner input, ArrayList<Projeto> projs, ArrayList<Usuario> users)
@@ -87,54 +87,42 @@ public class Utilidades implements Lista{
 
         if (cmdConsulta == 1)
         {
-                System.out.println("Digite o RG do usuario:");
-                ListarUsers (users);
+            System.out.println("Digite o RG do usuario:");
+            ListarUsers (users);
 
-                int checkIdU = LerInt(input);
-                Usuario usuario = BuscarUsuario(users, checkIdU);
+            int checkIdU = LerInt(input);
+            Usuario usuario = BuscarUsuario(users, checkIdU);
 
-                if (usuario != null)
-                {
-                    System.out.println("Dados do usuario encontrado: ");
-                    DadosUser(usuario);
-                }
+            System.out.println("Dados do usuario encontrado: ");
+            DadosUser(usuario);
         }
         else if (cmdConsulta == 2)
         {
-                System.out.println(("Digite o id do projeto onde a atividade esta localizda: "));
-                ListarProjs(projs);
+            System.out.println(("Digite o id do projeto onde a atividade esta localizda: "));
+            ListarProjs(projs);
 
-                int checkIdP = LerInt(input);
-                Projeto project = BuscarProjeto(projs, checkIdP);
+            int checkIdP = LerInt(input);
+            Projeto project = BuscarProjeto(projs, checkIdP);
 
-                if (project != null)
-                {
-                    System.out.println("Digite o id da atividade: ");
-                    ListarAtivs(project.getAtividades());
+            System.out.println("Digite o id da atividade: ");
+            ListarAtivs(project.getAtividades());
 
-                    int checkIdA = LerInt(input);
-                    Atividade atividade = BuscarAtividade(project.getAtividades(), checkIdA);
+            int checkIdA = LerInt(input);
+            Atividade atividade = BuscarAtividade(project.getAtividades(), checkIdA);
 
-                    if (atividade != null)
-                    {
-                        System.out.println("Dados da atividade encontrada: ");
-                        DadosAtiv(atividade);
-                    }
-                }
+            System.out.println("Dados da atividade encontrada: ");
+            DadosAtiv(atividade);
         }
         else if (cmdConsulta == 3)
         {
-                System.out.println(("Digite o id do projeto: "));
-                ListarProjs(projs);
+            System.out.println(("Digite o id do projeto: "));
+            ListarProjs(projs);
 
-                int checkIdP = LerInt(input);
-                Projeto project = BuscarProjeto(projs, checkIdP);
+            int checkIdP = LerInt(input);
+            Projeto project = BuscarProjeto(projs, checkIdP);
 
-                if (project != null)
-                {
-                    System.out.println("Dados do projeto encontrado: ");
-                    DadosProj(project);
-                }
+            System.out.println("Dados do projeto encontrado: ");
+            DadosProj(project);
         }
     }
     

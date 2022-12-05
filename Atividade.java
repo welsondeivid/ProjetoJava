@@ -28,7 +28,7 @@ public class Atividade implements Lista{
         this.setStatus("Iniciada");
     }
 
-    public void EditarAtividade(Projeto project, Scanner input)
+    public void EditarAtividade(Projeto project, Scanner input) throws Exception
     {
         DefinirResponsavel(input);
 
@@ -41,7 +41,7 @@ public class Atividade implements Lista{
         RemoverTarefas(input);
     }
 
-    public void DefinirResponsavel(Scanner input)
+    public void DefinirResponsavel(Scanner input) throws Exception
     {
         Usuario respAtual = U.BuscarUsuario(this.getUsuarios(), this.getIdResponsavel());
 
@@ -51,18 +51,24 @@ public class Atividade implements Lista{
         System.out.println("Gostaria de alterar? 1 para sim");
         int decisao = U.LerInt(input);
 
-        if (decisao == 1)
+        while (decisao == 1)
         {
             System.out.println("Digite o RG do novo Responsavel");
             ListarUsers(this.getUsuarios());
             int checkIdU = U.LerInt(input);
-            Usuario idResponsavel = U.BuscarUsuario(this.getUsuarios(), checkIdU);
-            this.setIdResponsavel(idResponsavel.getId());
-            this.setUsuarios(idResponsavel);
+            
+            try {
+                Usuario idResponsavel = U.BuscarUsuario(this.getUsuarios(), checkIdU);
+                 this.setIdResponsavel(idResponsavel.getId());
+                 decisao = 0;
+            } catch (Exception e) {
+                
+                System.out.println(e.getMessage()+"Tente novamente");
+            }
         }
     }
     
-    public void AdicionarUsuarios(Projeto project,Scanner input) //Continue Daqui
+    public void AdicionarUsuarios(Projeto project,Scanner input) throws Exception
     {
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
         ListarUsers(project.getProjetistas());
@@ -72,22 +78,28 @@ public class Atividade implements Lista{
         {
             System.out.println("Digite o RG do usuario que deseja adicionar: ");
             int checkIdU = U.LerInt(input);
-            Usuario usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
 
-            if (usuario.getAtividade() == 0)
-            {
-                this.setUsuarios(usuario);
-                usuario.setAtividade(this.getId());
-            }
-            else
-            {
-                System.out.println("Usuario ja esta alocado em uma atividade\ntente outro usuario\n");
+            try {
+                 
+                Usuario usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
+                if (usuario.getAtividade() == 0)
+                {
+                    this.setUsuarios(usuario);
+                    usuario.setAtividade(this.getId());
+                }
+                else
+                {
+                    System.out.println("Usuario ja esta alocado em uma atividade\nTente outro usuario\n");
+                    i--;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
                 i--;
             }
         }
     }
     
-    public void RemoverUsuarios(Scanner input)
+    public void RemoverUsuarios(Scanner input) throws Exception
     {
         System.out.println("Qual sera a quantidade de usuarios removidos? 0 para nenhum");
         ListarUsers(this.getUsuarios());
@@ -97,15 +109,20 @@ public class Atividade implements Lista{
         {
             System.out.println("Digite o RG do usuario que deseja remover: ");
             int checkIdU = U.LerInt(input);
-            Usuario usuario = U.BuscarUsuario(this.getUsuarios(), checkIdU);
+            try {
+                Usuario usuario = U.BuscarUsuario(this.getUsuarios(), checkIdU);
+                usuario.setAtividade(0);
+                usuario.getTarefas().clear();
+                this.getUsuarios().remove(usuario);
 
-            usuario.setAtividade(0);
-            usuario.getTarefas().clear();
-            this.getUsuarios().remove(usuario);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                i--;
+            }
         }
     }
 
-    public void AdicionarTarefas(Scanner input)
+    public void AdicionarTarefas(Scanner input) throws Exception
     {
         System.out.println("Qual sera a quantidade de tarefas adicionadas? 0 para nenhuma: ");
         int quant = U.LerInt(input);
@@ -119,18 +136,22 @@ public class Atividade implements Lista{
 
             System.out.println("Digite o RG do profissional que realizara a tarefa: ");
             int respTarefa = U.LerInt(input);
-            Usuario user = U.BuscarUsuario(this.getUsuarios(), respTarefa);
-
-            if (user != null)
-            {
+            try {
+                
+                Usuario user = U.BuscarUsuario(this.getUsuarios(), respTarefa);
+                
                 Tarefa tarefa = new Tarefa(descTarefa, respTarefa);
                 user.setTarefas(tarefa);
                 this.setTarefas(tarefa);
+            
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                i--;
             }
         }
     }
     
-    public void RemoverTarefas(Scanner input)
+    public void RemoverTarefas(Scanner input) throws Exception
     {
         System.out.println("Qual sera a quantidade de tarefas removidas? 0 para nenhuma");
         int quant = U.LerInt(input);
@@ -141,16 +162,17 @@ public class Atividade implements Lista{
             ListarTasks(this.getTarefas());
             
             int respTarefa = U.LerInt(input);
-            Usuario responsavel = U.BuscarUsuario(this.getUsuarios(), respTarefa);
+            try {
 
-            for (Tarefa item : this.getTarefas())
-            {
-                if (item.getProfissional() == respTarefa)
+                Usuario responsavel = U.BuscarUsuario(this.getUsuarios(), respTarefa);
+
+                for (Tarefa item : responsavel.getTarefas())
                 {
-                    System.out.println("Descricao da atividade: "+item.getDesc());
+                    System.out.println("Descricao da tarefa: "+item.getDesc());
                     System.out.println("Gostaria de remove-la? 1 para sim");
 
                     int dec = U.LerInt(input);
+
                     if (dec == 1)
                     {
                         this.getTarefas().remove(item);
@@ -159,6 +181,9 @@ public class Atividade implements Lista{
                         break;
                     }
                 }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                i--;
             }
         }
     }

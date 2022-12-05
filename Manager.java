@@ -1,9 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-//tratar os erros nos else's
-//Em cada for com if (obj != null), tratar o else
-
 public class Manager {
 
     ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
@@ -41,10 +38,10 @@ public class Manager {
                     System.out.print("Digite sua senha: ");
                     senha = input.nextLine();
 
-                    Usuario loginUser = U.BuscarUsuario(m.getUsuarios(), id);
+                    try {
 
-                    if (loginUser != null)
-                    {
+                        Usuario loginUser = U.BuscarUsuario(m.getUsuarios(), id);
+
                         if (senha.equals(loginUser.getSenha()))
                         {
                             System.out.println();
@@ -57,9 +54,7 @@ public class Manager {
                         {
                             throw new RuntimeException ("Senha incorreta");
                         }
-                    }
-                    else
-                    {
+                    } catch (Exception e) {
                         throw new RuntimeException("Id fora do sistema");
                     }
                 }
@@ -111,11 +106,6 @@ public class Manager {
                     }
                     
                     m.getUsuarios().add(usuario);
-
-                    for (Usuario item: m.getUsuarios())
-                    {
-                        System.out.println("Depois de ADD"+item.getId());
-                    }
                 }
 
                 else if (cmd == 3)
@@ -133,29 +123,22 @@ public class Manager {
 
                     Usuario user = U.BuscarUsuario(m.getUsuarios(), id);
 
-                    if (user != null)
+                    if (nome.equals(user.getNome()) && email.equals(user.getEmail()))
                     {
-                        if (nome.equals(user.getNome()) && email.equals(user.getEmail()))
+                        System.out.println("Digite a nova senha: ");
                         {
-                            System.out.println("Digite a nova senha: ");
-                            {
-                                String novaSenha = input.nextLine();
+                            String novaSenha = input.nextLine();
 
-                                if (!novaSenha.equals(user.getSenha()))
-                                {
-                                    user.setSenha(novaSenha);
-                                    System.out.println("Senha alterada com sucesso");
-                                }
-                                else
-                                {
-                                    System.out.println("Erro, senha igual a anterior");
-                                }
+                            if (!novaSenha.equals(user.getSenha()))
+                            {
+                                user.setSenha(novaSenha);
+                                System.out.println("Senha alterada com sucesso");
+                            }
+                            else
+                            {
+                                throw new RuntimeException ("Erro, senha igual a anterior");
                             }
                         }
-                    }
-                    else
-                    {
-                        throw new RuntimeException("Usuario fora do sistema");
                     }
                 }
             }

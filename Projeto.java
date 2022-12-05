@@ -43,7 +43,7 @@ public class Projeto implements Lista{
         this.setProjetistas(Coord);
     }
 
-    public void EditarProjeto (ArrayList<Usuario> usuarios, Scanner input, DateTimeFormatter format)
+    public void EditarProjeto (ArrayList<Usuario> usuarios, Scanner input, DateTimeFormatter format) throws Exception
     {
         System.out.println("Somente Docentes podem coordenar um projeto");
         DesignarCoordenador(usuarios, input);
@@ -69,16 +69,15 @@ public class Projeto implements Lista{
         DefinirPrazoBolsa("Analista", input, format);
     }
 
-    public void DesignarCoordenador(ArrayList<Usuario> usuarios, Scanner input)
+    public void DesignarCoordenador(ArrayList<Usuario> usuarios, Scanner input) throws Exception
     {
         System.out.println("Digite o RG do novo coordenador do projeto: ");
         ListarDocentes(usuarios);
 
         int checkIdU = U.LerInt(input);
-        Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
-
-        if (usuario != null)
-        {
+        try {
+            
+            Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
             if (usuario instanceof Docente)
             {
                 Docente doce = (Docente)usuario;
@@ -90,10 +89,12 @@ public class Projeto implements Lista{
             {
                 System.out.println("Usuario precisa ser Docente");
             }
+        } catch (Exception e) {
+            DesignarCoordenador(usuarios, input);
         }
     }
 
-    public void AdicionarUsuarios(ArrayList<Usuario> usuarios, Scanner input)
+    public void AdicionarUsuarios(ArrayList<Usuario> usuarios, Scanner input) throws Exception
     {
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
         ListarUsers(usuarios);
@@ -110,7 +111,7 @@ public class Projeto implements Lista{
             {
                 doce = (Docente)usuario;
             }
-            if (usuario != null || doce != null && !doce.getCoord())
+            if (!doce.getCoord())
             {
                 System.out.println("Designe a funcao dele no projeto: ");
                 menu.MenuFuncUsuario();
@@ -140,10 +141,7 @@ public class Projeto implements Lista{
                         usuario.setFunc("Tecn");
                     }
                 }
-                else
-                {
-                    //erro
-                }
+                
                 this.setProjetistas(usuario);
                 usuario.setDiaIngresso(LocalDateTime.now());
                 usuario.setProjeto(this.getId());
@@ -157,7 +155,7 @@ public class Projeto implements Lista{
         }
     }
 
-    public void RemoverUsuarios(ArrayList<Usuario> usuarios, Scanner input)
+    public void RemoverUsuarios(ArrayList<Usuario> usuarios, Scanner input) throws Exception
     {
         System.out.println("Qual sera a quantidade de usuarios removidos?");
         ListarUsers(usuarios);
@@ -169,48 +167,45 @@ public class Projeto implements Lista{
             int checkIdU = U.LerInt(input);
             Usuario usuario = U.BuscarUsuario(this.getProjetistas(), checkIdU);
 
-            if (usuario != null) 
+            if (usuario.getFunc().equals("Devp"))
             {
-                if (usuario.getFunc().equals("Devp"))
-                {
-                    this.getDesenvolvedores().remove(usuario);
-                    usuario.setFunc(null);
-                }
-                else if (usuario.getFunc().equals("Test"))
-                {
-                    this.getTestadores().remove(usuario);
-                    usuario.setFunc(null);
-                }
-                else if (usuario.getFunc().equals("Anlt"))
-                {
-                    this.getAnalistas().remove(usuario);
-                    usuario.setFunc(null);
-                }
-                else if (usuario.getFunc().equals("Tecn"))
-                {
-                    this.setIdTecnico(0);
-                    usuario.setFunc(null);
-                }
+                this.getDesenvolvedores().remove(usuario);
+                usuario.setFunc(null);
+            }
+            else if (usuario.getFunc().equals("Test"))
+            {
+                this.getTestadores().remove(usuario);
+                usuario.setFunc(null);
+            }
+            else if (usuario.getFunc().equals("Anlt"))
+            {
+                this.getAnalistas().remove(usuario);
+                usuario.setFunc(null);
+            }
+            else if (usuario.getFunc().equals("Tecn"))
+            {
+                this.setIdTecnico(0);
+                usuario.setFunc(null);
+            }
 
-                this.getProjetistas().remove(usuario);
-                usuario.setProjeto(0);
+            this.getProjetistas().remove(usuario);
+            usuario.setProjeto(0);
 
-                Atividade ativ = U.BuscarAtividade(this.getAtividades(), usuario.getId());
-                ativ.getUsuarios().remove(usuario);
-                usuario.setAtividade(0);
-                
-                usuario.getTarefas().clear();
+            Atividade ativ = U.BuscarAtividade(this.getAtividades(), usuario.getId());
+            ativ.getUsuarios().remove(usuario);
+            usuario.setAtividade(0);
+            
+            usuario.getTarefas().clear();
 
-                if (usuario instanceof Discente)
-                {
-                    Discente disc = (Discente)usuario;
-                    disc.setDiaPag(null);
-                }
+            if (usuario instanceof Discente)
+            {
+                Discente disc = (Discente)usuario;
+                disc.setDiaPag(null);
             }
         }
     }
 
-    public void RemoverIntercambista(Scanner input)
+    public void RemoverIntercambista(Scanner input) throws Exception
     {
         System.out.println("Lista de Intercambistas atuais: ");
         ListarUsers(this.getIntercambistas());
@@ -228,17 +223,14 @@ public class Projeto implements Lista{
             Discente intercamb = (Discente)user;
             Atividade ativ = U.BuscarAtividade(this.getAtividades(), intercamb.getAtivInterCam());
             
-            if (intercamb != null)
-            {
-                this.getIntercambistas().remove(intercamb);
-                ativ.getUsuarios().remove(intercamb);
-                intercamb.setProjInterCam(0);
-                intercamb.setAtivInterCam(0);
-            }
+            this.getIntercambistas().remove(intercamb);
+            ativ.getUsuarios().remove(intercamb);
+            intercamb.setProjInterCam(0);
+            intercamb.setAtivInterCam(0);
         }
     }
     
-    public void AdicionarAtividades(DateTimeFormatter format, Scanner input)
+    public void AdicionarAtividades(DateTimeFormatter format, Scanner input) throws Exception
     {
         System.out.println("Qual sera a quantidade de atividades adicionadas?");
         int quant = U.LerInt(input);
@@ -278,7 +270,7 @@ public class Projeto implements Lista{
         }
     }
 
-    public void RemoverAtividades(Scanner input)
+    public void RemoverAtividades(Scanner input) throws Exception
     {
         System.out.println("Qual sera a quantidade de atividades removidas?");
         ListarAtivs(this.getAtividades());
@@ -305,7 +297,7 @@ public class Projeto implements Lista{
         }
     }
 
-    public void DefinirBolsa(String tipoBolsa, Scanner input)
+    public void DefinirBolsa(String tipoBolsa, Scanner input) throws Exception
     {
         System.out.println("Digite o novo valor para a bolsa, -1 para manter");
 
@@ -352,7 +344,7 @@ public class Projeto implements Lista{
         }
     }
     
-    public void DefinirPrazoBolsa(String tipoBolsa, Scanner input, DateTimeFormatter format)
+    public void DefinirPrazoBolsa(String tipoBolsa, Scanner input, DateTimeFormatter format) throws Exception
     {
         System.out.println("Defina um novo prazo para as bolsas, 1 para mudar");
         System.out.println("Prazo atual da bolsa: ");

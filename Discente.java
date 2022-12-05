@@ -5,6 +5,7 @@ public class Discente extends Usuario{
     private int projInterCam = 0;
     private int ativInterCam = 0;
     private LocalDateTime diaPag = null;
+    private boolean pass = false;
 
     public Discente (String nome, String email, String senha, String tipo, int id)
     {
@@ -53,16 +54,16 @@ public class Discente extends Usuario{
         this.diaPag = diaPag;
     }
 
-    public boolean getCoord()
+    public boolean getPass()
     {
-        return false;
-    }
-    
-    public void setCoord(boolean coord)
-    {
-        System.out.println("Discentes nao podem ser coordenadores");
+        return this.pass;
     }
 
+    public void setPass(Boolean pass)
+    {
+        this.pass = pass;
+    }
+    
     @Override
     public String toString()
     {

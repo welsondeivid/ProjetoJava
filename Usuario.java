@@ -47,7 +47,7 @@ public abstract class Usuario
     
     public abstract void IngressarProjeto(Projeto project);
 
-    public void IngressarAtividade(Projeto project, Scanner input)
+    public void IngressarAtividade(Projeto project, Scanner input) throws Exception
     {
         if (project != null)
         {
@@ -55,10 +55,7 @@ public abstract class Usuario
             int checkIdA = U.LerInt(input);
             Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
 
-            if (atividade != null)
-            {
-                this.setAtividade(atividade.getId());
-            }
+            this.setAtividade(atividade.getId());
         }
     }
 
@@ -217,7 +214,7 @@ public abstract class Usuario
         {
             dataHora = U.MostrarDataHora(this.getDiaIngresso());
 
-            if (this.getTarefas() != null) //try
+            if (this.getTarefas() != null)
             {
                 for (Tarefa item : this.getTarefas())
                 {
