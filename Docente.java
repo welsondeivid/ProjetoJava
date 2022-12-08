@@ -4,7 +4,7 @@ public class Docente extends Usuario{
     
     private boolean coord = false;
 
-    public Docente (String nome, String email, String senha, String tipo, int id)
+    public Docente (String nome, String email, String senha, int tipo, int id)
     {
         super(nome, email, senha, tipo, id);
     }
@@ -37,17 +37,17 @@ public class Docente extends Usuario{
     {
         String tipo = null;
 
-        if (this.getTipo().equals("Prof"))
+        if (this.getTipo() == 4)
         {
             tipo = "Professor";
         }
-        else if (this.getTipo().equals("Pesq"))
+        else if (this.getTipo() == 5)
         {
             tipo = "Pesquisador";
         }
         if(this.getCoord())
         {
-            tipo.concat("Coordenador");
+            tipo += "Coordenador";
         }
 
         return tipo + "\n"+super.toString();

@@ -7,7 +7,7 @@ public class Discente extends Usuario{
     private LocalDateTime diaPag = null;
     private boolean pass = false;
 
-    public Discente (String nome, String email, String senha, String tipo, int id)
+    public Discente (String nome, String email, String senha, int tipo, int id)
     {
         super(nome, email, senha, tipo, id);
     }
@@ -69,15 +69,15 @@ public class Discente extends Usuario{
     {
         String tipo = null, intercambista = null;
 
-        if (this.getTipo().equals("Grad"))
+        if (this.getTipo() == 1)
         {
             tipo = "Aluno Graduando";
         }
-        else if (this.getTipo().equals("Mest"))
+        else if (this.getTipo() == 2)
         {
             tipo = "Aluno Mestrando";
         }
-        else if (this.getTipo().equals("Dout"))
+        else if (this.getTipo() == 3)
         {
             tipo = "Aluno Doutorando";
         }
@@ -85,7 +85,7 @@ public class Discente extends Usuario{
         if (this.getProjInterCam() != 0)
         {
             intercambista = "\nFaz intercambio no projeto: "+this.getProjInterCam()+"\n";
-            intercambista.concat("Designado para a atividade: "+this.getAtivInterCam()+"\n");
+            intercambista += "Designado para a atividade: "+this.getAtivInterCam()+"\n";
         }
         else
         {

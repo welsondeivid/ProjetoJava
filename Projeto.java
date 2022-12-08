@@ -1,13 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-import java.time.format.DateTimeFormatter;
-
-public class Projeto implements Lista{
-
-    Utilidades U = new Utilidades();
-    Menu menu = new Menu();
+public class Projeto extends VarGlobais implements Lista{
 
     private int id = -1;
     private String desc = null;
@@ -43,38 +37,38 @@ public class Projeto implements Lista{
         this.setProjetistas(Coord);
     }
 
-    public void EditarProjeto (ArrayList<Usuario> usuarios, Scanner input, DateTimeFormatter format) throws Exception
+    public void EditarProjeto (ArrayList<Usuario> usuarios) throws Exception
     {
         System.out.println("Somente Docentes podem coordenar um projeto");
-        DesignarCoordenador(usuarios, input);
+        DesignarCoordenador(usuarios);
 
-        AdicionarUsuarios(usuarios, input);
+        AdicionarUsuarios(usuarios);
 
-        RemoverUsuarios(this.projetistas, input);
+        RemoverUsuarios(this.projetistas);
 
-        AdicionarAtividades(format, input);
+        AdicionarAtividades();
 
-        RemoverAtividades(input);                       
+        RemoverAtividades();                       
 
-        DefinirBolsa("Desenvolvedor", input);
+        DefinirBolsa("Desenvolvedor");
 
-        DefinirBolsa("Testador", input);
+        DefinirBolsa("Testador");
 
-        DefinirBolsa("Analista", input);
+        DefinirBolsa("Analista");
 
-        DefinirPrazoBolsa("Desenvolvedor", input, format);
+        DefinirPrazoBolsa("Desenvolvedor");
 
-        DefinirPrazoBolsa("Testador", input, format);
+        DefinirPrazoBolsa("Testador");
 
-        DefinirPrazoBolsa("Analista", input, format);
+        DefinirPrazoBolsa("Analista");
     }
 
-    public void DesignarCoordenador(ArrayList<Usuario> usuarios, Scanner input) throws Exception
+    public void DesignarCoordenador(ArrayList<Usuario> usuarios) throws Exception
     {
         System.out.println("Digite o RG do novo coordenador do projeto: ");
         ListarDocentes(usuarios);
 
-        int checkIdU = U.LerInt(input);
+        int checkIdU = U.LerInt();
         try {
             
             Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
@@ -90,20 +84,20 @@ public class Projeto implements Lista{
                 System.out.println("Usuario precisa ser Docente");
             }
         } catch (Exception e) {
-            DesignarCoordenador(usuarios, input);
+            DesignarCoordenador(usuarios);
         }
     }
 
-    public void AdicionarUsuarios(ArrayList<Usuario> usuarios, Scanner input) throws Exception
+    public void AdicionarUsuarios(ArrayList<Usuario> usuarios) throws Exception
     {
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
         ListarUsers(usuarios);
-        int quant = U.LerInt(input);
+        int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o RG do usuario que deseja adicionar: ");
-            int checkIdU = U.LerInt(input);
+            int checkIdU = U.LerInt();
             Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
             Docente doce = null;
 
@@ -116,7 +110,7 @@ public class Projeto implements Lista{
                 System.out.println("Designe a funcao dele no projeto: ");
                 menu.MenuFuncUsuario();
                 
-                int funcUsuario = U.LerInt(input);
+                int funcUsuario = U.LerInt();
 
                 if (funcUsuario == 1)
                 {
@@ -155,16 +149,16 @@ public class Projeto implements Lista{
         }
     }
 
-    public void RemoverUsuarios(ArrayList<Usuario> usuarios, Scanner input) throws Exception
+    public void RemoverUsuarios(ArrayList<Usuario> usuarios) throws Exception
     {
         System.out.println("Qual sera a quantidade de usuarios removidos?");
         ListarUsers(usuarios);
-        int quant = U.LerInt(input);
+        int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite RG do usuario que deseja remover: ");
-            int checkIdU = U.LerInt(input);
+            int checkIdU = U.LerInt();
             Usuario usuario = U.BuscarUsuario(this.getProjetistas(), checkIdU);
 
             if (usuario.getFunc().equals("Devp"))
@@ -205,19 +199,19 @@ public class Projeto implements Lista{
         }
     }
 
-    public void RemoverIntercambista(Scanner input) throws Exception
+    public void RemoverIntercambista() throws Exception
     {
         System.out.println("Lista de Intercambistas atuais: ");
         ListarUsers(this.getIntercambistas());
 
         System.out.println("Qual sera a quantidade de usuarios removidos?");
 
-        int quant = U.LerInt(input);
+        int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite RG do usuario que deseja remover: ");
-            int checkIdU = U.LerInt(input);
+            int checkIdU = U.LerInt();
             Usuario user = U.BuscarUsuario(this.getIntercambistas(), checkIdU);
 
             Discente intercamb = (Discente)user;
@@ -230,17 +224,17 @@ public class Projeto implements Lista{
         }
     }
     
-    public void AdicionarAtividades(DateTimeFormatter format, Scanner input) throws Exception
+    public void AdicionarAtividades() throws Exception
     {
         System.out.println("Qual sera a quantidade de atividades adicionadas?");
-        int quant = U.LerInt(input);
+        int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Crie a atividade a ser adicionada: ");
 
             System.out.println("Digite o ID da atividade: ");
-            int idAtividade = U.LerInt(input);
+            int idAtividade = U.LerInt();
 
             if (U.BuscarAtividade(this.getAtividades(), idAtividade) != null)
             {
@@ -253,7 +247,7 @@ public class Projeto implements Lista{
             String descAtividade = input.nextLine();
 
             System.out.println("Digite o RG do responsavel pela atividade: ");
-            int checkIdU = U.LerInt(input);
+            int checkIdU = U.LerInt();
             Usuario responsavel = U.BuscarUsuario(this.getProjetistas(), checkIdU);
 
             System.out.println ("Digite a data de inicio no formato: HH:mm dd/MM/yyyy");
@@ -270,16 +264,16 @@ public class Projeto implements Lista{
         }
     }
 
-    public void RemoverAtividades(Scanner input) throws Exception
+    public void RemoverAtividades() throws Exception
     {
         System.out.println("Qual sera a quantidade de atividades removidas?");
         ListarAtivs(this.getAtividades());
-        int quant = U.LerInt(input);
+        int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o ID da atividade a ser removida: ");
-            int checkIdA = U.LerInt(input);
+            int checkIdA = U.LerInt();
 
             Atividade atividade = U.BuscarAtividade(this.getAtividades(), checkIdA);
             if (atividade != null)
@@ -297,7 +291,7 @@ public class Projeto implements Lista{
         }
     }
 
-    public void DefinirBolsa(String tipoBolsa, Scanner input) throws Exception
+    public void DefinirBolsa(String tipoBolsa) throws Exception
     {
         System.out.println("Digite o novo valor para a bolsa, -1 para manter");
 
@@ -308,7 +302,7 @@ public class Projeto implements Lista{
         {
             System.out.println(this.getBolsaDesenvolvedor());
             
-            bolsa = U.LerFloat(input);
+            bolsa = U.LerFloat();
 
             if (bolsa > -1)
             {
@@ -319,7 +313,7 @@ public class Projeto implements Lista{
         {
             System.out.println(+this.getBolsaTestador());
 
-            bolsa = U.LerFloat(input);
+            bolsa = U.LerFloat();
 
             if (bolsa > -1)
             {
@@ -330,7 +324,7 @@ public class Projeto implements Lista{
         {
             System.out.println(this.getBolsaAnalista());
             
-            bolsa = U.LerFloat(input);
+            bolsa = U.LerFloat();
 
             if (bolsa > -1)
             {
@@ -344,12 +338,12 @@ public class Projeto implements Lista{
         }
     }
     
-    public void DefinirPrazoBolsa(String tipoBolsa, Scanner input, DateTimeFormatter format) throws Exception
+    public void DefinirPrazoBolsa(String tipoBolsa) throws Exception
     {
         System.out.println("Defina um novo prazo para as bolsas, 1 para mudar");
         System.out.println("Prazo atual da bolsa: ");
 
-        int decisao = U.LerInt(input);
+        int decisao = U.LerInt();
 
         if (tipoBolsa.equals("Desenvolvedor"))
         {

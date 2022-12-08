@@ -1,12 +1,13 @@
-import java.util.Scanner;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Utilidades implements Lista{
 	    
-    public int LerInt(Scanner input) 
+    Scanner input = new Scanner(System.in);
+    public int LerInt()
     {
         int num = -1;
         try 
@@ -24,7 +25,7 @@ public class Utilidades implements Lista{
         return num;
     }
     
-    public float LerFloat(Scanner input)
+    public float LerFloat()
     {
         float num = -1.0f;
         try
@@ -52,7 +53,7 @@ public class Utilidades implements Lista{
             }
         }
 
-        throw new RuntimeException("Usuario fora do sistema\n");
+        throw new RuntimeException("Usuario fora do sistema");
     }
 
     public Projeto BuscarProjeto(ArrayList<Projeto> projs, int checkId)
@@ -65,7 +66,7 @@ public class Utilidades implements Lista{
             } 
         }
 
-        throw new RuntimeException("Projeto fora do sistema\n");
+        throw new RuntimeException("Projeto fora do sistema");
     }
 
     public Atividade BuscarAtividade(ArrayList<Atividade> ativs, int checkId)
@@ -78,19 +79,19 @@ public class Utilidades implements Lista{
             }    
         }
 
-        throw new RuntimeException("Atividade fora do sistema\n");
+        throw new RuntimeException("Atividade fora do sistema");
     }
 
-    public void Consultar (Scanner input, ArrayList<Projeto> projs, ArrayList<Usuario> users)
+    public void Consultar (ArrayList<Projeto> projs, ArrayList<Usuario> users)
     {
-        int cmdConsulta = LerInt(input);
+        int cmdConsulta = LerInt();
 
         if (cmdConsulta == 1)
         {
             System.out.println("Digite o RG do usuario:");
             ListarUsers (users);
 
-            int checkIdU = LerInt(input);
+            int checkIdU = LerInt();
             Usuario usuario = BuscarUsuario(users, checkIdU);
 
             System.out.println("Dados do usuario encontrado: ");
@@ -101,13 +102,13 @@ public class Utilidades implements Lista{
             System.out.println(("Digite o id do projeto onde a atividade esta localizda: "));
             ListarProjs(projs);
 
-            int checkIdP = LerInt(input);
+            int checkIdP = LerInt();
             Projeto project = BuscarProjeto(projs, checkIdP);
 
             System.out.println("Digite o id da atividade: ");
             ListarAtivs(project.getAtividades());
 
-            int checkIdA = LerInt(input);
+            int checkIdA = LerInt();
             Atividade atividade = BuscarAtividade(project.getAtividades(), checkIdA);
 
             System.out.println("Dados da atividade encontrada: ");
@@ -118,7 +119,7 @@ public class Utilidades implements Lista{
             System.out.println(("Digite o id do projeto: "));
             ListarProjs(projs);
 
-            int checkIdP = LerInt(input);
+            int checkIdP = LerInt();
             Projeto project = BuscarProjeto(projs, checkIdP);
 
             System.out.println("Dados do projeto encontrado: ");
@@ -348,17 +349,17 @@ public class Utilidades implements Lista{
         return pagar;
     }
     
-    public String ChecarTipoUsuario (String tipo)
+    public String ChecarTipoUsuario (int tipo)
     {
-        if (tipo.equals("Grad") || tipo.equals("Mest") || tipo.equals("Dout"))
+        if (tipo == 1 || tipo == 2 || tipo == 3)
         {
             return "Disc";
         }
-        else if (tipo.equals("Prof") || tipo.equals("Pesq"))
+        else if (tipo == 4 || tipo == 5)
         {
             return "Doce";
         }
 
-        throw new RuntimeException("Erro: Tipo Invalido");
+        throw new RuntimeException("Erro: Valor Invalido\nTente Novamente: ");
     }
 }

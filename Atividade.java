@@ -1,11 +1,8 @@
 import java.time.LocalDateTime;
-import java.util.Scanner;
 import java.util.ArrayList;
 
-public class Atividade implements Lista{
+public class Atividade extends VarGlobais implements Lista{
     
-    Utilidades U = new Utilidades();
-
     private int id = -1;
     private String desc = null;
     private int idResponsavel = 0;
@@ -28,20 +25,20 @@ public class Atividade implements Lista{
         this.setStatus("Iniciada");
     }
 
-    public void EditarAtividade(Projeto project, Scanner input) throws Exception
+    public void EditarAtividade(Projeto project) throws Exception
     {
-        DefinirResponsavel(input);
+        DefinirResponsavel();
 
-        AdicionarUsuarios(project, input);
+        AdicionarUsuarios(project);
 
-        RemoverUsuarios(input);
+        RemoverUsuarios();
 
-        AdicionarTarefas(input);
+        AdicionarTarefas();
 
-        RemoverTarefas(input);
+        RemoverTarefas();
     }
 
-    public void DefinirResponsavel(Scanner input) throws Exception
+    public void DefinirResponsavel() throws Exception
     {
         Usuario respAtual = U.BuscarUsuario(this.getUsuarios(), this.getIdResponsavel());
 
@@ -49,13 +46,13 @@ public class Atividade implements Lista{
         System.out.println(respAtual.getNome());
 
         System.out.println("Gostaria de alterar? 1 para sim");
-        int decisao = U.LerInt(input);
+        int decisao = U.LerInt();
 
         while (decisao == 1)
         {
             System.out.println("Digite o RG do novo Responsavel");
             ListarUsers(this.getUsuarios());
-            int checkIdU = U.LerInt(input);
+            int checkIdU = U.LerInt();
             
             try {
                 Usuario idResponsavel = U.BuscarUsuario(this.getUsuarios(), checkIdU);
@@ -68,16 +65,16 @@ public class Atividade implements Lista{
         }
     }
     
-    public void AdicionarUsuarios(Projeto project,Scanner input) throws Exception
+    public void AdicionarUsuarios(Projeto project) throws Exception
     {
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
         ListarUsers(project.getProjetistas());
-        int quant = U.LerInt(input);
+        int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o RG do usuario que deseja adicionar: ");
-            int checkIdU = U.LerInt(input);
+            int checkIdU = U.LerInt();
 
             try {
                  
@@ -99,16 +96,16 @@ public class Atividade implements Lista{
         }
     }
     
-    public void RemoverUsuarios(Scanner input) throws Exception
+    public void RemoverUsuarios() throws Exception
     {
         System.out.println("Qual sera a quantidade de usuarios removidos? 0 para nenhum");
         ListarUsers(this.getUsuarios());
-        int quant = U.LerInt(input);
+        int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o RG do usuario que deseja remover: ");
-            int checkIdU = U.LerInt(input);
+            int checkIdU = U.LerInt();
             try {
                 Usuario usuario = U.BuscarUsuario(this.getUsuarios(), checkIdU);
                 usuario.setAtividade(0);
@@ -122,10 +119,10 @@ public class Atividade implements Lista{
         }
     }
 
-    public void AdicionarTarefas(Scanner input) throws Exception
+    public void AdicionarTarefas() throws Exception
     {
         System.out.println("Qual sera a quantidade de tarefas adicionadas? 0 para nenhuma: ");
-        int quant = U.LerInt(input);
+        int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
         {
@@ -135,7 +132,7 @@ public class Atividade implements Lista{
             String descTarefa = input.nextLine();
 
             System.out.println("Digite o RG do profissional que realizara a tarefa: ");
-            int respTarefa = U.LerInt(input);
+            int respTarefa = U.LerInt();
             try {
                 
                 Usuario user = U.BuscarUsuario(this.getUsuarios(), respTarefa);
@@ -151,17 +148,17 @@ public class Atividade implements Lista{
         }
     }
     
-    public void RemoverTarefas(Scanner input) throws Exception
+    public void RemoverTarefas() throws Exception
     {
         System.out.println("Qual sera a quantidade de tarefas removidas? 0 para nenhuma");
-        int quant = U.LerInt(input);
+        int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
         {
             System.out.println("Digite o RG do responsável pela tarefa que deseja remover: ");
             ListarTasks(this.getTarefas());
             
-            int respTarefa = U.LerInt(input);
+            int respTarefa = U.LerInt();
             try {
 
                 Usuario responsavel = U.BuscarUsuario(this.getUsuarios(), respTarefa);
@@ -171,7 +168,7 @@ public class Atividade implements Lista{
                     System.out.println("Descricao da tarefa: "+item.getDesc());
                     System.out.println("Gostaria de remove-la? 1 para sim");
 
-                    int dec = U.LerInt(input);
+                    int dec = U.LerInt();
 
                     if (dec == 1)
                     {

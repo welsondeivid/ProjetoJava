@@ -12,19 +12,18 @@ public class Manager {
         Utilidades U = new Utilidades();
         Manager m = new Manager();
         Menu menu = new Menu();
-        
-        String[] tipos = {"Grad", "Mest", "Dout", "Prof", "Pesq"};
 	    
         Scanner input = new Scanner(System.in);
 
         int cmd = -1;
         
+        System.out.println("-----Gerenciador de Projetos-----\n");
         while (cmd != 0)
         {
             try
             {
                 menu.MenuPrincipal();
-                cmd = U.LerInt(input);
+                cmd = U.LerInt();
 
                 if (cmd == 1)
                 {
@@ -33,76 +32,41 @@ public class Manager {
                     System.out.println("\t\tLOGIN NO SISTEMA");
 
                     System.out.print("Digite seu ID: ");
-                    id = U.LerInt(input);
+                    id = U.LerInt();
+
+                    Usuario loginUser = U.BuscarUsuario(m.getUsuarios(), id);
 
                     System.out.print("Digite sua senha: ");
                     senha = input.nextLine();
 
-                    try {
-
-                        Usuario loginUser = U.BuscarUsuario(m.getUsuarios(), id);
-
-                        if (senha.equals(loginUser.getSenha()))
-                        {
-                            System.out.println();
-                            Login log = new Login();
-                            System.out.println("Login realizado com Sucesso\n");
-                            
-                            log.LoginOn(input, loginUser, m);
-                        }
-                        else
-                        {
-                            throw new RuntimeException ("Senha incorreta");
-                        }
-                    } catch (Exception e) {
-                        throw new RuntimeException("Id fora do sistema");
+                    if (senha.equals(loginUser.getSenha()))
+                    {
+                        System.out.println();
+                        Login log = new Login();
+                        System.out.println("Login realizado com Sucesso\n");
+                        
+                        log.LoginOn(loginUser, m);
+                    }
+                    else
+                    {
+                        throw new RuntimeException ("Erro: Senha incorreta");
                     }
                 }
                 else if (cmd == 2)
                 {
-                    System.out.println("Digite seu nome: ");
-                    String nomeUser = input.nextLine();
-                    
-                    erro.CheckErros(nomeUser, "nome");
-                    
-                    System.out.println("Digite seu RG, usaremos como seu id: ");
-                    int idUser = U.LerInt(input);
-                    
-                    try {
-
-                        U.BuscarUsuario(m.getUsuarios(), idUser);
-                        System.out.println("ID ja consta no sistema\nFalha no cadastro");
-                        continue;
-
-                    } catch (Exception e) {
-                        
-                       System.out.println("ID valido");
-                    }
-
-                    System.out.println("Digite seu email: "); //Falta Formatar
-                    String emailUser = input.nextLine();
-                    erro.CheckErros(nomeUser, "nome");
-
-                    System.out.println("Digite sua senha: "); //Crie uma confirmação
-                    String senhaUser = input.nextLine();
-                    erro.CheckErros(nomeUser, "senha");
-
-                    System.out.println("Digite o seu tipo de usuario: ");
-                    for (int i = 0; i < tipos.length; i++)
-                    {
-                        System.out.println(tipos[i]);
-                    }
-                    String tipoUser = input.nextLine();
-
+                    Cadastro cadastro = new Cadastro();
                     Usuario usuario = null;
-                    
-                    if (U.ChecarTipoUsuario(tipoUser).equals("Disc"))
+
+                    while (usuario == null)
                     {
-                        usuario = new Discente(nomeUser, emailUser, senhaUser, tipoUser, idUser);
-                    }
-                    else if (U.ChecarTipoUsuario(tipoUser).equals("Doce"))
-                    {
-                        usuario = new Docente(nomeUser, emailUser, senhaUser, tipoUser, idUser);
+                        try
+                        {
+                            usuario = cadastro.Cadastrar(m.getUsuarios());
+                        }
+                        catch (Exception e)
+                        {
+                            System.out.println("Falha no cadastro\n"+e.getMessage()+"\n");
+                        }
                     }
                     
                     m.getUsuarios().add(usuario);
@@ -116,18 +80,21 @@ public class Manager {
                     String nome = input.nextLine();
 
                     System.out.print("Seu Id: ");
-                    int id = U.LerInt(input);
+                    int id = U.LerInt();
+
+                    Usuario user = U.BuscarUsuario(m.getUsuarios(), id);
 
                     System.out.print("Seu email: ");
                     String email = input.nextLine();
 
-                    Usuario user = U.BuscarUsuario(m.getUsuarios(), id);
+                    if (!email.contains("@icproj")) email += "@icproj.com";
 
                     if (nome.equals(user.getNome()) && email.equals(user.getEmail()))
                     {
                         System.out.println("Digite a nova senha: ");
                         {
                             String novaSenha = input.nextLine();
+                            erro.CheckErros(novaSenha, "senha");
 
                             if (!novaSenha.equals(user.getSenha()))
                             {
@@ -136,7 +103,7 @@ public class Manager {
                             }
                             else
                             {
-                                throw new RuntimeException ("Erro, senha igual a anterior");
+                                throw new RuntimeException ("Erro: Senha igual a anterior");
                             }
                         }
                     }
@@ -144,7 +111,7 @@ public class Manager {
             }
             catch (Exception e)
             {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage()+"\n");
             }
         }
         

@@ -121,4 +121,13 @@ public class Menu {
         System.out.println("Digite 3  para: Analista");
         System.out.println("Digite 4  para: Tecnico");
     }
+
+    public void MenuTipoUser()
+    {
+        System.out.println("Digite 1 para: Graduando");
+        System.out.println("Digite 2 para: Mestrando");
+        System.out.println("Digite 3 para: Doutorando");
+        System.out.println("Digite 4 para: Professor");
+        System.out.println("Digite 5 para: Pesquisador");
+    }
 }

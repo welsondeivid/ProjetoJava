@@ -1,17 +1,13 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public abstract class Usuario
+public abstract class Usuario extends VarGlobais
 {
-    Utilidades U = new Utilidades();
-    Menu menu = new Menu();
-
     private int id = -1;
     private String nome = null;
     private String email = null;
     private String senha = null;
-    private String tipo = null;
+    private int tipo = 0;
 
     private int projeto = 0;
     private LocalDateTime diaIngresso = null;
@@ -19,7 +15,7 @@ public abstract class Usuario
     private int atividade = 0;
     private ArrayList <Tarefa> tarefas = new ArrayList<Tarefa>();
 
-    public Usuario(String nome, String email, String senha, String tipo, int id)
+    public Usuario(String nome, String email, String senha, int tipo, int id)
     {
         setNome(nome);
         setEmail(email);
@@ -28,38 +24,38 @@ public abstract class Usuario
         setId(id);
     }
 
-    public void AlterarSenha (Scanner input) throws Exception
+    public void AlterarSenha () throws Exception
     {
         System.out.println("Sua senha atual é "+this.senha);
         System.out.println("Gostaria de mudar? 1 para sim");
 
-        int decisao = U.LerInt(input);
+        int decisao = U.LerInt();
 
         if (decisao == 1)
         {
             System.out.println("Digite a nova senha: ");
             String novaSenha = input.nextLine();
+            erro.CheckErros(novaSenha, "senha");
 
-            // tratamento de erro senha, vazia
             this.senha = novaSenha;
         }
     }
     
     public abstract void IngressarProjeto(Projeto project);
 
-    public void IngressarAtividade(Projeto project, Scanner input) throws Exception
+    public void IngressarAtividade(Projeto project) throws Exception
     {
         if (project != null)
         {
             System.out.println("Digite o ID da atividade a qual gostaria de associar-se: ");
-            int checkIdA = U.LerInt(input);
+            int checkIdA = U.LerInt();
             Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
 
             this.setAtividade(atividade.getId());
         }
     }
 
-    public void EditarTarefas(Scanner input)
+    public void EditarTarefas()
     {
         System.out.println("Tarefas atribuidas: ");
 
@@ -77,7 +73,7 @@ public abstract class Usuario
             System.out.println("Digite o indice da tarefa que deseja mudar o status: ");
             System.out.println("-1 para sair");
 
-            indTarefa = U.LerInt(input) - 1;
+            indTarefa = U.LerInt() - 1;
             if (indTarefa >= 0 && indTarefa < this.getTarefas().size())
             {
                 item = this.getTarefas().get(indTarefa);
@@ -93,7 +89,7 @@ public abstract class Usuario
 
                 menu.MenuEditarTarefa();
 
-                int decisao = U.LerInt(input);
+                int decisao = U.LerInt();
 
                 if (decisao == 1)
                 {
@@ -145,11 +141,11 @@ public abstract class Usuario
         this.senha = senha;
     }
 
-    public String getTipo() {
+    public int getTipo() {
         return this.tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(int tipo) {
         this.tipo = tipo;
     }
 
@@ -200,13 +196,13 @@ public abstract class Usuario
         if (this.getFunc() != null)
         {
             funcao = "Funcao no Projeto: ";
-            if (this.getFunc().equals("Devp"))          funcao.concat("Desenvolvedor");
+            if (this.getFunc().equals("Devp"))          funcao += "Desenvolvedor";
             
-            else if (this.getFunc().equals("Test"))     funcao.concat("Testador");
+            else if (this.getFunc().equals("Test"))     funcao += "Testador";
 
-            else if (this.getFunc().equals("Anlt"))     funcao.concat("Analista");
+            else if (this.getFunc().equals("Anlt"))     funcao += "Analista";
 
-            else if (this.getFunc().equals("Tecn"))     funcao.concat("Tecnico");
+            else if (this.getFunc().equals("Tecn"))     funcao += "Tecnico";
         }
 
         String dataHora = null, taskLists = "Ainda nao designadas";
@@ -218,7 +214,7 @@ public abstract class Usuario
             {
                 for (Tarefa item : this.getTarefas())
                 {
-                    taskLists.concat(item.getDesc()+"\n");
+                    taskLists += item.getDesc()+"\n";
                 }
             }
             return  "Nome: "+this.getNome()+"\n"+

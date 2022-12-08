@@ -1,29 +1,23 @@
-import java.util.Scanner;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class Login implements Lista
+public class Login extends VarGlobais implements Lista
 {
-    DateTimeFormatter format = DateTimeFormatter.ofPattern ("HH:mm dd/MM/yyyy");
-    Utilidades U = new Utilidades();
-    Menu menu = new Menu();
-
-    public void LoginOn(Scanner input, Usuario userLog, Manager m) throws Exception
+    public void LoginOn(Usuario userLog, Manager m) throws Exception
     {
         int cmdLogin = -1;
 
-        if (userLog instanceof Docente)
+        if (userLog instanceof Docente) //Continue daqui, trate os Exceptions
         {
             Docente user = (Docente)userLog;
             while (cmdLogin != 0)
             {
                 menu.MenuUsuarioDocente();
-                cmdLogin = U.LerInt(input);
+                cmdLogin = U.LerInt();
 
                 if (cmdLogin == 1)
                 {   
-                    CriarProjeto(U, input, format, m);
+                    CriarProjeto(m);
                 }
 
                 else if (cmdLogin == 2)
@@ -41,72 +35,72 @@ public class Login implements Lista
                         while (cmdProjeto != 0)
                         {
                             menu.MenuProjeto();
-                            cmdProjeto = U.LerInt(input);
+                            cmdProjeto = U.LerInt();
 
                             if (cmdProjeto == 1)
                             {
-                                project.EditarProjeto(m.getUsuarios(), input, format);
+                                project.EditarProjeto(m.getUsuarios());
                             }
                             else if (cmdProjeto == 2)
                             {
-                                project.DesignarCoordenador(m.getUsuarios(), input);
+                                project.DesignarCoordenador(m.getUsuarios());
                             }
                             else if (cmdProjeto == 3)
                             {
                                 menu.MenuAddRemove();
-                                int num = U.LerInt(input);
+                                int num = U.LerInt();
 
                                 if (num == 1)
                                 {
-                                    project.AdicionarUsuarios(m.getUsuarios(), input);
+                                    project.AdicionarUsuarios(m.getUsuarios());
                                 }
                                 else if (num == 2)
                                 {
-                                    project.RemoverUsuarios(project.getProjetistas(), input);
+                                    project.RemoverUsuarios(project.getProjetistas());
                                 }
                             }
                             else if (cmdProjeto == 4)
                             {
-                                project.RemoverIntercambista(input);
+                                project.RemoverIntercambista();
                             }
                             else if (cmdProjeto == 5)
                             {
                                 menu.MenuAddRemove();
-                                int num = U.LerInt(input);
+                                int num = U.LerInt();
 
                                 if (num == 1)
                                 {
-                                    project.AdicionarAtividades(format, input);
+                                    project.AdicionarAtividades();
                                 }
                                 else if (num == 2)
                                 {
 
-                                    project.RemoverAtividades(input);
+                                    project.RemoverAtividades();
                                 }
                             }
                             else if (cmdProjeto == 6)
                             {
-                                project.DefinirBolsa("Desenvolvedor", input);
+                                project.DefinirBolsa("Desenvolvedor");
                             }
                             else if (cmdProjeto == 7)
                             {
-                                project.DefinirBolsa("Testador", input);
+                                project.DefinirBolsa("Testador");
                             }
                             else if (cmdProjeto == 8)
                             {
-                                project.DefinirBolsa("Analista", input); 
+                                project.DefinirBolsa("Analista"); 
                             }
                             else if (cmdProjeto == 9)
                             {
-                                project.DefinirPrazoBolsa("Desenvolvedor", input, format);
+                                project.DefinirPrazoBolsa("Desenvolvedor");
                             }
                             else if (cmdProjeto == 10)
                             {
-                                project.DefinirPrazoBolsa("Testador", input, format);
+                                project.DefinirPrazoBolsa("Testador");
                             }
                             else if (cmdProjeto == 11)
                             {
-                                project.DefinirPrazoBolsa("Analista", input, format);
+                                project.DefinirPrazoBolsa("Analista");
                             }
                         }
                     }
@@ -123,33 +117,33 @@ public class Login implements Lista
 
                     while (cmdAtividade != 0)
                     {
-                        cmdAtividade = U.LerInt(input);
+                        cmdAtividade = U.LerInt();
 
                         if (user.getId() == atividade.getIdResponsavel() || user.getId() == project.getIdCoordenador())
                         {
                             if (cmdAtividade == 1)
                             {
-                                atividade.EditarAtividade(project, input);
+                                atividade.EditarAtividade(project);
                             }
                             else if (cmdAtividade == 2)
                             {
-                                atividade.DefinirResponsavel(input);
+                                atividade.DefinirResponsavel();
                             }
                             if (cmdAtividade == 3)
                             {
-                                atividade.AdicionarUsuarios(project, input);
+                                atividade.AdicionarUsuarios(project);
                             }
                             else if (cmdAtividade == 4)
                             {
-                                atividade.RemoverUsuarios(input);
+                                atividade.RemoverUsuarios();
                             }
                             else if (cmdAtividade == 5)
                             {
-                                atividade.AdicionarTarefas(input);
+                                atividade.AdicionarTarefas();
                             }
                             else if (cmdAtividade == 6)
                             {
-                                atividade.RemoverTarefas(input);
+                                atividade.RemoverTarefas();
                             }
                         }
                     }
@@ -162,21 +156,21 @@ public class Login implements Lista
                     while (cmdUsuario != 0)
                     {
                         menu.MenuEditarUsuario(true);
-                        cmdUsuario = U.LerInt(input);
+                        cmdUsuario = U.LerInt();
 
                         if (cmdUsuario == 1)
                         {
-                            user.AlterarSenha(input);
+                            user.AlterarSenha();
                         }
                         else if (cmdUsuario == 2)
                         {
-                            user.EditarTarefas(input);
+                            user.EditarTarefas();
                         }
                         else if (cmdUsuario == 3)
                         {
                             System.out.println("Digite o ID do projeto ao qual gostaria de ingressar: ");
                             ListarProjs(m.getProjetos());
-                            int checkIdP = U.LerInt(input);
+                            int checkIdP = U.LerInt();
 
                             Projeto project = U.BuscarProjeto(m.getProjetos(), checkIdP);
 
@@ -186,7 +180,7 @@ public class Login implements Lista
                         {
                             Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
                             
-                            user.IngressarAtividade(project, input);
+                            user.IngressarAtividade(project);
                         }
                     }
                 }
@@ -208,14 +202,14 @@ public class Login implements Lista
                             System.out.println("Status atual: "+project.getStatus());
                             System.out.println("Gostaria de alterar? 1 para sim");
 
-                            int decisao = U.LerInt(input);
+                            int decisao = U.LerInt();
 
                             if (decisao == 1)
                             {
                                 System.out.println("Escolha para qual Status gostaria de alterar: ");
                                 menu.MenuStatusProjeto();
 
-                                decisao = U.LerInt(input);
+                                decisao = U.LerInt();
                                 if (decisao == 1)
                                 {
                                     boolean check = m.ChecarStatusDoProjeto(project);
@@ -266,7 +260,7 @@ public class Login implements Lista
                     System.out.println("O que gostaria de consultar?");
                     menu.MenuConsulta();
 
-                    U.Consultar(input, m.getProjetos(), m.getUsuarios());            
+                    U.Consultar(m.getProjetos(), m.getUsuarios());            
                 }                
 
                 else if (cmdLogin == 7)
@@ -284,7 +278,7 @@ public class Login implements Lista
 
                         menu.MenuRelatorio();
 
-                        int decisao = U.LerInt(input);
+                        int decisao = U.LerInt();
                         
                         if (decisao == 1)
                         {
@@ -337,7 +331,7 @@ public class Login implements Lista
                         System.out.println("Gostaria de fazer o pagamento?");
                         menu.MenuPagamento();
 
-                        int cmdPag = U.LerInt(input);
+                        int cmdPag = U.LerInt();
 
                         if (cmdPag == 1)
                         {
@@ -356,7 +350,7 @@ public class Login implements Lista
                                 System.out.println(item.getNome());
                                 System.out.println(item.getId());
 
-                                int num = U.LerInt(input);
+                                int num = U.LerInt();
                                 if (num == 1)   item.setDiaPag(LocalDateTime.now());
                             } 
                         }
@@ -375,7 +369,7 @@ public class Login implements Lista
                         Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
 
                         System.out.println("Digite o RG do usuario que deseja adicionar:");
-                        Usuario checkUser = U.BuscarUsuario(m.getUsuarios(), U.LerInt(input));
+                        Usuario checkUser = U.BuscarUsuario(m.getUsuarios(), U.LerInt());
 
                         if (checkUser instanceof Discente)
                         {
@@ -389,7 +383,7 @@ public class Login implements Lista
                                     if (projInterCam != project)
                                     {
                                         System.out.println("Para qual atividade ele sera atribuido?");
-                                        int checkIdA = U.LerInt(input);
+                                        int checkIdA = U.LerInt();
                                         Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
 
                                         atividade.setUsuarios(intercamb);
@@ -421,7 +415,7 @@ public class Login implements Lista
             while (cmdLogin != 0)
             {
                 menu.MenuUsuarioDiscente();
-                cmdLogin = U.LerInt(input);
+                cmdLogin = U.LerInt();
 
                 if (cmdLogin == 1)
                 {
@@ -431,15 +425,15 @@ public class Login implements Lista
                     {
                         menu.MenuEditarUsuario(false);
                         
-                        cmdUsuario = U.LerInt(input);
+                        cmdUsuario = U.LerInt();
 
                         if (cmdUsuario == 1)
                         {
-                            user.AlterarSenha(input);
+                            user.AlterarSenha();
                         }
                         else if (cmdUsuario == 2)
                         {
-                            user.EditarTarefas(input);
+                            user.EditarTarefas();
                         }
                     }
                 }
@@ -448,7 +442,7 @@ public class Login implements Lista
                     System.out.println("O que gostaria de consultar?");
                     menu.MenuConsulta();
 
-                    U.Consultar(input, m.getProjetos(), m.getUsuarios());
+                    U.Consultar(m.getProjetos(), m.getUsuarios());
                 }
                 else if (cmdLogin == 3)
                 {
@@ -519,10 +513,10 @@ public class Login implements Lista
         
     }
 
-    public void CriarProjeto(Utilidades U, Scanner input, DateTimeFormatter format, Manager m) throws Exception
+    public void CriarProjeto(Manager m) throws Exception
     {
         System.out.println("Digite o ID do projeto: ");
-        int idProject = U.LerInt(input);
+        int idProject = U.LerInt();
 
         try {
             U.BuscarProjeto(m.getProjetos(), idProject);
@@ -541,7 +535,7 @@ public class Login implements Lista
 
         System.out.println("Defina o Coordenador do projeto, somente Professor/Pesquisador");
         U.ListarDocentes(m.getUsuarios());
-        int idCoord = U.LerInt(input);
+        int idCoord = U.LerInt();
 
         Usuario userCoord = U.BuscarUsuario(m.getUsuarios(), idCoord);
 
