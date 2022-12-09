@@ -210,17 +210,22 @@ public class Utilidades implements Lista{
         System.out.println(BuscarUsuario(ativ.getUsuarios(), ativ.getIdResponsavel()).getNome());
 
         System.out.println("Inicio da Atividade: ");
-        MostrarDataHora(ativ.getInicio());
+        System.out.print(MostrarDataHora(ativ.getInicio()));
 
         System.out.println("Termino da Atividade: ");
-        MostrarDataHora(ativ.getTermino());
+        System.out.print(MostrarDataHora(ativ.getTermino()));
 
         System.out.println("Lista de usuarios: ");
-        for(Usuario item : ativ.getUsuarios())
+        
+        if (!ativ.getUsuarios().isEmpty())
         {
-            System.out.println("Nome: "+item.getNome());
-            System.out.println("Func: "+item.getFunc());
+            for(Usuario item : ativ.getUsuarios())
+            {
+                System.out.println("Nome: "+item.getNome());
+                System.out.println("Func: "+item.getFunc());
+            }
         }
+        else    System.out.println("Sem usuario no momento");
 
         System.out.println("Lista de tarefas: ");
         ArrayList<Tarefa> tasks = new ArrayList<Tarefa>();
@@ -258,54 +263,57 @@ public class Utilidades implements Lista{
     public void RelatorioProj(Projeto proj)
     {
         System.out.println("Projeto descrito: ");
-        System.out.println(proj.getDesc());
+        System.out.println(proj.getDesc()+"\n");
 
-        System.out.println("Status do Projeto: "+proj.getStatus());
+        System.out.println("Status do Projeto: "+proj.getStatus()+"\n");
 
         System.out.println("Inicio do Projeto: ");
-        System.out.println(MostrarDataHora(proj.getInicio()));
+        System.out.print(MostrarDataHora(proj.getInicio())+"\n");
         
         System.out.println("Termino do Projeto: ");
-        System.out.println(MostrarDataHora(proj.getTermino()));
+        System.out.print(MostrarDataHora(proj.getTermino())+"\n");
 
         System.out.println("Coordenador do Projeto: ");
-        String fodase = BuscarUsuario(proj.getProjetistas(), proj.getIdCoordenador()).getNome();
-        System.out.println(fodase);
+        String coordenador = BuscarUsuario(proj.getProjetistas(), proj.getIdCoordenador()).getNome();
+        System.out.println(coordenador+"\n");
 
 
         System.out.println("Lista de Desenvolvedores: ");
-        for (Usuario item : proj.getDesenvolvedores())    System.out.println(item.getNome());
-
+        if (!proj.getDesenvolvedores().isEmpty())   for (Usuario item : proj.getDesenvolvedores())    System.out.println(item.getNome());
+        else    System.out.println("Sem Desenvolvedores"+"\n");
+        
         System.out.println("Lista de Testadores: ");
-        for (Usuario item : proj.getTestadores())    System.out.println(item.getNome());
-
+        if (!proj.getTestadores().isEmpty())   for (Usuario item : proj.getTestadores())    System.out.println(item.getNome());
+        else    System.out.println("Sem Testadores"+"\n");
+        
         System.out.println("Lista de Analistas: ");
-        for (Usuario item : proj.getAnalistas())    System.out.println(item.getNome());
+        if (!proj.getAnalistas().isEmpty())   for (Usuario item : proj.getAnalistas())    System.out.println(item.getNome());
+        else    System.out.println("Sem Analistas"+"\n");
 
-        if (!proj.getIntercambistas().isEmpty())
-        {
-            System.out.println("Lista de Intercambistas: ");
-            for (Usuario item : proj.getIntercambistas())    System.out.println(item.getNome());
-        }
+        System.out.println("Lista de Intercambistas: ");
+        if (!proj.getIntercambistas().isEmpty())    for (Usuario item : proj.getIntercambistas())    System.out.println(item.getNome());
 
         System.out.println("Tecnico do Projeto: ");
-        System.out.println(BuscarUsuario(proj.getProjetistas(), proj.getIdTecnico()));
+        String tecnico = "Sem Tecnico";
+        if (proj.getIdTecnico() != 0)   tecnico = BuscarUsuario(proj.getProjetistas(), proj.getIdTecnico()).getNome();
+        System.out.println(tecnico+"\n");  
 
         System.out.println("Lista de Atividades: ");
-        for (Atividade item : proj.getAtividades()) DadosAtiv(item);
+        if (!proj.getAtividades().isEmpty())    for (Atividade item : proj.getAtividades()) DadosAtiv(item);
+        else    System.out.println("Sem atividades no momento");
 
-        System.out.println("Valor da Bolsa-Desenvolvedor: "+proj.getBolsaDesenvolvedor());
+        System.out.println("\nValor da Bolsa-Desenvolvedor: "+proj.getBolsaDesenvolvedor());
         System.out.println("Valor da Bolsa-Testador: "+proj.getBolsaTestador());
-        System.out.println("Valor da Bolsa-Analista: "+proj.getBolsaAnalista());
+        System.out.println("Valor da Bolsa-Analista: "+proj.getBolsaAnalista()+"\n");
 
         System.out.println("Prazo da Bolsa-Desenvolvedor: ");
-        MostrarDataHora(proj.getTempoBolsaDesenvolvedor());
+        System.out.println(MostrarDataHora(proj.getTempoBolsaDesenvolvedor()));
         
         System.out.println("Prazo da Bolsa-Testador: ");
-        MostrarDataHora(proj.getTempoBolsaTestador());
+        System.out.println(MostrarDataHora(proj.getTempoBolsaTestador()));
 
         System.out.println("Prazo da Bolsa-Analista: ");
-        MostrarDataHora(proj.getTempoBolsaAnalista());
+        System.out.println(MostrarDataHora(proj.getTempoBolsaAnalista()));
     }
 
     public String MostrarDataHora(LocalDateTime tempo)
@@ -316,11 +324,24 @@ public class Utilidades implements Lista{
 	        DateTimeFormatter horaForm = DateTimeFormatter.ofPattern("HH:mm");
 
             return  "Data: "+dataForm.format(tempo)+"\n"+
-                    "Hora: "+horaForm.format(tempo);
+                    "Hora: "+horaForm.format(tempo)+"\n";
         }
         else
         {
-            return "Falta Definir";
+            return "Falta Definir\n";
+        }
+    }
+
+    public LocalDateTime DefinirDataHora() throws Exception
+    {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern ("HH:mm dd/MM/yyyy");
+        System.out.println ("Digite a data do novo prazo no formato: HH:mm dd/MM/yyyy");
+
+        try {
+            LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
+            return tempoBolsa;
+        } catch (Exception e) {
+            throw new RuntimeException ("Formato de Data/Hora invalido\n");
         }
     }
 

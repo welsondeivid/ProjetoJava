@@ -2,7 +2,7 @@ public class Erros {
     
     public void CheckErros(String test, String tipo) throws Exception
     {
-        if (tipo.equals("email") ||tipo.equals("senha"))
+        if (tipo.equals("email") ||tipo.equals("senha") || tipo.equals("tarefa"))
         {
             CheckEmail(test);
         }

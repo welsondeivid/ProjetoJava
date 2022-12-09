@@ -17,110 +17,154 @@ public class Login extends VarGlobais implements Lista
 
                 if (cmdLogin == 1)
                 {   
-                    CriarProjeto(m);
+                    boolean check = false;
+                    while (!check)
+                    {
+                        try {
+                            check = CriarProjeto(m);
+                        } catch (Exception e) {
+                            System.out.println("Falha ao criar projeto: "+e.getMessage());
+                        }
+                    }
+                    
                 }
 
                 else if (cmdLogin == 2)
                 {
-                    System.out.println("Somente Coordenadores podem editar projetos e somente o proprio");
+                    System.out.println("Somente Coordenadores podem editar projetos e somente o proprio\n");
                     
-                    Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
+                    try {
 
-                    if (user.getId() == project.getIdCoordenador())
-                    {
-                        System.out.println("Coordenador identificado");
+                        Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
 
-                        int cmdProjeto = -1;
-
-                        while (cmdProjeto != 0)
+                        if (user.getId() == project.getIdCoordenador())
                         {
-                            menu.MenuProjeto();
-                            cmdProjeto = U.LerInt();
+                            System.out.println("Coordenador identificado");
 
-                            if (cmdProjeto == 1)
-                            {
-                                project.EditarProjeto(m.getUsuarios());
-                            }
-                            else if (cmdProjeto == 2)
-                            {
-                                project.DesignarCoordenador(m.getUsuarios());
-                            }
-                            else if (cmdProjeto == 3)
-                            {
-                                menu.MenuAddRemove();
-                                int num = U.LerInt();
+                            int cmdProjeto = -1;
 
-                                if (num == 1)
-                                {
-                                    project.AdicionarUsuarios(m.getUsuarios());
-                                }
-                                else if (num == 2)
-                                {
-                                    project.RemoverUsuarios(project.getProjetistas());
-                                }
-                            }
-                            else if (cmdProjeto == 4)
+                            while (cmdProjeto != 0)
                             {
-                                project.RemoverIntercambista();
-                            }
-                            else if (cmdProjeto == 5)
-                            {
-                                menu.MenuAddRemove();
-                                int num = U.LerInt();
+                                try {
+                                    
+                                    menu.MenuProjeto();
+                                    cmdProjeto = U.LerInt();
 
-                                if (num == 1)
-                                {
-                                    project.AdicionarAtividades();
-                                }
-                                else if (num == 2)
-                                {
+                                    if (cmdProjeto == 1)
+                                    {
+                                        project.EditarProjeto(m.getUsuarios(), user);
+                                    }
+                                    else if (cmdProjeto == 2)
+                                    {
+                                        project.DesignarCoordenador(m.getUsuarios());
+                                    }
+                                    else if (cmdProjeto == 3)
+                                    {
+                                        menu.MenuAddRemove();
+                                        int num = U.LerInt();
 
-                                    project.RemoverAtividades();
-                                }
-                            }
-                            else if (cmdProjeto == 6)
-                            {
-                                project.DefinirBolsa("Desenvolvedor");
-                            }
-                            else if (cmdProjeto == 7)
-                            {
-                                project.DefinirBolsa("Testador");
-                            }
-                            else if (cmdProjeto == 8)
-                            {
-                                project.DefinirBolsa("Analista"); 
-                            }
-                            else if (cmdProjeto == 9)
-                            {
-                                project.DefinirPrazoBolsa("Desenvolvedor");
-                            }
-                            else if (cmdProjeto == 10)
-                            {
-                                project.DefinirPrazoBolsa("Testador");
-                            }
-                            else if (cmdProjeto == 11)
-                            {
-                                project.DefinirPrazoBolsa("Analista");
+                                        if (num == 1)
+                                        {
+                                            project.AdicionarUsuarios(m.getUsuarios());
+                                        }
+                                        else if (num == 2)
+                                        {
+                                            if (project.getProjetistas().size() > 0)
+                                            {
+                                                project.RemoverUsuarios(project.getProjetistas());
+                                            }
+                                            else
+                                            {
+                                                System.out.println("Erro: Lista de usuarios do projeto vazia");
+                                            }
+                                        }
+                                    }
+                                    else if (cmdProjeto == 4)
+                                    {
+                                        project.RemoverIntercambista();
+                                    }
+                                    else if (cmdProjeto == 5)
+                                    {
+                                        menu.MenuAddRemove();
+                                        int num = U.LerInt();
+
+                                        if (num == 1)
+                                        {
+                                            project.AdicionarAtividades(user);
+                                        }
+                                        else if (num == 2)
+                                        {
+                                            if (project.getAtividades().size() > 0)
+                                            {
+                                                project.RemoverAtividades();
+                                            }
+                                            else
+                                            {
+                                                System.out.println("Erro: Lista de atividades do projeto vazia");
+                                            }
+                                            
+                                        }
+                                    }
+                                    else if (cmdProjeto == 6)
+                                    {
+                                        project.DefinirBolsa("Desenvolvedor");
+                                    }
+                                    else if (cmdProjeto == 7)
+                                    {
+                                        project.DefinirBolsa("Testador");
+                                    }
+                                    else if (cmdProjeto == 8)
+                                    {
+                                        project.DefinirBolsa("Analista"); 
+                                    }
+                                    else if (cmdProjeto == 9)
+                                    {
+                                        project.DefinirPrazoBolsa("Desenvolvedor");
+                                    }
+                                    else if (cmdProjeto == 10)
+                                    {
+                                        project.DefinirPrazoBolsa("Testador");
+                                    }
+                                    else if (cmdProjeto == 11)
+                                    {
+                                        project.DefinirPrazoBolsa("Analista");
+                                    }
+                                    else
+                                    {
+                                        if (cmdProjeto != 0)   throw new RuntimeException ("Erro: Valor invalido");
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println("Falha ao Editar Projeto: "+e.getMessage());
+                                } 
                             }
                         }
+                        else
+                        {
+                            System.out.println("Usuario sem autorizacao para editar");
+                        }
+                    } catch (Exception e) {
+                        
+                        System.out.println("Erro: Usuario sem projeto associado");
+                        continue;
                     }
                 }
 
                 else if (cmdLogin == 3)
                 {
+                    System.out.println("Somente o responsavel ou o coordenador por uma atividade podem edita-la");
                     Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
 
                     Atividade atividade = U.BuscarAtividade(project.getAtividades(), user.getAtividade());
                     
-                    menu.MenuAtividade();
                     int cmdAtividade = -1;      
 
-                    while (cmdAtividade != 0)
+                    if (user.getId() == atividade.getIdResponsavel() || user.getCoord())
                     {
-                        cmdAtividade = U.LerInt();
-
-                        if (user.getId() == atividade.getIdResponsavel() || user.getId() == project.getIdCoordenador())
+                        while (cmdAtividade != 0)
                         {
+                            menu.MenuAtividade();
+                            cmdAtividade = U.LerInt();
+
                             if (cmdAtividade == 1)
                             {
                                 atividade.EditarAtividade(project);
@@ -129,7 +173,7 @@ public class Login extends VarGlobais implements Lista
                             {
                                 atividade.DefinirResponsavel();
                             }
-                            if (cmdAtividade == 3)
+                            else if (cmdAtividade == 3)
                             {
                                 atividade.AdicionarUsuarios(project);
                             }
@@ -144,6 +188,10 @@ public class Login extends VarGlobais implements Lista
                             else if (cmdAtividade == 6)
                             {
                                 atividade.RemoverTarefas();
+                            }
+                            else
+                            {
+                                if (cmdAtividade != 0)   throw new RuntimeException ("Erro: Valor invalido");
                             }
                         }
                     }
@@ -181,6 +229,10 @@ public class Login extends VarGlobais implements Lista
                             Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
                             
                             user.IngressarAtividade(project);
+                        }
+                        else
+                        {
+                            if (cmdUsuario != 0)   throw new RuntimeException ("Erro: Valor invalido");
                         }
                     }
                 }
@@ -246,6 +298,10 @@ public class Login extends VarGlobais implements Lista
                                         }
                                     }
                                 }
+                                else
+                                {
+                                    throw new RuntimeException ("Erro: Valor invalido");
+                                }
                             }    
                         }
                     }
@@ -290,6 +346,10 @@ public class Login extends VarGlobais implements Lista
                             {
                                 U.RelatorioAtiv(item);
                             }                    
+                        }
+                        else
+                        {
+                            throw new RuntimeException ("Erro: Valor invalido");
                         }
                     }
                     else
@@ -354,6 +414,10 @@ public class Login extends VarGlobais implements Lista
                                 if (num == 1)   item.setDiaPag(LocalDateTime.now());
                             } 
                         }
+                        else
+                        {
+                            if (cmdPag != 0)   throw new RuntimeException ("Erro: Valor invalido");
+                        }
                         pagar = null;
                     }
                 }
@@ -406,6 +470,10 @@ public class Login extends VarGlobais implements Lista
                         }
                     }
                 }
+                else
+                {
+                    if (cmdLogin != 0)   throw new RuntimeException ("Erro: Valor invalido");
+                }
                 System.out.println("Digite o proximo comando: ");
             }
         }
@@ -435,6 +503,10 @@ public class Login extends VarGlobais implements Lista
                         {
                             user.EditarTarefas();
                         }
+                        else
+                        {
+                            if (cmdUsuario != 0)   throw new RuntimeException ("Erro: Valor invalido");
+                        }
                     }
                 }
                 else if (cmdLogin == 2)
@@ -446,7 +518,7 @@ public class Login extends VarGlobais implements Lista
                 }
                 else if (cmdLogin == 3)
                 {
-                    System.out.print("Um Discente apenas tem acesso a um relatorio de atividade se for o respnsavel");
+                    System.out.println("Um Discente apenas tem acesso a um relatorio de atividade se for o respnsavel");
                     
                     try {
                         Projeto proj = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
@@ -465,10 +537,62 @@ public class Login extends VarGlobais implements Lista
                         throw new RuntimeException("Usuario nao esta alocado em um projeto");
                     }
                 }
+                else if (cmdLogin == 4)
+                {
+                    System.out.println("Somente os Responsaveis por uma atividade podem edita-la");
+                    Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
+
+                    Atividade atividade = U.BuscarAtividade(project.getAtividades(), user.getAtividade());
+                    
+                    if (user.getId() == atividade.getIdResponsavel())
+                    {
+                        System.out.println("Responsavel identificado\n");
+
+                        menu.MenuAtividade();
+                        int cmdAtividade = -1;
+
+                        while (cmdAtividade != 0)
+                        {
+                            cmdAtividade = U.LerInt();
+
+                            if (cmdAtividade == 1)
+                            {
+                                atividade.EditarAtividade(project);
+                            }
+                            else if (cmdAtividade == 2)
+                            {
+                                atividade.DefinirResponsavel();
+                            }
+                            if (cmdAtividade == 3)
+                            {
+                                atividade.AdicionarUsuarios(project);
+                            }
+                            else if (cmdAtividade == 4)
+                            {
+                                atividade.RemoverUsuarios();
+                            }
+                            else if (cmdAtividade == 5)
+                            {
+                                atividade.AdicionarTarefas();
+                            }
+                            else if (cmdAtividade == 6)
+                            {
+                                atividade.RemoverTarefas();
+                            }
+                            else
+                            {
+                                if (cmdAtividade != 0)   throw new RuntimeException ("Erro: Valor invalido");
+                            }
+                        }
+                    }
+                    
+                }
+                else
+                {
+                    if (cmdLogin != 0)   throw new RuntimeException ("Erro: Valor invalido");
+                }
             }
         }
-    
-        return;
     }
 
     @Override
@@ -504,7 +628,14 @@ public class Login extends VarGlobais implements Lista
     @Override
     public void ListarDocentes(ArrayList<Usuario> users) {
         
-        
+        System.out.println("        Lista de Docentes disponiveis\n");
+        for (Usuario item : users)
+        {
+            if (item instanceof Docente)
+            {
+                System.out.println("Nome: "+item.getNome()+"|ID: "+item.getId()+"\n");
+            }
+        }
     }
 
     @Override
@@ -513,28 +644,36 @@ public class Login extends VarGlobais implements Lista
         
     }
 
-    public void CriarProjeto(Manager m) throws Exception
+    public boolean CriarProjeto(Manager m) throws Exception
     {
         System.out.println("Digite o ID do projeto: ");
         int idProject = U.LerInt();
 
         try {
             U.BuscarProjeto(m.getProjetos(), idProject);
+            System.out.println ("Falha ao criar projeto: ID ja consta no sistema\n");
+            return false;
         } catch (Exception e) {
-            System.out.println("ID disponivel");
+            System.out.println("ID disponivel\n");
         }
 
         System.out.println("Digite a descricao do projeto: ");
         String descProject = input.nextLine();
 
-        System.out.println ("Digite a data de inicio no formato: HH:mm dd/MM/yyyy");
-        LocalDateTime inicio = LocalDateTime.parse(input.nextLine(), format);
-
-        System.out.println ("Digite a data de termino no formato: HH:mm dd/MM/yyyy");
-        LocalDateTime termino = LocalDateTime.parse(input.nextLine(), format);
+        LocalDateTime inicio = null, termino = null;
+        try
+        {
+            inicio = U.DefinirDataHora();
+            termino = U.DefinirDataHora();
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e.getMessage());
+        }
+        
 
         System.out.println("Defina o Coordenador do projeto, somente Professor/Pesquisador");
-        U.ListarDocentes(m.getUsuarios());
+        ListarDocentes(m.getUsuarios());
         int idCoord = U.LerInt();
 
         Usuario userCoord = U.BuscarUsuario(m.getUsuarios(), idCoord);
@@ -551,11 +690,15 @@ public class Login extends VarGlobais implements Lista
                 user.setCoord(true);
                 user.setDiaIngresso(LocalDateTime.now());
                 m.getProjetos().add(project);
+                System.out.println("Projeto criado com sucesso\nEnter para continuar");
+                input.nextLine();
+                return true;
             }
         }
         else
         {
             System.out.println("Discente nao pode ser Coordenador");
         }
+        return false;
     }
 }

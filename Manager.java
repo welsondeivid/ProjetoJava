@@ -18,6 +18,27 @@ public class Manager {
         int cmd = -1;
         
         System.out.println("-----Gerenciador de Projetos-----\n");
+
+        //teste, apague essas linhas
+        Usuario testeU = new Docente("Welson", "Welson@icproj.com", "456", 5, 123);
+        m.getUsuarios().add(testeU);
+        Usuario testeU2 = new Discente("Deivid", "Deivid@icproj.com", "456", 1, 789);
+        m.getUsuarios().add(testeU2);
+        Usuario testeU3 = new Discente("Gustavo", "Gustavo@icproj.com", "456", 2, 147);
+        m.getUsuarios().add(testeU3);
+        Projeto testeP = new Projeto(1, "abc", null, null, null, testeU);
+        m.getProjetos().add(testeP);
+        testeU.setProjeto(testeP.getId());
+        Atividade testeA = new Atividade(1, "atv1", testeU2.getId(), testeU2, null, null);
+        testeP.setAtividades(testeA);
+        testeP.setProjetistas(testeU2);
+        testeP.setProjetistas(testeU3);
+        testeU2.setProjeto(testeP.getId());
+        testeU2.setAtividade(testeA.getId());
+        testeA.setUsuarios(testeU);
+        testeU.setAtividade(testeA.getId());
+        //
+
         while (cmd != 0)
         {
             try
@@ -107,6 +128,10 @@ public class Manager {
                             }
                         }
                     }
+                }
+                else
+                {
+                    if (cmd != 0)   throw new RuntimeException ("Erro: Valor invalido");
                 }
             }
             catch (Exception e)

@@ -37,18 +37,33 @@ public class Projeto extends VarGlobais implements Lista{
         this.setProjetistas(Coord);
     }
 
-    public void EditarProjeto (ArrayList<Usuario> usuarios) throws Exception
+    public void EditarProjeto (ArrayList<Usuario> usuarios, Usuario coord) throws Exception
     {
         System.out.println("Somente Docentes podem coordenar um projeto");
         DesignarCoordenador(usuarios);
 
         AdicionarUsuarios(usuarios);
 
-        RemoverUsuarios(this.projetistas);
+        if (this.projetistas.size() > 0)
+        {
+            RemoverUsuarios(this.projetistas);
+        }
+        else
+        {
+            System.out.println("Erro: Lista de usuarios do projeto vazia");
+        }
 
-        AdicionarAtividades();
+        AdicionarAtividades(coord);
 
-        RemoverAtividades();                       
+        if (this.atividades.size() > 0)
+        {
+            RemoverAtividades();  
+        }
+        else
+        {
+            System.out.println("Erro: Lista de atividades do projeto vazia");
+        }
+                             
 
         DefinirBolsa("Desenvolvedor");
 
@@ -69,44 +84,37 @@ public class Projeto extends VarGlobais implements Lista{
         ListarDocentes(usuarios);
 
         int checkIdU = U.LerInt();
-        try {
-            
-            Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
-            if (usuario instanceof Docente)
-            {
-                Docente doce = (Docente)usuario;
-                doce.setCoord(true);
-                this.setIdCoordenador(usuario.getId());
-                usuario.setProjeto(this.getId());
-            }
-            else
-            {
-                System.out.println("Usuario precisa ser Docente");
-            }
-        } catch (Exception e) {
-            DesignarCoordenador(usuarios);
+
+        Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
+
+        if (usuario instanceof Docente)
+        {
+            Docente doce = (Docente)usuario;
+            doce.setCoord(true);
+            this.setIdCoordenador(usuario.getId());
+            usuario.setProjeto(this.getId());
+            System.out.println("Coordenador alterado");
+        }
+        else
+        {
+            System.out.println("Coordenador precisa ser Docente");
         }
     }
 
     public void AdicionarUsuarios(ArrayList<Usuario> usuarios) throws Exception
     {
-        System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
-        ListarUsers(usuarios);
+        System.out.println("\nQual sera a quantidade de usuarios adicionados? 0 para nenhum\n");
         int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite o RG do usuario que deseja adicionar: ");
-            int checkIdU = U.LerInt();
-            Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
-            Docente doce = null;
-
-            if (usuario instanceof Docente)
-            {
-                doce = (Docente)usuario;
-            }
-            if (!doce.getCoord())
-            {
+            try {
+            
+                System.out.println("Digite o RG do usuario que deseja adicionar: ");
+                ListarUsers(usuarios);
+                int checkIdU = U.LerInt();
+                Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
+                
                 System.out.println("Designe a funcao dele no projeto: ");
                 menu.MenuFuncUsuario();
                 
@@ -135,67 +143,78 @@ public class Projeto extends VarGlobais implements Lista{
                         usuario.setFunc("Tecn");
                     }
                 }
-                
-                this.setProjetistas(usuario);
-                usuario.setDiaIngresso(LocalDateTime.now());
-                usuario.setProjeto(this.getId());
 
-                if (usuario instanceof Discente)
-                {
-                    Discente disc = (Discente)usuario;
-                    disc.setDiaPag(LocalDateTime.now());
-                }
+                usuario.IngressarProjeto(this);
+                System.out.println("Usuario adicionado com sucesso\n");
+
+            } catch (Exception e) {
+
+                System.out.println("Falha ao adicionar usuario: "+e.getMessage());
+                System.out.println("\nManter o numero de adicoes? 1 para sim");
+
+                int decisao = input.nextInt();
+
+                if (decisao == 1)   i--;
             }
+            
         }
     }
 
     public void RemoverUsuarios(ArrayList<Usuario> usuarios) throws Exception
     {
         System.out.println("Qual sera a quantidade de usuarios removidos?");
-        ListarUsers(usuarios);
         int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite RG do usuario que deseja remover: ");
-            int checkIdU = U.LerInt();
-            Usuario usuario = U.BuscarUsuario(this.getProjetistas(), checkIdU);
+            try {
 
-            if (usuario.getFunc().equals("Devp"))
-            {
-                this.getDesenvolvedores().remove(usuario);
-                usuario.setFunc(null);
-            }
-            else if (usuario.getFunc().equals("Test"))
-            {
-                this.getTestadores().remove(usuario);
-                usuario.setFunc(null);
-            }
-            else if (usuario.getFunc().equals("Anlt"))
-            {
-                this.getAnalistas().remove(usuario);
-                usuario.setFunc(null);
-            }
-            else if (usuario.getFunc().equals("Tecn"))
-            {
-                this.setIdTecnico(0);
-                usuario.setFunc(null);
-            }
+                System.out.println("Digite RG do usuario que deseja remover: ");
+                ListarUsers(usuarios);
+                int checkIdU = U.LerInt();
 
-            this.getProjetistas().remove(usuario);
-            usuario.setProjeto(0);
+                Usuario usuario = U.BuscarUsuario(this.getProjetistas(), checkIdU);
 
-            Atividade ativ = U.BuscarAtividade(this.getAtividades(), usuario.getId());
-            ativ.getUsuarios().remove(usuario);
-            usuario.setAtividade(0);
+                if (usuario.getFunc().equals("Devp"))
+                {
+                    this.getDesenvolvedores().remove(usuario);
+                    usuario.setFunc(null);
+                }
+                else if (usuario.getFunc().equals("Test"))
+                {
+                    this.getTestadores().remove(usuario);
+                    usuario.setFunc(null);
+                }
+                else if (usuario.getFunc().equals("Anlt"))
+                {
+                    this.getAnalistas().remove(usuario);
+                    usuario.setFunc(null);
+                }
+                else if (usuario.getFunc().equals("Tecn"))
+                {
+                    this.setIdTecnico(0);
+                    usuario.setFunc(null);
+                }
+
+                Atividade ativ = null;
+
+                try {
+                    ativ = U.BuscarAtividade(this.getAtividades(), usuario.getId());
+                } catch (Exception e) {
+                    System.out.println("Usuario sem atividade para remover\n");
+                }
+                usuario.SairProjeto(this, ativ);
+
+            } catch (Exception e) {
+
+                System.out.println("Falha ao remover usuario: "+e.getMessage());
+                System.out.println("\nManter o numero de remocoes? 1 para sim");
+
+                int decisao = input.nextInt();
+
+                if (decisao == 1)   i--;
+            }
             
-            usuario.getTarefas().clear();
-
-            if (usuario instanceof Discente)
-            {
-                Discente disc = (Discente)usuario;
-                disc.setDiaPag(null);
-            }
         }
     }
 
@@ -224,42 +243,63 @@ public class Projeto extends VarGlobais implements Lista{
         }
     }
     
-    public void AdicionarAtividades() throws Exception
+    public void AdicionarAtividades(Usuario coord) throws Exception
     {
         System.out.println("Qual sera a quantidade de atividades adicionadas?");
         int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Crie a atividade a ser adicionada: ");
+            try {
 
-            System.out.println("Digite o ID da atividade: ");
-            int idAtividade = U.LerInt();
+                System.out.println("Crie a atividade a ser adicionada: ");
 
-            if (U.BuscarAtividade(this.getAtividades(), idAtividade) != null)
-            {
-                System.out.println("ID de atividade ja consta no sistema");
-                System.out.println("Falha ao criar atividade");
-                return;
-            }
+                System.out.println("Digite o ID da atividade: ");
+                int idAtividade = U.LerInt();
 
-            System.out.println("Digite a descricao da atividade: ");
-            String descAtividade = input.nextLine();
+                try {
+                    U.BuscarAtividade(this.getAtividades(), idAtividade);
+                    System.out.println("Falha ao adicionar atividade: ID de atividade ja consta no sistema\n");
+                    return;
+                } catch (Exception e) {
+                   System.out.println("ID disponivel");
+                }
 
-            System.out.println("Digite o RG do responsavel pela atividade: ");
-            int checkIdU = U.LerInt();
-            Usuario responsavel = U.BuscarUsuario(this.getProjetistas(), checkIdU);
+                System.out.println("Digite a descricao da atividade: ");
+                String descAtividade = input.nextLine();
 
-            System.out.println ("Digite a data de inicio no formato: HH:mm dd/MM/yyyy");
-            LocalDateTime inicio = LocalDateTime.parse(input.nextLine(), format);
+                System.out.println("Digite o RG do responsavel pela atividade: ");
+                ListarUsers(this.getProjetistas());
+                int checkIdU = U.LerInt();
+                Usuario responsavel = U.BuscarUsuario(this.getProjetistas(), checkIdU);
 
-            System.out.println ("Digite a data de termino no formato: HH:mm dd/MM/yyyy");
-            LocalDateTime termino = LocalDateTime.parse(input.nextLine(), format);
+                LocalDateTime inicio = null, termino = null;
+                try
+                {
+                    inicio = U.DefinirDataHora();
+                    termino = U.DefinirDataHora();
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException(e.getMessage());
+                }
 
-            if (idAtividade > 0 && descAtividade != null && inicio != null && termino != null)
-            {
-                Atividade atividade = new Atividade(idAtividade, descAtividade, responsavel.getId(), responsavel, inicio, termino);
-                this.setAtividades(atividade);
+                if (idAtividade > 0 && descAtividade != null && inicio != null && termino != null)
+                {
+                    Atividade atividade = new Atividade(idAtividade, descAtividade, responsavel.getId(), responsavel, inicio, termino);
+                    this.setAtividades(atividade);
+                    responsavel.setAtividade(idAtividade);
+                    atividade.setUsuarios(coord);
+                    coord.setAtividade(this.getId());
+                }
+            } catch (Exception e) {
+
+                System.out.println("Falha ao adicionar atividade: "+e.getMessage());
+                System.out.println("\nManter o numero de adicoes? 1 para sim");
+
+                int decisao = input.nextInt();
+
+                if (decisao == 1)   i--;
             }
         }
     }
@@ -272,12 +312,14 @@ public class Projeto extends VarGlobais implements Lista{
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite o ID da atividade a ser removida: ");
-            int checkIdA = U.LerInt();
+            try {
 
-            Atividade atividade = U.BuscarAtividade(this.getAtividades(), checkIdA);
-            if (atividade != null)
-            {
+                System.out.println("Digite o ID da atividade a ser removida: ");
+                ListarAtivs(atividades);
+                int checkIdA = U.LerInt();
+
+                Atividade atividade = U.BuscarAtividade(this.getAtividades(), checkIdA);
+
                 for (Usuario item : atividade.getUsuarios())
                 {
                     item.setAtividade(0);
@@ -287,95 +329,101 @@ public class Projeto extends VarGlobais implements Lista{
                 this.getAtividades().remove(atividade);
                 atividade.getTarefas().clear();
                 atividade = null;
+
+            } catch (Exception e) {
+
+                System.out.println("Falha ao remover atividade: "+e.getMessage());
+                System.out.println("\nManter o numero de adicoes? 1 para sim");
+
+                int decisao = input.nextInt();
+
+                if (decisao == 1)   i--;
             }
         }
     }
 
-    public void DefinirBolsa(String tipoBolsa) throws Exception
+    public void DefinirBolsa(String tipoBolsa)
     {
         System.out.println("Digite o novo valor para a bolsa, -1 para manter");
 
         float bolsa = -1;
-        System.out.print("Valor atual da Bolsa-"+tipoBolsa+": ");
+        System.out.println("Valores atuais das Bolsas: \n");
 
-        if (tipoBolsa.equals("Desenvolvedor"))
+        System.out.println("Bolsa-Desenvolvedor: "+this.getBolsaDesenvolvedor());
+        System.out.println("Bolsa-Desenvolvedor: "+this.getBolsaTestador());
+        System.out.println("Bolsa-Desenvolvedor: "+this.getBolsaAnalista());
+
+        boolean check = false;
+
+        while (!check)
         {
-            System.out.println(this.getBolsaDesenvolvedor());
+            bolsa = U.LerFloat();
+
+            if (bolsa == -1)
+            {
+                System.out.println("Valores Mantidos\n");
+                check = true;
+            }
+            else if (bolsa > -1)
+            {
+                if (tipoBolsa.equals("Desenvolvedor"))
+                {
+                    this.setBolsaDesenvolvedor(bolsa);
+                }
+                else if (tipoBolsa.equals("Testador"))
+                {
+                    this.setBolsaTestador(bolsa);
+                }
+                else if (tipoBolsa.equals("Analista"))
+                {
+                    this.setBolsaAnalista(bolsa);
+                }
+                check = true;
+                System.out.println("Valor alterado com sucesso\n");
+            }
             
-            bolsa = U.LerFloat();
-
-            if (bolsa > -1)
+            else
             {
-                this.setBolsaDesenvolvedor(bolsa);
+                System.out.println("Valor digitado menor que 0\n");
             }
-        }
-        else if (tipoBolsa.equals("Testador"))
-        {
-            System.out.println(+this.getBolsaTestador());
-
-            bolsa = U.LerFloat();
-
-            if (bolsa > -1)
-            {
-                this.setBolsaTestador(bolsa);
-            }
-        }
-        else if (tipoBolsa.equals("Analista"))
-        {
-            System.out.println(this.getBolsaAnalista());
-            
-            bolsa = U.LerFloat();
-
-            if (bolsa > -1)
-            {
-                this.setBolsaAnalista(bolsa);
-            }
-        }
-    
-        if (bolsa < -1)
-        {
-            //erro
         }
     }
     
     public void DefinirPrazoBolsa(String tipoBolsa) throws Exception
     {
         System.out.println("Defina um novo prazo para as bolsas, 1 para mudar");
-        System.out.println("Prazo atual da bolsa: ");
+        System.out.println("Prazos atuais das bolsas: \n");
+
+        System.out.print("Bolsa-Desenvolvedor: "+U.MostrarDataHora(this.getTempoBolsaDesenvolvedor()));
+        System.out.print("Bolsa-Testador: "+U.MostrarDataHora(this.getTempoBolsaTestador()));
+        System.out.print("Bolsa-Analista: "+U.MostrarDataHora(this.getTempoBolsaAnalista()));
 
         int decisao = U.LerInt();
 
-        if (tipoBolsa.equals("Desenvolvedor"))
+        if (decisao == 1)
         {
-            U.MostrarDataHora(this.getTempoBolsaDesenvolvedor());
-
-            if (decisao == 1)
+            boolean check = false;
+            while (!check)
             {
-                System.out.println ("Digite a data do prazo no formato: HH:mm dd/MM/yyyy");
-                LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
-                this.setTempoBolsaDesenvolvedor(tempoBolsa);
-            }
-        }
-        else if (tipoBolsa.equals("Testador"))
-        {
-            U.MostrarDataHora(this.getTempoBolsaTestador());
+                try {
+                    if (tipoBolsa.equals("Desenvolvedor"))
+                    {
+                        this.setTempoBolsaDesenvolvedor(U.DefinirDataHora());
+                    }
+                    else if (tipoBolsa.equals("Testador"))
+                    {
+                        this.setTempoBolsaTestador(U.DefinirDataHora());
+                    }
+                    else if (tipoBolsa.equals("Analista"))
+                    {
+                        this.setTempoBolsaAnalista(U.DefinirDataHora());
+                    }
+                    check = true;
+                    System.out.println("Prazo alterado com sucesso\n");
 
-            if (decisao == 1)
-            {
-                System.out.println ("Digite a data do prazo no formato: HH:mm dd/MM/yyyy");
-                LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
-                this.setTempoBolsaTestador(tempoBolsa);
-            }
-        }
-        else if (tipoBolsa.equals("Analista"))
-        {
-            U.MostrarDataHora(this.getTempoBolsaAnalista());
-
-            if (decisao == 1)
-            {
-                System.out.println ("Digite a data do prazo no formato: HH:mm dd/MM/yyyy");
-                LocalDateTime tempoBolsa = LocalDateTime.parse(input.nextLine(), format);
-                this.setTempoBolsaAnalista(tempoBolsa);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             }
         }
     }
@@ -588,9 +636,8 @@ public class Projeto extends VarGlobais implements Lista{
         {
             if (item instanceof Docente)
             {
-                System.out.println("Nome: "+item.getNome());
-                System.out.println("ID: "+item.getId());
-                System.out.println("Email: "+item.getEmail());
+                System.out.println("Nome: "+item.getNome()+"ID: "+item.getId());
+                System.out.println("Email: "+item.getEmail()+"\n");
             }
         }
     }

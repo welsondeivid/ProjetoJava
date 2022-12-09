@@ -13,7 +13,7 @@ public class Discente extends Usuario{
     }
 
     @Override
-    public void IngressarProjeto(Projeto project)
+    public void IngressarProjeto(Projeto project) throws Exception
     {
         if (project != null && this.getProjeto() == 0)
         {
@@ -24,10 +24,25 @@ public class Discente extends Usuario{
         }
         else
         {
-            System.out.println("Usuario ja se encontra em projeto");
+            throw new RuntimeException(" Usuario ja se encontra em projeto");
         }
     }
     
+    @Override
+    public void SairProjeto(Projeto project, Atividade ativ) throws Exception
+    {   
+        project.getProjetistas().remove(this);
+        this.setProjeto(0);
+        this.setDiaPag(null);
+        
+        if (ativ != null)
+        {
+            ativ.getUsuarios().remove(this);
+            this.setAtividade(0);
+            this.getTarefas().clear();
+        }
+    }
+ 
     public int getProjInterCam() {
         return this.projInterCam;
     }

@@ -41,7 +41,8 @@ public abstract class Usuario extends VarGlobais
         }
     }
     
-    public abstract void IngressarProjeto(Projeto project);
+    public abstract void IngressarProjeto(Projeto project) throws Exception;
+    public abstract void SairProjeto(Projeto project, Atividade ativ) throws Exception;
 
     public void IngressarAtividade(Projeto project) throws Exception
     {

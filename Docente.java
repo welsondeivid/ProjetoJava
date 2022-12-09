@@ -7,20 +7,46 @@ public class Docente extends Usuario{
     public Docente (String nome, String email, String senha, int tipo, int id)
     {
         super(nome, email, senha, tipo, id);
+        this.setCoord(true); //teste, apague essa linha
     }
 
     @Override
-    public void IngressarProjeto(Projeto project)
+    public void IngressarProjeto(Projeto project) throws Exception
     {
         if (project != null && this.getProjeto() == 0)
         {
-            this.setProjeto(project.getId());
-            project.setProjetistas(this);
-            this.setDiaIngresso(LocalDateTime.now());
+            if (!this.getCoord())
+            {
+                this.setProjeto(project.getId());
+                project.setProjetistas(this);
+                this.setDiaIngresso(LocalDateTime.now());
+            }
+            else
+            {
+                throw new RuntimeException("Usuario eh Coordenador");
+            }
         }
         else
         {
-            System.out.println("Usuario ja se encontra em projeto");
+            throw new RuntimeException("Usuario ja se encontra em projeto");
+        }
+    }
+    @Override
+    public void SairProjeto(Projeto project, Atividade ativ) throws Exception
+    {
+        if (this.getCoord())
+        {
+            throw new RuntimeException("Coordenador n pode sair do projeto");
+        }
+        
+        project.getProjetistas().remove(this);
+        this.setProjeto(0);
+
+        if (ativ != null)
+        {
+            ativ.getUsuarios().remove(this);
+            this.setAtividade(0);
+            this.getTarefas().clear();
         }
     }
     

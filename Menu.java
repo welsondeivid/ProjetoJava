@@ -34,8 +34,10 @@ public class Menu {
         System.out.println("Digite 0 para: Sair");
         System.out.println("Digite 1 para: Tudo");
         System.out.println("Digite 2 para: Responsavel");
-        System.out.println("Digite 3 para: Adicionar ou remover usuarios da atividade");
-        System.out.println("Digite 4 para: Adicionar ou remover tarefas da atividade");
+        System.out.println("Digite 3 para: Adicionar usuarios na atividade");
+        System.out.println("Digite 4 para: Remover usuarios da atividade");
+        System.out.println("Digite 5 para: Adicionar tarefas na atividade");
+        System.out.println("Digite 6 para: Remover tarefas da atividade");
     }
 
     public void MenuEditarUsuario(boolean liberado)
@@ -80,6 +82,7 @@ public class Menu {
         System.out.println("Digite 1  para: Editar um usuario");
         System.out.println("Digite 2  para: Consultar");
         System.out.println("Digite 3  para: Relatorio");
+        System.out.println("Digite 4  para: Editar uma atividade");
     }
 
     public void MenuAddRemove()

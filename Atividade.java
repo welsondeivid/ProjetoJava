@@ -38,7 +38,7 @@ public class Atividade extends VarGlobais implements Lista{
         RemoverTarefas();
     }
 
-    public void DefinirResponsavel() throws Exception
+    public void DefinirResponsavel()
     {
         Usuario respAtual = U.BuscarUsuario(this.getUsuarios(), this.getIdResponsavel());
 
@@ -48,19 +48,22 @@ public class Atividade extends VarGlobais implements Lista{
         System.out.println("Gostaria de alterar? 1 para sim");
         int decisao = U.LerInt();
 
+        ListarUsers(this.getUsuarios());
+
         while (decisao == 1)
         {
-            System.out.println("Digite o RG do novo Responsavel");
-            ListarUsers(this.getUsuarios());
-            int checkIdU = U.LerInt();
-            
             try {
-                Usuario idResponsavel = U.BuscarUsuario(this.getUsuarios(), checkIdU);
-                 this.setIdResponsavel(idResponsavel.getId());
-                 decisao = 0;
-            } catch (Exception e) {
+
+                System.out.println("Digite o RG do novo Responsavel");
+                int checkIdU = U.LerInt();
                 
-                System.out.println(e.getMessage()+"Tente novamente");
+                Usuario idResponsavel = U.BuscarUsuario(this.getUsuarios(), checkIdU);
+                this.setIdResponsavel(idResponsavel.getId());
+                System.out.println("Responsavel aletrado com sucesso");
+                decisao = 0;
+
+            } catch (Exception e) {
+                System.out.println("Falha ao editar responsavel: "+e.getMessage());
             }
         }
     }
@@ -83,6 +86,7 @@ public class Atividade extends VarGlobais implements Lista{
                 {
                     this.setUsuarios(usuario);
                     usuario.setAtividade(this.getId());
+                    System.out.println("Usuario adicionado com sucesso\n");
                 }
                 else
                 {
@@ -90,12 +94,18 @@ public class Atividade extends VarGlobais implements Lista{
                     i--;
                 }
             } catch (Exception e) {
-                System.out.println(e.getMessage());
-                i--;
+                
+                System.out.println("Falha ao adicionar usuario: "+e.getMessage());
+                System.out.println("\nManter o numero de adicoes? 1 para sim");
+
+                int decisao = input.nextInt();
+
+                if (decisao == 1)   i--;
             }
         }
     }
     
+    //continue os testes aqui
     public void RemoverUsuarios() throws Exception
     {
         System.out.println("Qual sera a quantidade de usuarios removidos? 0 para nenhum");
@@ -111,10 +121,15 @@ public class Atividade extends VarGlobais implements Lista{
                 usuario.setAtividade(0);
                 usuario.getTarefas().clear();
                 this.getUsuarios().remove(usuario);
+                System.out.println("Usuario removido com sucesso\n");
 
             } catch (Exception e) {
-                System.out.println(e.getMessage());
-                i--;
+                System.out.println("Falha ao remover usuario: "+e.getMessage());
+                System.out.println("\nManter o numero de remocoes? 1 para sim");
+
+                int decisao = input.nextInt();
+
+                if (decisao == 1)   i--;
             }
         }
     }
@@ -126,24 +141,32 @@ public class Atividade extends VarGlobais implements Lista{
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite as infos sobre a tarefa que deseja adicionar: ");
-            
-            System.out.println("Digite a descricao da tarefa: ");
-            String descTarefa = input.nextLine();
-
-            System.out.println("Digite o RG do profissional que realizara a tarefa: ");
-            int respTarefa = U.LerInt();
             try {
                 
+                System.out.println("Digite as infos sobre a tarefa que deseja adicionar: ");
+                
+                System.out.println("Digite a descricao da tarefa: ");
+                String descTarefa = input.nextLine();
+                erro.CheckErros(descTarefa, "tarefa");
+
+                System.out.println("Digite o RG do profissional que realizara a tarefa: ");
+                int respTarefa = U.LerInt();
+
                 Usuario user = U.BuscarUsuario(this.getUsuarios(), respTarefa);
                 
                 Tarefa tarefa = new Tarefa(descTarefa, respTarefa);
                 user.setTarefas(tarefa);
                 this.setTarefas(tarefa);
+
+                System.out.println("Tarefa adicionada com sucesso");
             
             } catch (Exception e) {
-                System.out.println(e.getMessage());
-                i--;
+                System.out.println("Falha ao adicionar tarefa: "+e.getMessage());
+                System.out.println("\nManter o numero de adicoes? 1 para sim");
+
+                int decisao = input.nextInt();
+
+                if (decisao == 1)   i--;
             }
         }
     }
@@ -179,8 +202,12 @@ public class Atividade extends VarGlobais implements Lista{
                     }
                 }
             } catch (Exception e) {
-                System.out.println(e.getMessage());
-                i--;
+                System.out.println("Falha ao remover tarefa: "+e.getMessage());
+                System.out.println("\nManter o numero de adicoes? 1 para sim");
+
+                int decisao = input.nextInt();
+
+                if (decisao == 1)   i--;
             }
         }
     }
