@@ -15,7 +15,7 @@ public class Discente extends Usuario{
     @Override
     public void IngressarProjeto(Projeto project) throws Exception
     {
-        if (project != null && this.getProjeto() == 0)
+        if (this.getProjeto() == 0)
         {
             this.setProjeto(project.getId());
             project.setProjetistas(this);

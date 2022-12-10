@@ -13,7 +13,7 @@ public class Docente extends Usuario{
     @Override
     public void IngressarProjeto(Projeto project) throws Exception
     {
-        if (project != null && this.getProjeto() == 0)
+        if (this.getProjeto() == 0)
         {
             if (!this.getCoord())
             {

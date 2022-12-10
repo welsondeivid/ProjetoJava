@@ -31,11 +31,11 @@ public class Atividade extends VarGlobais implements Lista{
 
         AdicionarUsuarios(project);
 
-        RemoverUsuarios();
+        if (this.getUsuarios().size() > 0)   RemoverUsuarios();
 
         AdicionarTarefas();
 
-        RemoverTarefas();
+        if (this.getTarefas().size() > 0)  RemoverTarefas();
     }
 
     public void DefinirResponsavel()
@@ -105,7 +105,6 @@ public class Atividade extends VarGlobais implements Lista{
         }
     }
     
-    //continue os testes aqui
     public void RemoverUsuarios() throws Exception
     {
         System.out.println("Qual sera a quantidade de usuarios removidos? 0 para nenhum");
@@ -114,9 +113,10 @@ public class Atividade extends VarGlobais implements Lista{
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite o RG do usuario que deseja remover: ");
-            int checkIdU = U.LerInt();
             try {
+                System.out.println("Digite o RG do usuario que deseja remover: ");
+                int checkIdU = U.LerInt();
+
                 Usuario usuario = U.BuscarUsuario(this.getUsuarios(), checkIdU);
                 usuario.setAtividade(0);
                 usuario.getTarefas().clear();
@@ -150,6 +150,7 @@ public class Atividade extends VarGlobais implements Lista{
                 erro.CheckErros(descTarefa, "tarefa");
 
                 System.out.println("Digite o RG do profissional que realizara a tarefa: ");
+                U.ListarUsers(this.getUsuarios());
                 int respTarefa = U.LerInt();
 
                 Usuario user = U.BuscarUsuario(this.getUsuarios(), respTarefa);
@@ -174,16 +175,15 @@ public class Atividade extends VarGlobais implements Lista{
     public void RemoverTarefas() throws Exception
     {
         System.out.println("Qual sera a quantidade de tarefas removidas? 0 para nenhuma");
+        ListarTasks(this.getTarefas());
         int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite o RG do responsável pela tarefa que deseja remover: ");
-            ListarTasks(this.getTarefas());
-            
-            int respTarefa = U.LerInt();
             try {
 
+                System.out.println("Digite o RG do responsável pela tarefa que deseja remover: ");
+                int respTarefa = U.LerInt();
                 Usuario responsavel = U.BuscarUsuario(this.getUsuarios(), respTarefa);
 
                 for (Tarefa item : responsavel.getTarefas())

@@ -37,7 +37,7 @@ public class Projeto extends VarGlobais implements Lista{
         this.setProjetistas(Coord);
     }
 
-    public void EditarProjeto (ArrayList<Usuario> usuarios, Usuario coord) throws Exception
+    public void Editar (ArrayList<Usuario> usuarios, Usuario coord) throws Exception
     {
         System.out.println("Somente Docentes podem coordenar um projeto");
         DesignarCoordenador(usuarios);
@@ -426,6 +426,147 @@ public class Projeto extends VarGlobais implements Lista{
                 }
             }
         }
+    }
+
+    public void AlterarStatus() throws Exception
+    {
+        System.out.println("Seu projeto é o : "+this.getDesc());
+        System.out.println("Status atual: "+this.getStatus());
+        System.out.println("Gostaria de alterar? 1 para sim");
+
+        int checkProj = U.LerInt();
+
+        if (checkProj == 1)
+        {
+            System.out.println("Escolha para qual Status gostaria de alterar: ");
+            menu.MenuStatusProjeto();
+
+            int decisao = U.LerInt();
+            if (decisao == 1)
+            {
+                boolean check = this.ChecarStatus();
+
+                if (check)
+                {
+                    System.out.println("Status alterado com sucesso");
+                    this.setStatus("Em andamento");
+                }
+                else
+                {
+                    System.out.println("Adicione as infos que faltam");
+                }
+            }
+            else if (decisao == 2)
+            {
+                if (this.status.equals("Em andamento"))
+                {
+                    ArrayList<Atividade> ativs = new ArrayList<Atividade>();
+
+                    for (Atividade item : this.getAtividades())
+                    {
+                        if (!item.getStatus().equals("Concluida"))  ativs.add(item);
+                    }
+                    if (ativs.isEmpty()) 
+                    {
+                        System.out.println("Status alterado para 'Concluído'");
+                        this.setStatus("Concluído");
+                    }
+                    else
+                    {
+                        System.out.println("Alguma(s) atividades ainda não foram concluídas");
+                        for (Atividade item : ativs)
+                        {
+                            System.out.println(item.getId()+": "+item.getDesc());
+                        }
+                    }
+                }
+                else
+                {
+                    System.out.println("Marque o projeto como iniciado");
+                }
+            }
+            else
+            {
+                throw new RuntimeException ("Erro: Valor invalido");
+            }
+        }
+    }
+    
+    public boolean ChecarStatus()
+    {
+        boolean falha = false;
+
+        if (this.getIdCoordenador() == 0)
+        {
+            System.out.println("Falta designar Coordenador: ");
+            falha = true;
+        }
+        if (this.getProjetistas().isEmpty())
+        {
+            System.out.println("Falta designar Projetistas: ");
+            falha = true;
+        }
+        if (this.getDesenvolvedores().isEmpty())
+        {
+            System.out.println("Falta designar pelo menos 1 Desenvolvedor: ");
+            falha = true;
+        }if (this.getTestadores().isEmpty())
+        {
+            System.out.println("Falta designar pelo menos 1 Testador: ");
+            falha = true;
+        }
+        if (this.getAnalistas().isEmpty())
+        {
+            System.out.println("Falta designar pelo menos 1 Analista: ");
+            falha = true;
+        }
+        if (this.getIdTecnico() == 0)
+        {
+            System.out.println("Falta designar 1 Tecnico: ");
+            falha = true;
+        }
+        if (this.getAtividades().isEmpty())
+        {
+            System.out.println("Falta designar Atividades: ");
+            falha = true;
+        }
+        if (this.getBolsaDesenvolvedor() == 0)
+        {
+            System.out.println("Falta designar o valor da Bolsa do Desenvolvedor: ");
+            falha = true;
+        }
+        if (this.getBolsaAnalista() == 0)
+        {
+            System.out.println("Falta designar o valor da Bolsa do Analista: ");
+            falha = true;
+        }
+        if (this.getBolsaTestador() == 0)
+        {
+            System.out.println("Falta designar o valor da Bolsa do Testador: ");
+            falha = true;
+        }
+        if (this.getTempoBolsaDesenvolvedor() == null)
+        {
+            System.out.println("Falta designar o tempo da Bolsa do Desenvolvedor: ");
+            falha = true;
+        }
+        if (this.getTempoBolsaAnalista() == null)
+        {
+            System.out.println("Falta designar o tempo da Bolsa do Analista: ");
+            falha = true;
+        }
+        if (this.getTempoBolsaTestador() == null)
+        {
+            System.out.println("Falta designar o tempo da Bolsa do Testador: ");
+            falha = true;
+        }
+
+        if (!falha)
+        {
+            this.setStatus("Iniciado");
+            return true;
+        }
+        return false; 
     }
 
     public int getId() {

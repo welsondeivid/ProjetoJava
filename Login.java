@@ -7,7 +7,7 @@ public class Login extends VarGlobais implements Lista
     {
         int cmdLogin = -1;
 
-        if (userLog instanceof Docente) //Continue daqui, trate os Exceptions
+        if (userLog instanceof Docente)
         {
             Docente user = (Docente)userLog;
             while (cmdLogin != 0)
@@ -52,7 +52,7 @@ public class Login extends VarGlobais implements Lista
 
                                     if (cmdProjeto == 1)
                                     {
-                                        project.EditarProjeto(m.getUsuarios(), user);
+                                        project.Editar(m.getUsuarios(), user);
                                     }
                                     else if (cmdProjeto == 2)
                                     {
@@ -245,64 +245,12 @@ public class Login extends VarGlobais implements Lista
                     {
                         System.out.println("Coordenador identificado");
 
-                        Docente coordenador = user;
-                        Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
+                        Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
 
-                        if (project.getIdCoordenador() == coordenador.getProjeto())
+                        if (project.getIdCoordenador() == user.getId())
                         {
-                            System.out.println("Seu projeto é o : "+project.getDesc());
-                            System.out.println("Status atual: "+project.getStatus());
-                            System.out.println("Gostaria de alterar? 1 para sim");
-
-                            int decisao = U.LerInt();
-
-                            if (decisao == 1)
-                            {
-                                System.out.println("Escolha para qual Status gostaria de alterar: ");
-                                menu.MenuStatusProjeto();
-
-                                decisao = U.LerInt();
-                                if (decisao == 1)
-                                {
-                                    boolean check = m.ChecarStatusDoProjeto(project);
-
-                                    if (check)
-                                    {
-                                        System.out.println("Status alterado com sucesso");
-                                        project.setStatus("Em andamento");
-                                    }
-                                    else
-                                    {
-                                        System.out.println("Adicione as infos que faltam");
-                                    }
-                                }
-                                else if (decisao == 2)
-                                {
-                                    ArrayList<Atividade> ativs = new ArrayList<Atividade>();
-
-                                    for (Atividade item : project.getAtividades())
-                                    {
-                                        if (!item.getStatus().equals("Concluida"))  ativs.add(item);
-                                    }
-                                    if (ativs.isEmpty()) 
-                                    {
-                                        System.out.println("Status alterado para 'Concluído'");
-                                        project.setStatus("Concluído");
-                                    }
-                                    else
-                                    {
-                                        System.out.println("Alguma(s) atividades ainda não foram concluídas");
-                                        for (Atividade item : ativs)
-                                        {
-                                            System.out.println(item.getId()+": "+item.getDesc());
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    throw new RuntimeException ("Erro: Valor invalido");
-                                }
-                            }    
+                            System.out.println("Entrou");
+                            project.AlterarStatus();    
                         }
                     }
                     else
@@ -323,7 +271,7 @@ public class Login extends VarGlobais implements Lista
                 {
                     System.out.println("Somente Coordenadores podem checar o relatorio de um projeto");
                     System.out.println("Somente Coordenadores podem checar os relatorios das atividades de um projeto");
-                    System.out.println("Responsaveis podem checar o relatorio de sua propria atividade");
+                    System.out.println("Responsaveis podem checar o relatorio de sua propria atividade\n");
                     
                     Docente userCheck = user;
                     Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());

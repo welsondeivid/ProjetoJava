@@ -31,13 +31,20 @@ public abstract class Usuario extends VarGlobais
 
         int decisao = U.LerInt();
 
-        if (decisao == 1)
+        while (decisao == 1)
         {
-            System.out.println("Digite a nova senha: ");
-            String novaSenha = input.nextLine();
-            erro.CheckErros(novaSenha, "senha");
+            try {
+                System.out.println("Digite a nova senha: ");
+                String novaSenha = input.nextLine();
+                erro.CheckErros(novaSenha, "senha");
 
-            this.senha = novaSenha;
+                this.senha = novaSenha;
+                System.out.println("Senha alterada com sucesso\n");
+                decisao = 0;
+
+            } catch (Exception e) {
+                System.out.println("Falha ao alterar senha: "+e.getMessage());
+            }
         }
     }
     
@@ -46,14 +53,12 @@ public abstract class Usuario extends VarGlobais
 
     public void IngressarAtividade(Projeto project) throws Exception
     {
-        if (project != null)
-        {
-            System.out.println("Digite o ID da atividade a qual gostaria de associar-se: ");
-            int checkIdA = U.LerInt();
-            Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
+        System.out.println("Digite o ID da atividade a qual gostaria de associar-se: ");
+        
+        int checkIdA = U.LerInt();
+        Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
 
-            this.setAtividade(atividade.getId());
-        }
+        this.setAtividade(atividade.getId());
     }
 
     public void EditarTarefas()
