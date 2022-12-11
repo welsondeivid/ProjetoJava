@@ -5,7 +5,6 @@ public class Discente extends Usuario{
     private int projInterCam = 0;
     private int ativInterCam = 0;
     private LocalDateTime diaPag = null;
-    private boolean pass = false;
 
     public Discente (String nome, String email, String senha, int tipo, int id)
     {
@@ -69,16 +68,6 @@ public class Discente extends Usuario{
         this.diaPag = diaPag;
     }
 
-    public boolean getPass()
-    {
-        return this.pass;
-    }
-
-    public void setPass(Boolean pass)
-    {
-        this.pass = pass;
-    }
-    
     @Override
     public String toString()
     {

@@ -6,7 +6,9 @@ import java.util.Scanner;
 
 public class Utilidades implements Lista{
 	    
+    GerenciadorBolsa gerBolsa = new GerenciadorBolsa();
     Scanner input = new Scanner(System.in);
+
     public int LerInt()
     {
         int num = -1;
@@ -302,18 +304,7 @@ public class Utilidades implements Lista{
         if (!proj.getAtividades().isEmpty())    for (Atividade item : proj.getAtividades()) DadosAtiv(item);
         else    System.out.println("Sem atividades no momento");
 
-        System.out.println("\nValor da Bolsa-Desenvolvedor: "+proj.getBolsaDesenvolvedor());
-        System.out.println("Valor da Bolsa-Testador: "+proj.getBolsaTestador());
-        System.out.println("Valor da Bolsa-Analista: "+proj.getBolsaAnalista()+"\n");
-
-        System.out.println("Prazo da Bolsa-Desenvolvedor: ");
-        System.out.println(MostrarDataHora(proj.getTempoBolsaDesenvolvedor()));
-        
-        System.out.println("Prazo da Bolsa-Testador: ");
-        System.out.println(MostrarDataHora(proj.getTempoBolsaTestador()));
-
-        System.out.println("Prazo da Bolsa-Analista: ");
-        System.out.println(MostrarDataHora(proj.getTempoBolsaAnalista()));
+        System.out.println("\n"+gerBolsa);
     }
 
     public String MostrarDataHora(LocalDateTime tempo)

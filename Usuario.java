@@ -212,7 +212,7 @@ public abstract class Usuario extends VarGlobais
         }
 
         String dataHora = null, taskLists = "Ainda nao designadas";
-        if (this.getProjeto() != 0) // se for code smells, iniciar strings vazias e juntar em 1 return
+        if (this.getProjeto() != 0)
         {
             dataHora = U.MostrarDataHora(this.getDiaIngresso());
 

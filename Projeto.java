@@ -2,7 +2,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Projeto extends VarGlobais implements Lista{
-
+    
     private int id = -1;
     private String desc = null;
     private String status = null;
@@ -18,13 +18,6 @@ public class Projeto extends VarGlobais implements Lista{
     private int idTecnico = 0;
     private ArrayList <Usuario> projetistas = new ArrayList<Usuario>();
     private ArrayList <Atividade> atividades = new ArrayList<Atividade>();
-
-    private float bolsaDesenvolvedor = 0;
-    private float bolsaTestador = 0;
-    private float bolsaAnalista = 0;
-    private LocalDateTime tempoBolsaDesenvolvedor = null;
-    private LocalDateTime tempoBolsaTestador = null;
-    private LocalDateTime tempoBolsaAnalista = null;
 
     public Projeto (int id, String desc, LocalDateTime inicio, LocalDateTime termino, String status, Usuario Coord)
     {
@@ -65,17 +58,17 @@ public class Projeto extends VarGlobais implements Lista{
         }
                              
 
-        DefinirBolsa("Desenvolvedor");
+        gerBolsa.DefinirBolsa("Desenvolvedor");
 
-        DefinirBolsa("Testador");
+        gerBolsa.DefinirBolsa("Testador");
 
-        DefinirBolsa("Analista");
+        gerBolsa.DefinirBolsa("Analista");
 
-        DefinirPrazoBolsa("Desenvolvedor");
+        gerBolsa.DefinirPrazoBolsa("Desenvolvedor");
 
-        DefinirPrazoBolsa("Testador");
+        gerBolsa.DefinirPrazoBolsa("Testador");
 
-        DefinirPrazoBolsa("Analista");
+        gerBolsa.DefinirPrazoBolsa("Analista");
     }
 
     public void DesignarCoordenador(ArrayList<Usuario> usuarios) throws Exception
@@ -342,92 +335,6 @@ public class Projeto extends VarGlobais implements Lista{
         }
     }
 
-    public void DefinirBolsa(String tipoBolsa)
-    {
-        System.out.println("Digite o novo valor para a bolsa, -1 para manter");
-
-        float bolsa = -1;
-        System.out.println("Valores atuais das Bolsas: \n");
-
-        System.out.println("Bolsa-Desenvolvedor: "+this.getBolsaDesenvolvedor());
-        System.out.println("Bolsa-Desenvolvedor: "+this.getBolsaTestador());
-        System.out.println("Bolsa-Desenvolvedor: "+this.getBolsaAnalista());
-
-        boolean check = false;
-
-        while (!check)
-        {
-            bolsa = U.LerFloat();
-
-            if (bolsa == -1)
-            {
-                System.out.println("Valores Mantidos\n");
-                check = true;
-            }
-            else if (bolsa > -1)
-            {
-                if (tipoBolsa.equals("Desenvolvedor"))
-                {
-                    this.setBolsaDesenvolvedor(bolsa);
-                }
-                else if (tipoBolsa.equals("Testador"))
-                {
-                    this.setBolsaTestador(bolsa);
-                }
-                else if (tipoBolsa.equals("Analista"))
-                {
-                    this.setBolsaAnalista(bolsa);
-                }
-                check = true;
-                System.out.println("Valor alterado com sucesso\n");
-            }
-            
-            else
-            {
-                System.out.println("Valor digitado menor que 0\n");
-            }
-        }
-    }
-    
-    public void DefinirPrazoBolsa(String tipoBolsa) throws Exception
-    {
-        System.out.println("Defina um novo prazo para as bolsas, 1 para mudar");
-        System.out.println("Prazos atuais das bolsas: \n");
-
-        System.out.print("Bolsa-Desenvolvedor: "+U.MostrarDataHora(this.getTempoBolsaDesenvolvedor()));
-        System.out.print("Bolsa-Testador: "+U.MostrarDataHora(this.getTempoBolsaTestador()));
-        System.out.print("Bolsa-Analista: "+U.MostrarDataHora(this.getTempoBolsaAnalista()));
-
-        int decisao = U.LerInt();
-
-        if (decisao == 1)
-        {
-            boolean check = false;
-            while (!check)
-            {
-                try {
-                    if (tipoBolsa.equals("Desenvolvedor"))
-                    {
-                        this.setTempoBolsaDesenvolvedor(U.DefinirDataHora());
-                    }
-                    else if (tipoBolsa.equals("Testador"))
-                    {
-                        this.setTempoBolsaTestador(U.DefinirDataHora());
-                    }
-                    else if (tipoBolsa.equals("Analista"))
-                    {
-                        this.setTempoBolsaAnalista(U.DefinirDataHora());
-                    }
-                    check = true;
-                    System.out.println("Prazo alterado com sucesso\n");
-
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
-    }
-
     public void AlterarStatus() throws Exception
     {
         System.out.println("Seu projeto é o : "+this.getDesc());
@@ -530,34 +437,11 @@ public class Projeto extends VarGlobais implements Lista{
             System.out.println("Falta designar Atividades: ");
             falha = true;
         }
-        if (this.getBolsaDesenvolvedor() == 0)
+
+        String checkBolsas = gerBolsa.ChecarBolsas();
+        if(checkBolsas != null)
         {
-            System.out.println("Falta designar o valor da Bolsa do Desenvolvedor: ");
-            falha = true;
-        }
-        if (this.getBolsaAnalista() == 0)
-        {
-            System.out.println("Falta designar o valor da Bolsa do Analista: ");
-            falha = true;
-        }
-        if (this.getBolsaTestador() == 0)
-        {
-            System.out.println("Falta designar o valor da Bolsa do Testador: ");
-            falha = true;
-        }
-        if (this.getTempoBolsaDesenvolvedor() == null)
-        {
-            System.out.println("Falta designar o tempo da Bolsa do Desenvolvedor: ");
-            falha = true;
-        }
-        if (this.getTempoBolsaAnalista() == null)
-        {
-            System.out.println("Falta designar o tempo da Bolsa do Analista: ");
-            falha = true;
-        }
-        if (this.getTempoBolsaTestador() == null)
-        {
-            System.out.println("Falta designar o tempo da Bolsa do Testador: ");
+            System.out.println(checkBolsas);
             falha = true;
         }
 
@@ -673,54 +557,6 @@ public class Projeto extends VarGlobais implements Lista{
 
     public void setAtividades(Atividade atividade) {
         atividades.add(atividade);
-    }
-
-    public float getBolsaDesenvolvedor() {
-        return this.bolsaDesenvolvedor;
-    }
-
-    public void setBolsaDesenvolvedor(float bolsaDesenvolvedor) {
-        this.bolsaDesenvolvedor = bolsaDesenvolvedor;
-    }
-
-    public float getBolsaTestador() {
-        return this.bolsaTestador;
-    }
-
-    public void setBolsaTestador(float bolsaTestador) {
-        this.bolsaTestador = bolsaTestador;
-    }
-
-    public float getBolsaAnalista() {
-        return this.bolsaAnalista;
-    }
-
-    public void setBolsaAnalista(float bolsaAnalista) {
-        this.bolsaAnalista = bolsaAnalista;
-    }
-
-    public LocalDateTime getTempoBolsaDesenvolvedor() {
-        return this.tempoBolsaDesenvolvedor;
-    }
-
-    public void setTempoBolsaDesenvolvedor(LocalDateTime tempoBolsaDesenvolvedor) {
-        this.tempoBolsaDesenvolvedor = tempoBolsaDesenvolvedor;
-    }
-
-    public LocalDateTime getTempoBolsaTestador() {
-        return this.tempoBolsaTestador;
-    }
-
-    public void setTempoBolsaTestador(LocalDateTime tempoBolsaTestador) {
-        this.tempoBolsaTestador = tempoBolsaTestador;
-    }
-
-    public LocalDateTime getTempoBolsaAnalista() {
-        return this.tempoBolsaAnalista;
-    }
-
-    public void setTempoBolsaAnalista(LocalDateTime tempoBolsaAnalista) {
-        this.tempoBolsaAnalista = tempoBolsaAnalista;
     }
 
     @Override

@@ -107,27 +107,27 @@ public class Login extends VarGlobais implements Lista
                                     }
                                     else if (cmdProjeto == 6)
                                     {
-                                        project.DefinirBolsa("Desenvolvedor");
+                                        gerBolsa.DefinirBolsa("Desenvolvedor");
                                     }
                                     else if (cmdProjeto == 7)
                                     {
-                                        project.DefinirBolsa("Testador");
+                                        gerBolsa.DefinirBolsa("Testador");
                                     }
                                     else if (cmdProjeto == 8)
                                     {
-                                        project.DefinirBolsa("Analista"); 
+                                        gerBolsa.DefinirBolsa("Analista"); 
                                     }
                                     else if (cmdProjeto == 9)
                                     {
-                                        project.DefinirPrazoBolsa("Desenvolvedor");
+                                        gerBolsa.DefinirPrazoBolsa("Desenvolvedor");
                                     }
                                     else if (cmdProjeto == 10)
                                     {
-                                        project.DefinirPrazoBolsa("Testador");
+                                        gerBolsa.DefinirPrazoBolsa("Testador");
                                     }
                                     else if (cmdProjeto == 11)
                                     {
-                                        project.DefinirPrazoBolsa("Analista");
+                                        gerBolsa.DefinirPrazoBolsa("Analista");
                                     }
                                     else
                                     {
