@@ -8,7 +8,6 @@ public class Manager {
 
     public static void main (String[] args) {
         
-        Erros erro = new Erros();
         Utilidades U = new Utilidades();
         Manager m = new Manager();
         Menu menu = new Menu();
@@ -48,30 +47,7 @@ public class Manager {
 
                 if (cmd == 1)
                 {
-                    int id = 0;
-                    String senha = null;
-                    System.out.println("\t\tLOGIN NO SISTEMA");
-
-                    System.out.print("Digite seu ID: ");
-                    id = U.LerInt();
-
-                    Usuario loginUser = U.BuscarUsuario(m.getUsuarios(), id);
-
-                    System.out.print("Digite sua senha: ");
-                    senha = input.nextLine();
-
-                    if (senha.equals(loginUser.getSenha()))
-                    {
-                        System.out.println();
-                        Login log = new Login();
-                        System.out.println("Login realizado com Sucesso\n");
-                        
-                        log.LoginOn(loginUser, m);
-                    }
-                    else
-                    {
-                        throw new RuntimeException ("Erro: Senha incorreta");
-                    }
+                    m.Logar(U, input, m);
                 }
                 else if (cmd == 2)
                 {
@@ -97,36 +73,17 @@ public class Manager {
                 {
                     System.out.println("Para recuperar a senha preencha os campos abaixo");
 
-                    System.out.print("Seu nome: ");
-                    String nome = input.nextLine();
-
                     System.out.print("Seu Id: ");
                     int id = U.LerInt();
 
-                    Usuario user = U.BuscarUsuario(m.getUsuarios(), id);
+                    Usuario user = U.Buscar(m.getUsuarios(), id);
 
-                    System.out.print("Seu email: ");
-                    String email = input.nextLine();
+                    String novaSenha = m.RecuperarSenha(U, input, m, user);
 
-                    if (!email.contains("@icproj")) email += "@icproj.com";
-
-                    if (nome.equals(user.getNome()) && email.equals(user.getEmail()))
+                    if (novaSenha != null)
                     {
-                        System.out.println("Digite a nova senha: ");
-                        {
-                            String novaSenha = input.nextLine();
-                            erro.CheckErros(novaSenha, "senha");
-
-                            if (!novaSenha.equals(user.getSenha()))
-                            {
-                                user.setSenha(novaSenha);
-                                System.out.println("Senha alterada com sucesso");
-                            }
-                            else
-                            {
-                                throw new RuntimeException ("Erro: Senha igual a anterior");
-                            }
-                        }
+                        user.setSenha(novaSenha);
+                        System.out.println("Senha alterada com sucesso");
                     }
                 }
                 else
@@ -143,6 +100,66 @@ public class Manager {
         input.close();
     }
 
+    public void Logar(Utilidades U, Scanner input, Manager m) throws Exception
+    {
+        int id = 0;
+        String senha = null;
+        System.out.println("\t\tLOGIN NO SISTEMA");
+
+        System.out.print("Digite seu ID: ");
+        id = U.LerInt();
+
+        Usuario loginUser = U.Buscar(m.getUsuarios(), id);
+
+        System.out.print("Digite sua senha: ");
+        senha = input.nextLine();
+
+        if (senha.equals(loginUser.getSenha()))
+        {
+            Login log = new Login();
+            System.out.println("\nLogin realizado com Sucesso\n");
+            
+            log.LoginOn(loginUser, m);
+        }
+        else
+        {
+            throw new RuntimeException ("Erro: Senha incorreta");
+        }
+    }
+   
+    public String RecuperarSenha(Utilidades U, Scanner input, Manager m, Usuario user) throws Exception
+    {
+        Erros erro = new Erros();
+        
+        System.out.print("Seu nome: ");
+        String nome = input.nextLine();
+
+        System.out.print("Seu email: ");
+        String email = input.nextLine();
+
+        if (!email.contains("@icproj")) email += "@icproj.com";
+
+        if (nome.equals(user.getNome()) && email.equals(user.getEmail()))
+        {
+            System.out.println("Digite a nova senha: ");
+            {
+                String novaSenha = input.nextLine();
+                erro.CheckErros(novaSenha, "senha");
+
+                if (!novaSenha.equals(user.getSenha()))
+                {
+                    return novaSenha;
+                }
+                else
+                {
+                    throw new RuntimeException ("Erro: Senha igual a anterior");
+                }
+            }
+        }
+
+        return null;
+    }
+    
     public ArrayList<Usuario> getUsuarios ()
     {
         return usuarios;

@@ -1,7 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Atividade extends VarGlobais implements Lista{
+public class Atividade extends VarGlobais implements Busca{
     
     private int id = -1;
     private String desc = null;
@@ -17,7 +17,7 @@ public class Atividade extends VarGlobais implements Lista{
     public Atividade(int id, String desc, int idResponsavel, Usuario user, LocalDateTime inicio, LocalDateTime termino)
     {
         this.setId(id);
-        this.setDesc(desc);
+        this.setNome(desc);
         this.setIdResponsavel(idResponsavel);
         this.setUsuarios(user);
         this.setInicio(inicio);
@@ -40,7 +40,7 @@ public class Atividade extends VarGlobais implements Lista{
 
     public void DefinirResponsavel()
     {
-        Usuario respAtual = U.BuscarUsuario(this.getUsuarios(), this.getIdResponsavel());
+        Usuario respAtual = U.Buscar(this.getUsuarios(), this.getIdResponsavel());
 
         System.out.print("Responsavel atual pela atividade: ");
         System.out.println(respAtual.getNome());
@@ -48,7 +48,7 @@ public class Atividade extends VarGlobais implements Lista{
         System.out.println("Gostaria de alterar? 1 para sim");
         int decisao = U.LerInt();
 
-        ListarUsers(this.getUsuarios());
+        U.Listar(this.getUsuarios());
 
         while (decisao == 1)
         {
@@ -57,7 +57,7 @@ public class Atividade extends VarGlobais implements Lista{
                 System.out.println("Digite o RG do novo Responsavel");
                 int checkIdU = U.LerInt();
                 
-                Usuario idResponsavel = U.BuscarUsuario(this.getUsuarios(), checkIdU);
+                Usuario idResponsavel = U.Buscar(this.getUsuarios(), checkIdU);
                 this.setIdResponsavel(idResponsavel.getId());
                 System.out.println("Responsavel aletrado com sucesso");
                 decisao = 0;
@@ -71,7 +71,7 @@ public class Atividade extends VarGlobais implements Lista{
     public void AdicionarUsuarios(Projeto project) throws Exception
     {
         System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
-        ListarUsers(project.getProjetistas());
+        U.Listar(project.getProjetistas());
         int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
@@ -81,7 +81,7 @@ public class Atividade extends VarGlobais implements Lista{
 
             try {
                  
-                Usuario usuario = U.BuscarUsuario(project.getProjetistas(), checkIdU);
+                Usuario usuario = U.Buscar(project.getProjetistas(), checkIdU);
                 if (usuario.getAtividade() == 0)
                 {
                     this.setUsuarios(usuario);
@@ -108,7 +108,7 @@ public class Atividade extends VarGlobais implements Lista{
     public void RemoverUsuarios() throws Exception
     {
         System.out.println("Qual sera a quantidade de usuarios removidos? 0 para nenhum");
-        ListarUsers(this.getUsuarios());
+        U.Listar(this.getUsuarios());
         int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
@@ -117,7 +117,7 @@ public class Atividade extends VarGlobais implements Lista{
                 System.out.println("Digite o RG do usuario que deseja remover: ");
                 int checkIdU = U.LerInt();
 
-                Usuario usuario = U.BuscarUsuario(this.getUsuarios(), checkIdU);
+                Usuario usuario = U.Buscar(this.getUsuarios(), checkIdU);
                 usuario.setAtividade(0);
                 usuario.getTarefas().clear();
                 this.getUsuarios().remove(usuario);
@@ -150,10 +150,10 @@ public class Atividade extends VarGlobais implements Lista{
                 erro.CheckErros(descTarefa, "tarefa");
 
                 System.out.println("Digite o RG do profissional que realizara a tarefa: ");
-                U.ListarUsers(this.getUsuarios());
+                U.Listar(this.getUsuarios());
                 int respTarefa = U.LerInt();
 
-                Usuario user = U.BuscarUsuario(this.getUsuarios(), respTarefa);
+                Usuario user = U.Buscar(this.getUsuarios(), respTarefa);
                 
                 Tarefa tarefa = new Tarefa(descTarefa, respTarefa);
                 user.setTarefas(tarefa);
@@ -175,7 +175,7 @@ public class Atividade extends VarGlobais implements Lista{
     public void RemoverTarefas() throws Exception
     {
         System.out.println("Qual sera a quantidade de tarefas removidas? 0 para nenhuma");
-        ListarTasks(this.getTarefas());
+        U.Listar(this.getTarefas());
         int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
@@ -184,11 +184,11 @@ public class Atividade extends VarGlobais implements Lista{
 
                 System.out.println("Digite o RG do responsável pela tarefa que deseja remover: ");
                 int respTarefa = U.LerInt();
-                Usuario responsavel = U.BuscarUsuario(this.getUsuarios(), respTarefa);
+                Usuario responsavel = U.Buscar(this.getUsuarios(), respTarefa);
 
                 for (Tarefa item : responsavel.getTarefas())
                 {
-                    System.out.println("Descricao da tarefa: "+item.getDesc());
+                    System.out.println("Descricao da tarefa: "+item.getNome());
                     System.out.println("Gostaria de remove-la? 1 para sim");
 
                     int dec = U.LerInt();
@@ -212,6 +212,7 @@ public class Atividade extends VarGlobais implements Lista{
         }
     }
     
+    @Override
     public int getId() {
         return this.id;
     }
@@ -220,11 +221,12 @@ public class Atividade extends VarGlobais implements Lista{
         this.id = id;
     }
 
-    public String getDesc() {
+    @Override
+    public String getNome() {
         return this.desc;
     }
 
-    public void setDesc(String desc) {
+    public void setNome(String desc) {
         this.desc = desc;
     }
 
@@ -281,56 +283,11 @@ public class Atividade extends VarGlobais implements Lista{
     @Override
     public String toString()
     {
-        String respNome = U.BuscarUsuario(this.getUsuarios(), this.getIdResponsavel()).getNome();
+        String respNome = U.Buscar(this.getUsuarios(), this.getIdResponsavel()).getNome();
         
-        return  "Atividade descrita: "+this.getDesc()+"\n"+
+        return  "Atividade descrita: "+this.getNome()+"\n"+
                 "Responsavel pela Atividade: "+respNome+"\n"+
                 "Inicio da Atividade: "+this.getInicio()+"\n"+
                 "Termino da Atividade: "+this.getTermino()+"\n";
-    }
-
-    @Override
-    public void ListarProjs(ArrayList<Projeto> projs) {
-        
-    }
-
-    @Override
-    public void ListarAtivs(ArrayList<Atividade> ativs) {
-        
-    }
-
-    @Override
-    public void ListarTasks(ArrayList<Tarefa> tasks)
-    {
-        System.out.println("        Lista de tarefas disponiveis");
-        for (Tarefa item : tasks)
-        {
-            System.out.println("Descricao: "+item.getDesc());
-            System.out.println("Status da tarefa: "+item.getStatus());
-            System.out.println("ID do responsavel: "+item.getProfissional()+"\n");
-        }
-    }
-
-    @Override
-    public void ListarUsers(ArrayList<Usuario> users)
-    {
-        System.out.println("        Lista de usuarios disponiveis");
-        for (Usuario item : users)
-        {
-            System.out.println("Nome: "+item.getNome());
-            System.out.println("ID: "+item.getId());
-        }
-    }
-
-    @Override
-    public void ListarDocentes(ArrayList<Usuario> users) {
-        
-        
-    }
-
-    @Override
-    public void ListarDiscentes(ArrayList<Usuario> users) {
-        
-        
     }
 }

@@ -1,30 +1,30 @@
-public class Tarefa {
+public class Tarefa implements Busca{
     
     private String desc = null;
-    private int profissional = 0;
+    private int idProf = 0;
     private String status = null;
 
-    public Tarefa(String desc, int profissional)
+    public Tarefa(String desc, int idProf)
     {
-        this.setDesc(desc);
-        this.setProfissional(profissional);
+        this.setNome(desc);
+        this.setId(idProf);
         this.setStatus("Atribuida");
     }
 
-    public String getDesc() {
+    public String getNome() {
         return this.desc;
     }
 
-    public void setDesc(String desc) {
+    public void setNome(String desc) {
         this.desc = desc;
     }
 
-    public int getProfissional() {
-        return this.profissional;
+    public int getId() {
+        return this.idProf;
     }
 
-    public void setProfissional(int profissional) {
-        this.profissional = profissional;
+    public void setId(int idProf) {
+        this.idProf = idProf;
     }
 
     public String getStatus() {

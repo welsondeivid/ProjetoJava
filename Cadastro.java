@@ -4,24 +4,16 @@ public class Cadastro extends VarGlobais {
     
     public Usuario Cadastrar(ArrayList<Usuario> users) throws Exception
     {
-        System.out.println("Digite seu nome: ");
-        String nomeUser = input.nextLine();
-        
-        erro.CheckErros(nomeUser, "nome");
-        
-        System.out.println("Digite seu RG, usaremos como seu id: ");
-        int idUser = U.LerInt();
-        
-        try {
+        String nomeUser = CadastrarNome();
 
-            U.BuscarUsuario(users, idUser);
-            System.out.println("\nID ja consta no sistema\nFalha no cadastro\n");
+        int idUser = CadastrarId(users);
+
+        if (idUser == -1)
+        {
             return null;
-
-        } catch (Exception e) {
-            
-            System.out.println("ID valido");
         }
+
+        //Continue daqui: Long Method
 
         System.out.println("Digite seu email: ");
         String emailUser = input.nextLine();
@@ -52,5 +44,33 @@ public class Cadastro extends VarGlobais {
         System.out.println("Cadastro Realizado com sucesso\n");
 
         return usuario;
+    }
+
+    private String CadastrarNome() throws Exception
+    {
+        System.out.println("Digite seu nome: ");
+        String nome = input.nextLine();
+        
+        erro.CheckErros(nome, "nome");
+
+        return nome;
+    }
+
+    private int CadastrarId(ArrayList<Usuario> users) throws Exception
+    {
+        System.out.println("Digite seu RG, usaremos como seu id: ");
+        int id = U.LerInt();
+        
+        try {
+
+            U.Buscar(users, id);
+            System.out.println("\nID ja consta no sistema\nFalha no cadastro\n");
+            return -1;
+
+        } catch (Exception e) {
+            
+            System.out.println("ID valido");
+            return id;
+        }
     }
 }

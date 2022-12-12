@@ -4,9 +4,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Utilidades implements Lista{
+public class Utilidades{
 	    
-    GerenciadorBolsa gerBolsa = new GerenciadorBolsa();
     Scanner input = new Scanner(System.in);
 
     public int LerInt()
@@ -45,9 +44,9 @@ public class Utilidades implements Lista{
         return num;
     }   
 
-    public Usuario BuscarUsuario(ArrayList<Usuario> users, int checkId)
+    public <T extends Busca> T Buscar(ArrayList<T> objs, int checkId)
     {
-        for (Usuario item: users)
+        for (T item : objs)
         {
             if (checkId == item.getId())
             {
@@ -55,35 +54,27 @@ public class Utilidades implements Lista{
             }
         }
 
-        throw new RuntimeException("Usuario fora do sistema");
+        throw new RuntimeException("Falha na busca: Fora do sistema");
     }
 
-    public Projeto BuscarProjeto(ArrayList<Projeto> projs, int checkId)
+    public <T extends Busca> void Listar (ArrayList<T> objs)
     {
-        for (Projeto item : projs)
+        if (!objs.isEmpty())
         {
-            if (checkId == item.getId())
+            System.out.println("        Lista disponivel");
+
+            for (T item : objs)
             {
-                return item;
-            } 
+                System.out.println("Nome: "+item.getNome());
+                System.out.println("ID: "+item.getId());
+            }
         }
-
-        throw new RuntimeException("Projeto fora do sistema");
-    }
-
-    public Atividade BuscarAtividade(ArrayList<Atividade> ativs, int checkId)
-    {
-        for (Atividade item : ativs)
+        else
         {
-            if (checkId == item.getId())
-            {
-                return item;
-            }    
+            throw new RuntimeException("Lista Vazia");
         }
-
-        throw new RuntimeException("Atividade fora do sistema");
     }
-
+    
     public void Consultar (ArrayList<Projeto> projs, ArrayList<Usuario> users)
     {
         int cmdConsulta = LerInt();
@@ -91,125 +82,56 @@ public class Utilidades implements Lista{
         if (cmdConsulta == 1)
         {
             System.out.println("Digite o RG do usuario:");
-            ListarUsers (users);
+            Listar(users);
 
             int checkIdU = LerInt();
-            Usuario usuario = BuscarUsuario(users, checkIdU);
+            Usuario usuario = Buscar(users, checkIdU);
 
             System.out.println("Dados do usuario encontrado: ");
-            DadosUser(usuario);
+            Dados(usuario);
         }
         else if (cmdConsulta == 2)
         {
             System.out.println(("Digite o id do projeto onde a atividade esta localizda: "));
-            ListarProjs(projs);
+            Listar(projs);
 
             int checkIdP = LerInt();
-            Projeto project = BuscarProjeto(projs, checkIdP);
+            Projeto project = Buscar(projs, checkIdP);
 
             System.out.println("Digite o id da atividade: ");
-            ListarAtivs(project.getAtividades());
+            Listar(project.getAtividades());
 
             int checkIdA = LerInt();
-            Atividade atividade = BuscarAtividade(project.getAtividades(), checkIdA);
+            Atividade atividade = Buscar(project.getAtividades(), checkIdA);
 
             System.out.println("Dados da atividade encontrada: ");
-            DadosAtiv(atividade);
+            Dados(atividade);
         }
         else if (cmdConsulta == 3)
         {
             System.out.println(("Digite o id do projeto: "));
-            ListarProjs(projs);
+            Listar(projs);
 
             int checkIdP = LerInt();
-            Projeto project = BuscarProjeto(projs, checkIdP);
+            Projeto project = Buscar(projs, checkIdP);
 
             System.out.println("Dados do projeto encontrado: ");
-            DadosProj(project);
+            Dados(project);
         }
     }
     
-    @Override
-    public void ListarTasks (ArrayList<Tarefa> tasks)
+    public <T extends Busca> void Dados (T obj)
     {
-        
-    }
-    
-    @Override
-    public void ListarUsers(ArrayList<Usuario> users)
-    {
-        System.out.println("        Lista de usuarios disponiveis");
-        for (Usuario item : users)
-        {
-            System.out.println("Nome: "+item.getNome());
-            System.out.println("ID: "+item.getId());
-        }
-    }
-
-    @Override
-    public void ListarDocentes (ArrayList<Usuario> users)
-    {
-        System.out.println("        Lista de Docentes disponiveis");
-        for (Usuario item : users)
-        {
-            if (item instanceof Docente)
-            {
-                System.out.println("Nome: "+item.getNome());
-                System.out.println("ID: "+item.getId());
-            }
-        }
-    }
-
-    @Override
-    public void ListarDiscentes (ArrayList<Usuario> users)
-    {
-        
-    }
-    
-    @Override
-    public void ListarAtivs(ArrayList<Atividade> ativs)
-    {
-        System.out.println("        Lista de atividades disponiveis");
-        for (Atividade item : ativs)
-        {
-            System.out.println("Descricao: "+item.getDesc());
-            System.out.println("ID da atividade: "+item.getId());
-        }
-    }
-
-    @Override
-    public void ListarProjs(ArrayList<Projeto> projs)
-    {
-        System.out.println("        Lista de projetos disponiveis");
-        for (Projeto item : projs)
-        {
-            System.out.println("Descricao: "+item.getDesc());
-            System.out.println("ID do projeto: "+item.getId());
-        }
-    }
-
-    public void DadosUser(Usuario user)
-    {
-        System.out.println(user);
-    }
-
-    public void DadosAtiv(Atividade ativ)
-    {
-        System.out.println(ativ);
-    }
-
-    public void DadosProj(Projeto proj)
-    {
-        System.out.println(proj);
+        System.out.println(obj);
     }
 
     public void RelatorioAtiv (Atividade ativ)
     {
         System.out.println("Atividade descrita: ");
-        System.out.println(ativ.getDesc());
+        System.out.println(ativ.getNome());
 
         System.out.print("Responsavel pela Atividade: ");
-        System.out.println(BuscarUsuario(ativ.getUsuarios(), ativ.getIdResponsavel()).getNome());
+        System.out.println(Buscar(ativ.getUsuarios(), ativ.getIdResponsavel()).getNome());
 
         System.out.println("Inicio da Atividade: ");
         System.out.print(MostrarDataHora(ativ.getInicio()));
@@ -239,8 +161,8 @@ public class Utilidades implements Lista{
                 tasks.add(item);
             }
 
-            System.out.println("Desc: "+item.getDesc());
-            System.out.println("Responsavel: "+BuscarUsuario (ativ.getUsuarios(), item.getProfissional()));
+            System.out.println("Nome: "+item.getNome());
+            System.out.println("Responsavel: "+Buscar (ativ.getUsuarios(), item.getId()));
             System.out.println("Status: "+item.getStatus());
         }
 
@@ -256,16 +178,16 @@ public class Utilidades implements Lista{
             System.out.println("Tarefas restantes para concluir a atividade: ");
             for (Tarefa item : tasks)
             {
-                System.out.println("Desc: "+item.getDesc());
-                System.out.println("Responsavel: "+BuscarUsuario (ativ.getUsuarios(), item.getProfissional()));
+                System.out.println("Nome: "+item.getNome());
+                System.out.println("Responsavel: "+Buscar (ativ.getUsuarios(), item.getId()));
             }
         }
     }
 
-    public void RelatorioProj(Projeto proj)
+    public void RelatorioProj(Projeto proj, GerenciadorBolsa gerBolsa)
     {
         System.out.println("Projeto descrito: ");
-        System.out.println(proj.getDesc()+"\n");
+        System.out.println(proj.getNome()+"\n");
 
         System.out.println("Status do Projeto: "+proj.getStatus()+"\n");
 
@@ -276,7 +198,7 @@ public class Utilidades implements Lista{
         System.out.print(MostrarDataHora(proj.getTermino())+"\n");
 
         System.out.println("Coordenador do Projeto: ");
-        String coordenador = BuscarUsuario(proj.getProjetistas(), proj.getIdCoordenador()).getNome();
+        String coordenador = Buscar(proj.getProjetistas(), proj.getIdCoordenador()).getNome();
         System.out.println(coordenador+"\n");
 
 
@@ -297,11 +219,11 @@ public class Utilidades implements Lista{
 
         System.out.println("Tecnico do Projeto: ");
         String tecnico = "Sem Tecnico";
-        if (proj.getIdTecnico() != 0)   tecnico = BuscarUsuario(proj.getProjetistas(), proj.getIdTecnico()).getNome();
+        if (proj.getIdTecnico() != 0)   tecnico = Buscar(proj.getProjetistas(), proj.getIdTecnico()).getNome();
         System.out.println(tecnico+"\n");  
 
         System.out.println("Lista de Atividades: ");
-        if (!proj.getAtividades().isEmpty())    for (Atividade item : proj.getAtividades()) DadosAtiv(item);
+        if (!proj.getAtividades().isEmpty())    for (Atividade item : proj.getAtividades()) Dados(item);
         else    System.out.println("Sem atividades no momento");
 
         System.out.println("\n"+gerBolsa);

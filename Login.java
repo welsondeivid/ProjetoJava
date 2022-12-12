@@ -1,7 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Login extends VarGlobais implements Lista
+public class Login extends VarGlobais
 {
     public void LoginOn(Usuario userLog, Manager m) throws Exception
     {
@@ -35,7 +35,7 @@ public class Login extends VarGlobais implements Lista
                     
                     try {
 
-                        Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
+                        Projeto project = U.Buscar(m.getProjetos(), user.getProjeto());
 
                         if (user.getId() == project.getIdCoordenador())
                         {
@@ -152,9 +152,9 @@ public class Login extends VarGlobais implements Lista
                 else if (cmdLogin == 3)
                 {
                     System.out.println("Somente o responsavel ou o coordenador por uma atividade podem edita-la");
-                    Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
+                    Projeto project = U.Buscar(m.getProjetos(), user.getProjeto());
 
-                    Atividade atividade = U.BuscarAtividade(project.getAtividades(), user.getAtividade());
+                    Atividade atividade = U.Buscar(project.getAtividades(), user.getAtividade());
                     
                     int cmdAtividade = -1;      
 
@@ -217,16 +217,16 @@ public class Login extends VarGlobais implements Lista
                         else if (cmdUsuario == 3)
                         {
                             System.out.println("Digite o ID do projeto ao qual gostaria de ingressar: ");
-                            ListarProjs(m.getProjetos());
+                            U.Listar(m.getProjetos());
                             int checkIdP = U.LerInt();
 
-                            Projeto project = U.BuscarProjeto(m.getProjetos(), checkIdP);
+                            Projeto project = U.Buscar(m.getProjetos(), checkIdP);
 
                             user.IngressarProjeto(project);
                         }
                         else if (cmdUsuario == 4)
                         {
-                            Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
+                            Projeto project = U.Buscar(m.getProjetos(), user.getProjeto());
                             
                             user.IngressarAtividade(project);
                         }
@@ -245,7 +245,7 @@ public class Login extends VarGlobais implements Lista
                     {
                         System.out.println("Coordenador identificado");
 
-                        Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
+                        Projeto project = U.Buscar(m.getProjetos(), user.getProjeto());
 
                         if (project.getIdCoordenador() == user.getId())
                         {
@@ -274,7 +274,7 @@ public class Login extends VarGlobais implements Lista
                     System.out.println("Responsaveis podem checar o relatorio de sua propria atividade\n");
                     
                     Docente userCheck = user;
-                    Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
+                    Projeto project = U.Buscar(m.getProjetos(), user.getProjeto());
 
                     if (userCheck.getCoord())
                     {
@@ -286,7 +286,7 @@ public class Login extends VarGlobais implements Lista
                         
                         if (decisao == 1)
                         {
-                            U.RelatorioProj(project);
+                            U.RelatorioProj(project, gerBolsa);
                         }
                         else if (decisao == 2)
                         {     
@@ -302,7 +302,7 @@ public class Login extends VarGlobais implements Lista
                     }
                     else
                     {
-                        Atividade atividade = U.BuscarAtividade(project.getAtividades(), userCheck.getAtividade());
+                        Atividade atividade = U.Buscar(project.getAtividades(), userCheck.getAtividade());
 
                         if (user.getId() == atividade.getIdResponsavel())
                         {
@@ -325,7 +325,7 @@ public class Login extends VarGlobais implements Lista
                     {
                         System.out.println("Coordenador identificado");
 
-                        Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
+                        Projeto project = U.Buscar(m.getProjetos(), coordenador.getProjeto());
                         ArrayList <Discente> pagar = new ArrayList<Discente>();
 
                         System.out.println("Lista dos bolsistas que podem receber a bolsa: ");
@@ -378,10 +378,10 @@ public class Login extends VarGlobais implements Lista
                     if (coordenador.getCoord())
                     {
                         System.out.println("Coordenador identificado");
-                        Projeto project = U.BuscarProjeto(m.getProjetos(), coordenador.getProjeto());
+                        Projeto project = U.Buscar(m.getProjetos(), coordenador.getProjeto());
 
                         System.out.println("Digite o RG do usuario que deseja adicionar:");
-                        Usuario checkUser = U.BuscarUsuario(m.getUsuarios(), U.LerInt());
+                        Usuario checkUser = U.Buscar(m.getUsuarios(), U.LerInt());
 
                         if (checkUser instanceof Discente)
                         {
@@ -390,13 +390,13 @@ public class Login extends VarGlobais implements Lista
                             if (intercamb.getProjInterCam() == 0)
                             {
                                 try {
-                                    Projeto projInterCam = U.BuscarProjeto(m.getProjetos(), intercamb.getProjeto());
+                                    Projeto projInterCam = U.Buscar(m.getProjetos(), intercamb.getProjeto());
 
                                     if (projInterCam != project)
                                     {
                                         System.out.println("Para qual atividade ele sera atribuido?");
                                         int checkIdA = U.LerInt();
-                                        Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
+                                        Atividade atividade = U.Buscar(project.getAtividades(), checkIdA);
 
                                         atividade.setUsuarios(intercamb);
                                         project.setIntercambista(intercamb);
@@ -469,9 +469,9 @@ public class Login extends VarGlobais implements Lista
                     System.out.println("Um Discente apenas tem acesso a um relatorio de atividade se for o respnsavel");
                     
                     try {
-                        Projeto proj = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
+                        Projeto proj = U.Buscar(m.getProjetos(), user.getProjeto());
                         
-                        Atividade ativ = U.BuscarAtividade(proj.getAtividades(), user.getAtividade());
+                        Atividade ativ = U.Buscar(proj.getAtividades(), user.getAtividade());
                         if (ativ.getIdResponsavel() == user.getId())
                         {
                             System.out.println("Acesso liberado");
@@ -488,9 +488,9 @@ public class Login extends VarGlobais implements Lista
                 else if (cmdLogin == 4)
                 {
                     System.out.println("Somente os Responsaveis por uma atividade podem edita-la");
-                    Projeto project = U.BuscarProjeto(m.getProjetos(), user.getProjeto());
+                    Projeto project = U.Buscar(m.getProjetos(), user.getProjeto());
 
-                    Atividade atividade = U.BuscarAtividade(project.getAtividades(), user.getAtividade());
+                    Atividade atividade = U.Buscar(project.getAtividades(), user.getAtividade());
                     
                     if (user.getId() == atividade.getIdResponsavel())
                     {
@@ -543,62 +543,13 @@ public class Login extends VarGlobais implements Lista
         }
     }
 
-    @Override
-    public void ListarProjs(ArrayList<Projeto> projs)
-    {
-        System.out.println("        Lista de projetos disponiveis");
-        for (Projeto item : projs)
-        {
-            System.out.println("ID do projeto: "+item.getId());
-            System.out.println("Descricao: "+item.getDesc());
-            System.out.println("Coordenador: "+U.BuscarUsuario(item.getProjetistas(), item.getIdCoordenador()).getNome());
-        }
-    }
-
-    @Override
-    public void ListarAtivs(ArrayList<Atividade> ativs) {
-        
-        
-    }
-
-    @Override
-    public void ListarTasks(ArrayList<Tarefa> tasks) {
-        
-        
-    }
-
-    @Override
-    public void ListarUsers(ArrayList<Usuario> users) {
-        
-        
-    }
-
-    @Override
-    public void ListarDocentes(ArrayList<Usuario> users) {
-        
-        System.out.println("        Lista de Docentes disponiveis\n");
-        for (Usuario item : users)
-        {
-            if (item instanceof Docente)
-            {
-                System.out.println("Nome: "+item.getNome()+"|ID: "+item.getId()+"\n");
-            }
-        }
-    }
-
-    @Override
-    public void ListarDiscentes(ArrayList<Usuario> users) {
-        
-        
-    }
-
     public boolean CriarProjeto(Manager m) throws Exception
     {
         System.out.println("Digite o ID do projeto: ");
         int idProject = U.LerInt();
 
         try {
-            U.BuscarProjeto(m.getProjetos(), idProject);
+            U.Buscar(m.getProjetos(), idProject);
             System.out.println ("Falha ao criar projeto: ID ja consta no sistema\n");
             return false;
         } catch (Exception e) {
@@ -621,10 +572,10 @@ public class Login extends VarGlobais implements Lista
         
 
         System.out.println("Defina o Coordenador do projeto, somente Professor/Pesquisador");
-        ListarDocentes(m.getUsuarios());
+        U.Listar(m.getUsuarios());
         int idCoord = U.LerInt();
 
-        Usuario userCoord = U.BuscarUsuario(m.getUsuarios(), idCoord);
+        Usuario userCoord = U.Buscar(m.getUsuarios(), idCoord);
 
         if (userCoord instanceof Docente)
         {

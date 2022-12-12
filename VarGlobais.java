@@ -8,6 +8,7 @@ public class VarGlobais {
     Menu menu = new Menu();
     DateTimeFormatter format = DateTimeFormatter.ofPattern ("HH:mm dd/MM/yyyy");
     Scanner input = new Scanner(System.in);
+    //
     GerenciadorBolsa gerBolsa =  new GerenciadorBolsa();
     
 }

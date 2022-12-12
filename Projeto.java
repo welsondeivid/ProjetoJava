@@ -1,7 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Projeto extends VarGlobais implements Lista{
+public class Projeto extends VarGlobais implements Busca{
     
     private int id = -1;
     private String desc = null;
@@ -22,7 +22,7 @@ public class Projeto extends VarGlobais implements Lista{
     public Projeto (int id, String desc, LocalDateTime inicio, LocalDateTime termino, String status, Usuario Coord)
     {
         this.setId(id);
-        this.setDesc(desc);
+        this.setNome(desc);
         this.setInicio(inicio);
         this.setTermino(termino);
         this.setStatus(status);
@@ -74,11 +74,11 @@ public class Projeto extends VarGlobais implements Lista{
     public void DesignarCoordenador(ArrayList<Usuario> usuarios) throws Exception
     {
         System.out.println("Digite o RG do novo coordenador do projeto: ");
-        ListarDocentes(usuarios);
+        U.Listar(usuarios);
 
         int checkIdU = U.LerInt();
 
-        Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
+        Usuario usuario = U.Buscar(usuarios, checkIdU);
 
         if (usuario instanceof Docente)
         {
@@ -104,9 +104,9 @@ public class Projeto extends VarGlobais implements Lista{
             try {
             
                 System.out.println("Digite o RG do usuario que deseja adicionar: ");
-                ListarUsers(usuarios);
+                U.Listar(usuarios);
                 int checkIdU = U.LerInt();
-                Usuario usuario = U.BuscarUsuario(usuarios, checkIdU);
+                Usuario usuario = U.Buscar(usuarios, checkIdU);
                 
                 System.out.println("Designe a funcao dele no projeto: ");
                 menu.MenuFuncUsuario();
@@ -163,10 +163,10 @@ public class Projeto extends VarGlobais implements Lista{
             try {
 
                 System.out.println("Digite RG do usuario que deseja remover: ");
-                ListarUsers(usuarios);
+                U.Listar(usuarios);
                 int checkIdU = U.LerInt();
 
-                Usuario usuario = U.BuscarUsuario(this.getProjetistas(), checkIdU);
+                Usuario usuario = U.Buscar(this.getProjetistas(), checkIdU);
 
                 if (usuario.getFunc().equals("Devp"))
                 {
@@ -192,7 +192,7 @@ public class Projeto extends VarGlobais implements Lista{
                 Atividade ativ = null;
 
                 try {
-                    ativ = U.BuscarAtividade(this.getAtividades(), usuario.getId());
+                    ativ = U.Buscar(this.getAtividades(), usuario.getId());
                 } catch (Exception e) {
                     System.out.println("Usuario sem atividade para remover\n");
                 }
@@ -214,7 +214,7 @@ public class Projeto extends VarGlobais implements Lista{
     public void RemoverIntercambista() throws Exception
     {
         System.out.println("Lista de Intercambistas atuais: ");
-        ListarUsers(this.getIntercambistas());
+        U.Listar(this.getIntercambistas());
 
         System.out.println("Qual sera a quantidade de usuarios removidos?");
 
@@ -224,10 +224,10 @@ public class Projeto extends VarGlobais implements Lista{
         {
             System.out.println("Digite RG do usuario que deseja remover: ");
             int checkIdU = U.LerInt();
-            Usuario user = U.BuscarUsuario(this.getIntercambistas(), checkIdU);
+            Usuario user = U.Buscar(this.getIntercambistas(), checkIdU);
 
             Discente intercamb = (Discente)user;
-            Atividade ativ = U.BuscarAtividade(this.getAtividades(), intercamb.getAtivInterCam());
+            Atividade ativ = U.Buscar(this.getAtividades(), intercamb.getAtivInterCam());
             
             this.getIntercambistas().remove(intercamb);
             ativ.getUsuarios().remove(intercamb);
@@ -251,7 +251,7 @@ public class Projeto extends VarGlobais implements Lista{
                 int idAtividade = U.LerInt();
 
                 try {
-                    U.BuscarAtividade(this.getAtividades(), idAtividade);
+                    U.Buscar(this.getAtividades(), idAtividade);
                     System.out.println("Falha ao adicionar atividade: ID de atividade ja consta no sistema\n");
                     return;
                 } catch (Exception e) {
@@ -262,9 +262,9 @@ public class Projeto extends VarGlobais implements Lista{
                 String descAtividade = input.nextLine();
 
                 System.out.println("Digite o RG do responsavel pela atividade: ");
-                ListarUsers(this.getProjetistas());
+                U.Listar(this.getProjetistas());
                 int checkIdU = U.LerInt();
-                Usuario responsavel = U.BuscarUsuario(this.getProjetistas(), checkIdU);
+                Usuario responsavel = U.Buscar(this.getProjetistas(), checkIdU);
 
                 LocalDateTime inicio = null, termino = null;
                 try
@@ -300,7 +300,7 @@ public class Projeto extends VarGlobais implements Lista{
     public void RemoverAtividades() throws Exception
     {
         System.out.println("Qual sera a quantidade de atividades removidas?");
-        ListarAtivs(this.getAtividades());
+        U.Listar(this.getAtividades());
         int quant = U.LerInt();
 
         for (int i = 0; i < quant; i++)
@@ -308,10 +308,10 @@ public class Projeto extends VarGlobais implements Lista{
             try {
 
                 System.out.println("Digite o ID da atividade a ser removida: ");
-                ListarAtivs(atividades);
+                U.Listar(atividades);
                 int checkIdA = U.LerInt();
 
-                Atividade atividade = U.BuscarAtividade(this.getAtividades(), checkIdA);
+                Atividade atividade = U.Buscar(this.getAtividades(), checkIdA);
 
                 for (Usuario item : atividade.getUsuarios())
                 {
@@ -337,7 +337,7 @@ public class Projeto extends VarGlobais implements Lista{
 
     public void AlterarStatus() throws Exception
     {
-        System.out.println("Seu projeto é o : "+this.getDesc());
+        System.out.println("Seu projeto é o : "+this.getNome());
         System.out.println("Status atual: "+this.getStatus());
         System.out.println("Gostaria de alterar? 1 para sim");
 
@@ -383,7 +383,7 @@ public class Projeto extends VarGlobais implements Lista{
                         System.out.println("Alguma(s) atividades ainda não foram concluídas");
                         for (Atividade item : ativs)
                         {
-                            System.out.println(item.getId()+": "+item.getDesc());
+                            System.out.println(item.getId()+": "+item.getNome());
                         }
                     }
                 }
@@ -453,6 +453,7 @@ public class Projeto extends VarGlobais implements Lista{
         return false; 
     }
 
+    @Override
     public int getId() {
         return this.id;
     }
@@ -461,11 +462,12 @@ public class Projeto extends VarGlobais implements Lista{
         this.id = id;
     }
 
-    public String getDesc() {
+    @Override
+    public String getNome() {
         return this.desc;
     }
 
-    public void setDesc(String desc) {
+    public void setNome(String desc) {
         this.desc = desc;
     }
 
@@ -562,66 +564,12 @@ public class Projeto extends VarGlobais implements Lista{
     @Override
     public String toString()
     {
-        String coordNome = U.BuscarUsuario(this.getProjetistas(), this.getIdCoordenador()).getNome();
+        String coordNome = U.Buscar(this.getProjetistas(), this.getIdCoordenador()).getNome();
 
-        return  "Projeto descrito: \n"+this.getDesc()+"\n"+
+        return  "Projeto descrito: \n"+this.getNome()+"\n"+
                 "Status do Projeto: "+this.getStatus()+"\n"+
                 "Inicio do Projeto: "+this.getInicio()+"\n"+
                 "Termino do Projeto: "+this.getTermino()+"\n"+
                 "Coordenador do Projeto: "+coordNome+"\n";
-    }
-
-    @Override
-    public void ListarProjs(ArrayList<Projeto> projs)
-    {
-        
-    }
-
-    @Override
-    public void ListarAtivs(ArrayList<Atividade> ativs)
-    {
-        System.out.println("        Lista de atividades disponiveis");
-        for (Atividade item : ativs)
-        {
-            System.out.println("Descricao: "+item.getDesc());
-            System.out.println("ID da atividade: "+item.getId());
-        }
-    }
-
-    @Override
-    public void ListarTasks(ArrayList<Tarefa> tasks)
-    {
-        
-    }
-
-    @Override
-    public void ListarUsers(ArrayList<Usuario> users)
-    {
-        System.out.println("        Lista de usuarios disponiveis");
-        for (Usuario item : users)
-        {
-            System.out.println("Nome: "+item.getNome());
-            System.out.println("ID: "+item.getId());
-        }
-    }
-
-    @Override
-    public void ListarDocentes(ArrayList<Usuario> users)
-    {
-        System.out.println("        Lista de Docentes disponiveis");
-        for (Usuario item : users)
-        {
-            if (item instanceof Docente)
-            {
-                System.out.println("Nome: "+item.getNome()+"ID: "+item.getId());
-                System.out.println("Email: "+item.getEmail()+"\n");
-            }
-        }
-    }
-
-    @Override
-    public void ListarDiscentes(ArrayList<Usuario> users)
-    {
-        
     }
 }

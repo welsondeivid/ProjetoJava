@@ -1,7 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public abstract class Usuario extends VarGlobais
+public abstract class Usuario extends VarGlobais implements Busca
 {
     private int id = -1;
     private String nome = null;
@@ -56,7 +56,7 @@ public abstract class Usuario extends VarGlobais
         System.out.println("Digite o ID da atividade a qual gostaria de associar-se: ");
         
         int checkIdA = U.LerInt();
-        Atividade atividade = U.BuscarAtividade(project.getAtividades(), checkIdA);
+        Atividade atividade = U.Buscar(project.getAtividades(), checkIdA);
 
         this.setAtividade(atividade.getId());
     }
@@ -69,7 +69,7 @@ public abstract class Usuario extends VarGlobais
         for (int i = 0; i <= this.getTarefas().size(); i++)
         {
             item = this.getTarefas().get(i);
-            System.out.println((i+1)+":"+item.getDesc());
+            System.out.println((i+1)+":"+item.getNome());
         }
 
         int indTarefa = 0;
@@ -91,7 +91,7 @@ public abstract class Usuario extends VarGlobais
 
             if (item != null)
             {
-                System.out.println("Tarefa selecionada: "+item.getDesc());
+                System.out.println("Tarefa selecionada: "+item.getNome());
 
                 menu.MenuEditarTarefa();
 
@@ -99,13 +99,13 @@ public abstract class Usuario extends VarGlobais
 
                 if (decisao == 1)
                 {
-                    item.setDesc("Iniciada");
+                    item.setNome("Iniciada");
                     System.out.println("Status Atualizado");
                 }
                 else if (decisao == 2)
                 {
                     System.out.println("Status Atualizado");
-                    item.setDesc("Finalizada");
+                    item.setNome("Finalizada");
                 }
             }
             else
@@ -115,6 +115,7 @@ public abstract class Usuario extends VarGlobais
         }
     }
     
+    @Override
     public int getId() {
         return this.id;
     }
@@ -220,7 +221,7 @@ public abstract class Usuario extends VarGlobais
             {
                 for (Tarefa item : this.getTarefas())
                 {
-                    taskLists += item.getDesc()+"\n";
+                    taskLists += item.getNome()+"\n";
                 }
             }
             return  "Nome: "+this.getNome()+"\n"+

@@ -1,7 +1,9 @@
 import java.time.LocalDateTime;
 
 // continue daqui, metodo de pagamento
-public class GerenciadorBolsa extends VarGlobais{
+public class GerenciadorBolsa{
+    
+    Utilidades U = new Utilidades();
     
     private float valorDevp = 0;
     private float valorTest = 0;
