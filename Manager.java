@@ -58,7 +58,7 @@ public class Manager {
                     {
                         try
                         {
-                            usuario = cadastro.Cadastrar(m.getUsuarios());
+                            usuario = cadastro.CadastrarUsuario(m.getUsuarios());
                         }
                         catch (Exception e)
                         {
@@ -90,6 +90,7 @@ public class Manager {
                 {
                     if (cmd != 0)   throw new RuntimeException ("Erro: Valor invalido");
                 }
+                U.Continue();
             }
             catch (Exception e)
             {
@@ -118,7 +119,7 @@ public class Manager {
         {
             Login log = new Login();
             System.out.println("\nLogin realizado com Sucesso\n");
-            
+            U.Continue();
             log.LoginOn(loginUser, m);
         }
         else
@@ -144,7 +145,7 @@ public class Manager {
             System.out.println("Digite a nova senha: ");
             {
                 String novaSenha = input.nextLine();
-                erro.CheckErros(novaSenha, "senha");
+                erro.CheckErros(novaSenha, "vazio");
 
                 if (!novaSenha.equals(user.getSenha()))
                 {
@@ -164,6 +165,7 @@ public class Manager {
     {
         return usuarios;
     }
+    
     public ArrayList<Projeto> getProjetos()
     {
         return projetos;

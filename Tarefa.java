@@ -34,4 +34,12 @@ public class Tarefa implements Busca{
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString()
+    {
+        return  "Nome: "+this.desc+"\n"+
+                "ID do Responsavel: "+this.getId()+"\n"+
+                "Status: "+this.getStatus();
+    }
 }

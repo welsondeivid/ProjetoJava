@@ -54,12 +54,11 @@ public class Atividade extends VarGlobais implements Busca{
         {
             try {
 
-                System.out.println("Digite o RG do novo Responsavel");
-                int checkIdU = U.LerInt();
-                
-                Usuario idResponsavel = U.Buscar(this.getUsuarios(), checkIdU);
+                Usuario idResponsavel = U.EscolherUser(this.getUsuarios(), "do novo Responsavel");
+
                 this.setIdResponsavel(idResponsavel.getId());
-                System.out.println("Responsavel aletrado com sucesso");
+                System.out.println("Responsavel alterado com sucesso");
+                U.Continue();
                 decisao = 0;
 
             } catch (Exception e) {
@@ -70,23 +69,20 @@ public class Atividade extends VarGlobais implements Busca{
     
     public void AdicionarUsuarios(Projeto project) throws Exception
     {
-        System.out.println("Qual sera a quantidade de usuarios adicionados? 0 para nenhum");
-        U.Listar(project.getProjetistas());
-        int quant = U.LerInt();
+        int quant = U.EscolherQuant("usuarios adicionados", project.getProjetistas());
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite o RG do usuario que deseja adicionar: ");
-            int checkIdU = U.LerInt();
-
             try {
-                 
-                Usuario usuario = U.Buscar(project.getProjetistas(), checkIdU);
+
+                Usuario usuario = U.EscolherUser(project.getProjetistas(), "do usuario que deseja adicionar");
+
                 if (usuario.getAtividade() == 0)
                 {
                     this.setUsuarios(usuario);
                     usuario.setAtividade(this.getId());
                     System.out.println("Usuario adicionado com sucesso\n");
+                    U.Continue();
                 }
                 else
                 {
@@ -95,96 +91,63 @@ public class Atividade extends VarGlobais implements Busca{
                 }
             } catch (Exception e) {
                 
-                System.out.println("Falha ao adicionar usuario: "+e.getMessage());
-                System.out.println("\nManter o numero de adicoes? 1 para sim");
-
-                int decisao = input.nextInt();
-
-                if (decisao == 1)   i--;
+                if (erro.TratarEscolha(input, e, "adicionar usuario") == 1)   i--;
             }
         }
     }
     
     public void RemoverUsuarios() throws Exception
     {
-        System.out.println("Qual sera a quantidade de usuarios removidos? 0 para nenhum");
-        U.Listar(this.getUsuarios());
-        int quant = U.LerInt();
+        int quant = U.EscolherQuant("usuarios removidos", this.getUsuarios());
 
         for (int i = 0; i < quant; i++)
         {
             try {
-                System.out.println("Digite o RG do usuario que deseja remover: ");
-                int checkIdU = U.LerInt();
+                
+                Usuario usuario = U.EscolherUser(this.getUsuarios(), "do usuario que deseja remover");
 
-                Usuario usuario = U.Buscar(this.getUsuarios(), checkIdU);
                 usuario.setAtividade(0);
                 usuario.getTarefas().clear();
                 this.getUsuarios().remove(usuario);
                 System.out.println("Usuario removido com sucesso\n");
+                U.Continue();
 
             } catch (Exception e) {
-                System.out.println("Falha ao remover usuario: "+e.getMessage());
-                System.out.println("\nManter o numero de remocoes? 1 para sim");
 
-                int decisao = input.nextInt();
-
-                if (decisao == 1)   i--;
+                if (erro.TratarEscolha(input, e, "remover usuario") == 1)   i--;
             }
         }
     }
 
     public void AdicionarTarefas() throws Exception
     {
-        System.out.println("Qual sera a quantidade de tarefas adicionadas? 0 para nenhuma: ");
-        int quant = U.LerInt();
+        int quant = U.EscolherQuant("tarefas adicionadas", null);
 
         for (int i = 0; i < quant; i++)
         {
             try {
-                
-                System.out.println("Digite as infos sobre a tarefa que deseja adicionar: ");
-                
-                System.out.println("Digite a descricao da tarefa: ");
-                String descTarefa = input.nextLine();
-                erro.CheckErros(descTarefa, "tarefa");
 
-                System.out.println("Digite o RG do profissional que realizara a tarefa: ");
-                U.Listar(this.getUsuarios());
-                int respTarefa = U.LerInt();
-
-                Usuario user = U.Buscar(this.getUsuarios(), respTarefa);
-                
-                Tarefa tarefa = new Tarefa(descTarefa, respTarefa);
-                user.setTarefas(tarefa);
-                this.setTarefas(tarefa);
+                this.setTarefas(CriarTarefa());
 
                 System.out.println("Tarefa adicionada com sucesso");
+                U.Continue();
             
             } catch (Exception e) {
-                System.out.println("Falha ao adicionar tarefa: "+e.getMessage());
-                System.out.println("\nManter o numero de adicoes? 1 para sim");
 
-                int decisao = input.nextInt();
-
-                if (decisao == 1)   i--;
+                if (erro.TratarEscolha(input, e, "adicionar tarefa") == 1)   i--;
             }
         }
     }
     
     public void RemoverTarefas() throws Exception
     {
-        System.out.println("Qual sera a quantidade de tarefas removidas? 0 para nenhuma");
-        U.Listar(this.getTarefas());
-        int quant = U.LerInt();
+        int quant = U.EscolherQuant("tarefas removidas", this.getTarefas());
 
         for (int i = 0; i < quant; i++)
         {
             try {
 
-                System.out.println("Digite o RG do responsável pela tarefa que deseja remover: ");
-                int respTarefa = U.LerInt();
-                Usuario responsavel = U.Buscar(this.getUsuarios(), respTarefa);
+                Usuario responsavel = U.EscolherUser(this.getUsuarios(), "da tarefa que deseja remover");
 
                 for (Tarefa item : responsavel.getTarefas())
                 {
@@ -198,20 +161,80 @@ public class Atividade extends VarGlobais implements Busca{
                         this.getTarefas().remove(item);
                         responsavel.getTarefas().remove(item);
                         item = null;
+                        U.Continue();
                         break;
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Falha ao remover tarefa: "+e.getMessage());
-                System.out.println("\nManter o numero de adicoes? 1 para sim");
-
-                int decisao = input.nextInt();
-
-                if (decisao == 1)   i--;
+                
+                if (erro.TratarEscolha(input, e, "remover tarefa") == 1)   i--;
             }
         }
     }
     
+    public void UsersRelatorio(ArrayList<Usuario> users)
+    {
+        System.out.println("Lista de usuarios: ");
+        
+        if (users.isEmpty())
+        {
+            for(Usuario item : users)
+            {
+                System.out.println("Nome: "+item.getNome());
+                System.out.println("Func: "+item.getFunc());
+            }
+        }
+        else    System.out.println("Sem usuario no momento");
+    }
+
+    public ArrayList<Tarefa> TasksRelatorio(ArrayList<Tarefa> tasks, ArrayList<Tarefa> newTasks)
+    {
+        System.out.println("Lista de tarefas: ");
+
+        for(Tarefa item : tasks)
+        {
+            if (!item.getStatus().equals("Finalizada"))
+            {
+                newTasks.add(item);
+            }
+
+            System.out.println(item);
+        }
+
+        return newTasks;
+    }
+
+    public void ChecarStatus(ArrayList<Tarefa> tasks)
+    {
+        if (tasks.isEmpty())
+        {
+            System.out.println("Todas as tarefas Finalizadas, alterando Status para Concluida");
+            U.Continue();
+            this.setStatus("Concluida");
+        }
+        else
+        {
+            System.out.println("Tarefas restantes para concluir a atividade: ");
+            for (Tarefa item : tasks)
+            {
+                System.out.println(item);
+            }
+            U.Continue();
+        }
+    }
+
+    private Tarefa CriarTarefa() throws Exception
+    {
+        System.out.println("Digite as infos sobre a tarefa que deseja adicionar: ");
+
+        Cadastro cadastro = new Cadastro();
+        Tarefa tarefa = null;
+        
+        tarefa = cadastro.CadastrarTarefa(this);
+
+        return tarefa;
+    }
+
     @Override
     public int getId() {
         return this.id;
@@ -266,7 +289,7 @@ public class Atividade extends VarGlobais implements Busca{
         return this.tarefas;
     }
 
-    public void setTarefas(Tarefa tarefa) {
+    private void setTarefas(Tarefa tarefa) {
         tarefas.add(tarefa);
     }
 
@@ -275,7 +298,7 @@ public class Atividade extends VarGlobais implements Busca{
         return this.status;
     }
 
-    public void setStatus(String status)
+    private void setStatus(String status)
     {
         this.status = status;
     }

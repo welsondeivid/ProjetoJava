@@ -33,6 +33,7 @@ public class Projeto extends VarGlobais implements Busca{
     public void Editar (ArrayList<Usuario> usuarios, Usuario coord) throws Exception
     {
         System.out.println("Somente Docentes podem coordenar um projeto");
+        
         DesignarCoordenador(usuarios);
 
         AdicionarUsuarios(usuarios);
@@ -57,7 +58,6 @@ public class Projeto extends VarGlobais implements Busca{
             System.out.println("Erro: Lista de atividades do projeto vazia");
         }
                              
-
         gerBolsa.DefinirBolsa("Desenvolvedor");
 
         gerBolsa.DefinirBolsa("Testador");
@@ -73,12 +73,7 @@ public class Projeto extends VarGlobais implements Busca{
 
     public void DesignarCoordenador(ArrayList<Usuario> usuarios) throws Exception
     {
-        System.out.println("Digite o RG do novo coordenador do projeto: ");
-        U.Listar(usuarios);
-
-        int checkIdU = U.LerInt();
-
-        Usuario usuario = U.Buscar(usuarios, checkIdU);
+        Usuario usuario = U.EscolherUser(usuarios, "do novo coordenador do projeto");
 
         if (usuario instanceof Docente)
         {
@@ -92,62 +87,31 @@ public class Projeto extends VarGlobais implements Busca{
         {
             System.out.println("Coordenador precisa ser Docente");
         }
+        U.Continue();
     }
 
     public void AdicionarUsuarios(ArrayList<Usuario> usuarios) throws Exception
     {
-        System.out.println("\nQual sera a quantidade de usuarios adicionados? 0 para nenhum\n");
-        int quant = U.LerInt();
+        int quant = U.EscolherQuant("usuarios adicionados", usuarios);;
 
         for (int i = 0; i < quant; i++)
         {
             try {
             
-                System.out.println("Digite o RG do usuario que deseja adicionar: ");
-                U.Listar(usuarios);
-                int checkIdU = U.LerInt();
-                Usuario usuario = U.Buscar(usuarios, checkIdU);
+                Usuario usuario = U.EscolherUser(usuarios, "do usuario que deseja adicionar");
                 
                 System.out.println("Designe a funcao dele no projeto: ");
                 menu.MenuFuncUsuario();
                 
-                int funcUsuario = U.LerInt();
-
-                if (funcUsuario == 1)
-                {
-                    this.setDesenvolvedor(usuario);
-                    usuario.setFunc("Devp");
-                }
-                else if (funcUsuario == 2)
-                {
-                    this.setTestador(usuario);
-                    usuario.setFunc("Test");
-                }
-                else if (funcUsuario == 3)
-                {
-                    this.setAnalista(usuario);
-                    usuario.setFunc("Anlt");
-                }
-                else if (funcUsuario == 4)
-                {
-                    if (this.getIdTecnico() == 0)
-                    {
-                        this.setIdTecnico(usuario.getId());
-                        usuario.setFunc("Tecn");
-                    }
-                }
+                DefinirFuncUser(usuario);
 
                 usuario.IngressarProjeto(this);
                 System.out.println("Usuario adicionado com sucesso\n");
+                U.Continue();
 
             } catch (Exception e) {
 
-                System.out.println("Falha ao adicionar usuario: "+e.getMessage());
-                System.out.println("\nManter o numero de adicoes? 1 para sim");
-
-                int decisao = input.nextInt();
-
-                if (decisao == 1)   i--;
+                if (erro.TratarEscolha(input, e, "adicionar usuario") == 1)   i--;
             }
             
         }
@@ -155,39 +119,15 @@ public class Projeto extends VarGlobais implements Busca{
 
     public void RemoverUsuarios(ArrayList<Usuario> usuarios) throws Exception
     {
-        System.out.println("Qual sera a quantidade de usuarios removidos?");
-        int quant = U.LerInt();
+        int quant = U.EscolherQuant("usuarios removidos", this.getProjetistas());
 
         for (int i = 0; i < quant; i++)
         {
             try {
 
-                System.out.println("Digite RG do usuario que deseja remover: ");
-                U.Listar(usuarios);
-                int checkIdU = U.LerInt();
+                Usuario usuario = U.EscolherUser(this.getProjetistas(), "do usuario que deseja remover");
 
-                Usuario usuario = U.Buscar(this.getProjetistas(), checkIdU);
-
-                if (usuario.getFunc().equals("Devp"))
-                {
-                    this.getDesenvolvedores().remove(usuario);
-                    usuario.setFunc(null);
-                }
-                else if (usuario.getFunc().equals("Test"))
-                {
-                    this.getTestadores().remove(usuario);
-                    usuario.setFunc(null);
-                }
-                else if (usuario.getFunc().equals("Anlt"))
-                {
-                    this.getAnalistas().remove(usuario);
-                    usuario.setFunc(null);
-                }
-                else if (usuario.getFunc().equals("Tecn"))
-                {
-                    this.setIdTecnico(0);
-                    usuario.setFunc(null);
-                }
+                RemoverFuncUser(usuario);
 
                 Atividade ativ = null;
 
@@ -196,16 +136,14 @@ public class Projeto extends VarGlobais implements Busca{
                 } catch (Exception e) {
                     System.out.println("Usuario sem atividade para remover\n");
                 }
+
                 usuario.SairProjeto(this, ativ);
+                System.out.println("Usuario removido com sucesso");
+                U.Continue();
 
             } catch (Exception e) {
 
-                System.out.println("Falha ao remover usuario: "+e.getMessage());
-                System.out.println("\nManter o numero de remocoes? 1 para sim");
-
-                int decisao = input.nextInt();
-
-                if (decisao == 1)   i--;
+                if (erro.TratarEscolha(input, e, "remover usuario") == 1)   i--;
             }
             
         }
@@ -213,18 +151,11 @@ public class Projeto extends VarGlobais implements Busca{
 
     public void RemoverIntercambista() throws Exception
     {
-        System.out.println("Lista de Intercambistas atuais: ");
-        U.Listar(this.getIntercambistas());
-
-        System.out.println("Qual sera a quantidade de usuarios removidos?");
-
-        int quant = U.LerInt();
+        int quant = U.EscolherQuant("usuarios removidos", this.getIntercambistas());
 
         for (int i = 0; i < quant; i++)
         {
-            System.out.println("Digite RG do usuario que deseja remover: ");
-            int checkIdU = U.LerInt();
-            Usuario user = U.Buscar(this.getIntercambistas(), checkIdU);
+            Usuario user = U.EscolherUser(this.getIntercambistas(), "do usuario que deseja remover");
 
             Discente intercamb = (Discente)user;
             Atividade ativ = U.Buscar(this.getAtividades(), intercamb.getAtivInterCam());
@@ -233,66 +164,32 @@ public class Projeto extends VarGlobais implements Busca{
             ativ.getUsuarios().remove(intercamb);
             intercamb.setProjInterCam(0);
             intercamb.setAtivInterCam(0);
+
+            System.out.println("Usuario removido com sucesso");
+            U.Continue();
         }
     }
     
     public void AdicionarAtividades(Usuario coord) throws Exception
     {
-        System.out.println("Qual sera a quantidade de atividades adicionadas?");
-        int quant = U.LerInt();
+        int quant = U.EscolherQuant("atividades adicionadas", null);
 
         for (int i = 0; i < quant; i++)
         {
             try {
 
+                Cadastro cadastro = new Cadastro();
+                Atividade atividade = null;
+
                 System.out.println("Crie a atividade a ser adicionada: ");
 
-                System.out.println("Digite o ID da atividade: ");
-                int idAtividade = U.LerInt();
+                atividade = cadastro.CadastrarAtividade(this, coord);
 
-                try {
-                    U.Buscar(this.getAtividades(), idAtividade);
-                    System.out.println("Falha ao adicionar atividade: ID de atividade ja consta no sistema\n");
-                    return;
-                } catch (Exception e) {
-                   System.out.println("ID disponivel");
-                }
-
-                System.out.println("Digite a descricao da atividade: ");
-                String descAtividade = input.nextLine();
-
-                System.out.println("Digite o RG do responsavel pela atividade: ");
-                U.Listar(this.getProjetistas());
-                int checkIdU = U.LerInt();
-                Usuario responsavel = U.Buscar(this.getProjetistas(), checkIdU);
-
-                LocalDateTime inicio = null, termino = null;
-                try
-                {
-                    inicio = U.DefinirDataHora();
-                    termino = U.DefinirDataHora();
-                }
-                catch (Exception e)
-                {
-                    throw new RuntimeException(e.getMessage());
-                }
-
-                if (idAtividade > 0 && descAtividade != null && inicio != null && termino != null)
-                {
-                    Atividade atividade = new Atividade(idAtividade, descAtividade, responsavel.getId(), responsavel, inicio, termino);
-                    this.setAtividades(atividade);
-                    responsavel.setAtividade(idAtividade);
-                    atividade.setUsuarios(coord);
-                    coord.setAtividade(this.getId());
-                }
+                this.setAtividades(atividade);
+                
             } catch (Exception e) {
 
-                System.out.println("Falha ao adicionar atividade: "+e.getMessage());
-                System.out.println("\nManter o numero de adicoes? 1 para sim");
-
-                int decisao = input.nextInt();
-
-                if (decisao == 1)   i--;
+                if (erro.TratarEscolha(input, e, "adicionar atividade") == 1)   i--;
             }
         }
     }
@@ -451,6 +348,55 @@ public class Projeto extends VarGlobais implements Busca{
             return true;
         }
         return false; 
+    }
+
+    public void ListarTiposUsers(String tipo, ArrayList<Usuario> users)
+    {
+        System.out.println("Lista de "+tipo+": ");
+        if (!users.isEmpty()) U.Listar(users);
+        else                                      System.out.println("Sem "+tipo+"\n");
+    }
+
+    public void DefinirFuncUser(Usuario usuario)
+    {
+        int funcUsuario = U.LerInt();
+
+        if (funcUsuario == 1)
+        {
+            this.setDesenvolvedor(usuario);
+            usuario.setFunc("Devp");
+        }
+        else if (funcUsuario == 2)
+        {
+            this.setTestador(usuario);
+            usuario.setFunc("Test");
+        }
+        else if (funcUsuario == 3)
+        {
+            this.setAnalista(usuario);
+            usuario.setFunc("Anlt");
+        }
+        else if (funcUsuario == 4)
+        {
+            if (this.getIdTecnico() == 0)
+            {
+                this.setIdTecnico(usuario.getId());
+                usuario.setFunc("Tecn");
+            }
+        }
+    }
+    
+    public void RemoverFuncUser(Usuario usuario)
+    {
+        if (usuario.getFunc().equals("Devp"))       this.getDesenvolvedores().remove(usuario);
+
+        else if (usuario.getFunc().equals("Test"))  this.getTestadores().remove(usuario);
+        
+        else if (usuario.getFunc().equals("Anlt"))  this.getAnalistas().remove(usuario);
+
+        else if (usuario.getFunc().equals("Tecn"))  this.setIdTecnico(0);
+
+        usuario.setFunc(null);
     }
 
     @Override

@@ -264,7 +264,29 @@ public class Login extends VarGlobais
                     System.out.println("O que gostaria de consultar?");
                     menu.MenuConsulta();
 
-                    U.Consultar(m.getProjetos(), m.getUsuarios());            
+                    int cmdConsulta = U.LerInt();
+                    if (cmdConsulta == 1)
+                    {
+                        U.Consultar(m.getUsuarios());
+                    }
+                    else if (cmdConsulta == 2)
+                    {
+                        System.out.println(("Digite o id do projeto onde a atividade esta localizda: "));
+                        U.Listar(m.getProjetos());
+
+                        int checkIdP = U.LerInt();
+                        Projeto project = U.Buscar(m.getProjetos(), checkIdP);
+
+                        U.Consultar(project.getAtividades());
+                    }
+                    else if (cmdConsulta == 3)
+                    {
+                        U.Consultar(m.getProjetos());
+                    }
+                    else
+                    {
+                        throw new RuntimeException ("Erro: Valor invalido");
+                    }
                 }                
 
                 else if (cmdLogin == 7)
@@ -462,7 +484,29 @@ public class Login extends VarGlobais
                     System.out.println("O que gostaria de consultar?");
                     menu.MenuConsulta();
 
-                    U.Consultar(m.getProjetos(), m.getUsuarios());
+                    int cmdConsulta = U.LerInt();
+                    if (cmdConsulta == 1)
+                    {
+                        U.Consultar(m.getUsuarios());
+                    }
+                    else if (cmdConsulta == 2)
+                    {
+                        System.out.println(("Digite o id do projeto onde a atividade esta localizda: "));
+                        U.Listar(m.getProjetos());
+
+                        int checkIdP = U.LerInt();
+                        Projeto project = U.Buscar(m.getProjetos(), checkIdP);
+
+                        U.Consultar(project.getAtividades());
+                    }
+                    else if (cmdConsulta == 3)
+                    {
+                        U.Consultar(m.getProjetos());
+                    }
+                    else
+                    {
+                        throw new RuntimeException ("Erro: Valor invalido");
+                    }
                 }
                 else if (cmdLogin == 3)
                 {
