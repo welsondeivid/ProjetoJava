@@ -99,7 +99,7 @@ public class Utilidades{
 
         System.out.println("Status atual da atividade: "+ativ.getStatus());
 
-        ativ.ChecarStatus(tasks);
+        ativ.AlterarStatus(tasks);
 
         Continue();
     }
@@ -198,7 +198,7 @@ public class Utilidades{
 
     public Usuario EscolherUser(ArrayList<Usuario> users, String tipo) throws Exception
     {
-        System.out.println("Digite o ID"+tipo+" :");
+        System.out.println("Digite o ID "+tipo+" :");
         int checkIdU = LerInt();
         Usuario user = Buscar(users, checkIdU);
 
@@ -208,9 +208,16 @@ public class Utilidades{
     public <T extends Busca> int EscolherQuant(String tipo, ArrayList<T> objs) throws Exception
     {
         System.out.println("Qual sera a quantidade de "+tipo+"? 0 para nenhum");
-        Listar(objs);
-        int quant = LerInt();
+        try
+        {
+            Listar(objs);
+        }
+        catch (Exception e)
+        {
+            System.out.println("Lista vazia");
+        }
 
+        int quant = LerInt();
         return quant;
     }
 }

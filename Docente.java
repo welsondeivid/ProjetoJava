@@ -50,6 +50,13 @@ public class Docente extends Usuario{
         }
     }
     
+    public void Coordenar(Projeto proj)
+    {
+        this.setProjeto(proj.getId());
+        this.setCoord(true);
+        this.setDiaIngresso(LocalDateTime.now());
+    }
+
     public boolean getCoord() {
         return this.coord;
     }

@@ -204,7 +204,7 @@ public class Atividade extends VarGlobais implements Busca{
         return newTasks;
     }
 
-    public void ChecarStatus(ArrayList<Tarefa> tasks)
+    public void AlterarStatus(ArrayList<Tarefa> tasks)
     {
         if (tasks.isEmpty())
         {

@@ -1,3 +1,5 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Erros {
@@ -12,16 +14,6 @@ public class Erros {
         {
             CheckNome(test);
         }
-    }
-
-    public int TratarEscolha(Scanner input, Exception e, String tipo) throws Exception
-    {
-        System.out.println("Falha ao "+tipo+" :"+e.getMessage());
-        System.out.println("\nManter o numero de adicoes? 1 para sim");
-
-        int decisao = input.nextInt();
-
-        return decisao;
     }
     
     private void CheckVazio(String test) throws Exception
@@ -44,5 +36,24 @@ public class Erros {
                 throw new RuntimeException("Entrada Invalida: Caractere invalido '"+a+"'");
             }
         }
+    }
+
+    public int TratarEscolha(Scanner input, Exception e, String tipo) throws Exception
+    {
+        System.out.println("Falha ao "+tipo+" :"+e.getMessage());
+        System.out.println("\nManter o numero de adicoes? 1 para sim");
+
+        int decisao = input.nextInt();
+
+        return decisao;
+    }
+
+    public boolean CheckTempo(LocalDateTime inicio, LocalDateTime fim)
+    {
+        if (Duration.between(inicio, fim).toDays() <= 0)
+        {
+            return false;
+        }
+        return true;
     }
 }

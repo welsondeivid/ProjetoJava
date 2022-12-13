@@ -7,9 +7,8 @@ public class Cadastro extends VarGlobais {
     {
         String nomeUser = CadastrarNomeUsuario();
 
-        int idUser = CadastrarIdUsuario(users);
-
-        if (idUser == -1)   return null;
+        int idUser = CadastrarId(users, "usuario");
+        if (idUser == 0)   return null;
 
         String emailUser = CadastrarEmailUsuario();
 
@@ -41,24 +40,6 @@ public class Cadastro extends VarGlobais {
         erro.CheckErros(nome, "nome");
 
         return nome;
-    }
-
-    private int CadastrarIdUsuario(ArrayList<Usuario> users) throws Exception
-    {
-        System.out.println("Digite seu RG, usaremos como seu id: ");
-        int id = U.LerInt();
-        
-        try {
-
-            U.Buscar(users, id);
-            System.out.println("\nID ja consta no sistema\nFalha no cadastro\n");
-            return -1;
-
-        } catch (Exception e) {
-            
-            System.out.println("ID valido");
-            return id;
-        }
     }
 
     private String CadastrarEmailUsuario() throws Exception
@@ -97,90 +78,59 @@ public class Cadastro extends VarGlobais {
 
     public Tarefa CadastrarTarefa (Atividade ativ) throws Exception
     {
-        String descTarefa = CadastrarDescTarefa();
+        String descTarefa = CadastrarDesc("da atividade");
 
-        int respTarefa = CadastrarIdRespTarefa(ativ.getUsuarios());
+        int idTarefa = CadastrarIdTarefa(ativ.getUsuarios());
+        if (idTarefa == 0) throw new RuntimeException("ID invalido");
 
-        Usuario user = U.Buscar(ativ.getUsuarios(), respTarefa);
+        Usuario user = U.Buscar(ativ.getUsuarios(), idTarefa);
         
-        Tarefa tarefa = new Tarefa(descTarefa, respTarefa);
+        Tarefa tarefa = new Tarefa(descTarefa, idTarefa);
 
         user.setTarefas(tarefa);
 
         return tarefa;
     }
-
-    private String CadastrarDescTarefa() throws Exception
+    
+    private int CadastrarIdTarefa(ArrayList<Usuario> users)
     {
-        System.out.println("Digite a descricao da tarefa: ");
-        String desc = input.nextLine();
+        System.out.println("Digite o ID do profissional que realizara a tarefa: ");
+        int id = U.LerInt();
 
-        erro.CheckErros(desc, "vazio");
+        if (id < 0) return 0;
 
-        return desc;
+        try {
+            U.Listar(users);
+            return id;
+        } catch (Exception e) {
+            throw new RuntimeException("ID invalido");
+        }
     }
-
-    private int CadastrarIdRespTarefa (ArrayList<Usuario> users)
-    {
-        System.out.println("Digite o RG do profissional que realizara a tarefa: ");
-        U.Listar(users);
-
-        int resp = U.LerInt();
-
-        return resp;
-    }
-
+    
     
     public Atividade CadastrarAtividade(Projeto proj, Usuario coord) throws Exception
     {
-        int idAtividade = CadastrarIdAtividade(proj);
+        int idAtividade = CadastrarId(proj.getAtividades(), "atividade");
+
         if (idAtividade == 0)   throw new RuntimeException("ID invalido");
 
-        String descAtividade = CadastrarDescAtividade();
+        String descAtividade = CadastrarDesc("da atividade");
 
         Usuario responsavel = CadastrarRespAtividade(proj.getProjetistas());
 
         if (responsavel == null) throw new RuntimeException("ID invalido");
 
         LocalDateTime inicio = CadastrarPeriodo("inicial");
-
         LocalDateTime termino = CadastrarPeriodo("final");
+        erro.CheckTempo(inicio, termino);
 
         Atividade atividade = new Atividade(idAtividade, descAtividade, responsavel.getId(), responsavel, inicio, termino);
             
         responsavel.setAtividade(idAtividade);
         atividade.setUsuarios(coord);
         coord.setAtividade(proj.getId());
+        
         return atividade;
-    }
-
-    private int CadastrarIdAtividade(Projeto proj)
-    {
-        System.out.println("Digite o ID da atividade: ");
-        int id = U.LerInt();
-
-        try {
-            U.Buscar(proj.getAtividades(), id);
-            System.out.println("Falha ao adicionar atividade: ID de atividade ja consta no sistema\n");
-            return 0;
-
-        } catch (Exception e) {
-            System.out.println("ID disponivel");
-        }
-
-        if (id < 0) return 0;
-
-        return id;
-    }
-
-    private String CadastrarDescAtividade() throws Exception
-    {
-        System.out.println("Digite a descricao da atividade: ");
-        String desc = input.nextLine();
-
-        erro.CheckErros(desc, "vazio");
-
-        return desc;
     }
 
     private Usuario CadastrarRespAtividade(ArrayList<Usuario> users)
@@ -192,6 +142,66 @@ public class Cadastro extends VarGlobais {
         Usuario user = U.Buscar(users, checkIdU);
 
         return user;
+    }
+
+    
+    public Projeto CadastrarProjeto(ArrayList<Projeto> projs, ArrayList<Usuario> users) throws Exception
+    {
+        int idProject = CadastrarId(projs, "projeto");
+        if (idProject == 0) throw new RuntimeException("ID invalido");
+
+        String descProj = CadastrarDesc("do projeto");
+
+        LocalDateTime inicio = CadastrarPeriodo("inicial");
+        LocalDateTime termino = CadastrarPeriodo("final");
+        erro.CheckTempo(inicio, termino);
+
+        Usuario userCoord = U.EscolherUser(users, "do coordenador");
+
+        if (userCoord instanceof Docente)
+        {
+            Docente user = (Docente)userCoord;
+
+            Projeto project = new Projeto(idProject, descProj, inicio, termino, "Em processo de criacao", user);
+
+            user.Coordenar(project);
+            
+            System.out.println("Projeto criado com sucesso");
+            U.Continue();
+            return project;
+        }
+        else
+        {
+            System.out.println("Discente nao pode ser Coordenador");
+            return null;
+        }
+    }
+
+    private <T extends Busca> int CadastrarId(ArrayList<T> objs, String tipo)
+    {
+        System.out.println("Digite o ID: ");
+        int id = U.LerInt();
+        if (id < 0) return 0;
+
+        try {
+            U.Buscar(objs, id);
+            System.out.println("Falha ao criar "+tipo+": ID ja consta no sistema");
+            return 0;
+        } catch (Exception e) {
+            System.out.println("ID disponivel\n");
+        }
+
+        return id;
+    }
+
+    private String CadastrarDesc(String tipo) throws Exception
+    {
+        System.out.println("Digite a descricao "+tipo+": ");
+        String desc = input.nextLine();
+
+        erro.CheckErros(desc, "vazio");
+
+        return desc;
     }
 
     private LocalDateTime CadastrarPeriodo(String tipo)

@@ -196,9 +196,7 @@ public class Projeto extends VarGlobais implements Busca{
 
     public void RemoverAtividades() throws Exception
     {
-        System.out.println("Qual sera a quantidade de atividades removidas?");
-        U.Listar(this.getAtividades());
-        int quant = U.LerInt();
+        int quant = U.EscolherQuant("atividades removidas", this.getAtividades());
 
         for (int i = 0; i < quant; i++)
         {
@@ -221,13 +219,8 @@ public class Projeto extends VarGlobais implements Busca{
                 atividade = null;
 
             } catch (Exception e) {
-
-                System.out.println("Falha ao remover atividade: "+e.getMessage());
-                System.out.println("\nManter o numero de adicoes? 1 para sim");
-
-                int decisao = input.nextInt();
-
-                if (decisao == 1)   i--;
+                
+                if (erro.TratarEscolha(input, e, "remover atividade") == 1)   i--;
             }
         }
     }

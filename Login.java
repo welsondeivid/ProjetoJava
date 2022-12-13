@@ -589,59 +589,14 @@ public class Login extends VarGlobais
 
     public boolean CriarProjeto(Manager m) throws Exception
     {
-        System.out.println("Digite o ID do projeto: ");
-        int idProject = U.LerInt();
+        Cadastro cadastro = new Cadastro();
+        Projeto project = cadastro.CadastrarProjeto(m.getProjetos(), m.getUsuarios());
 
-        try {
-            U.Buscar(m.getProjetos(), idProject);
-            System.out.println ("Falha ao criar projeto: ID ja consta no sistema\n");
-            return false;
-        } catch (Exception e) {
-            System.out.println("ID disponivel\n");
-        }
-
-        System.out.println("Digite a descricao do projeto: ");
-        String descProject = input.nextLine();
-
-        LocalDateTime inicio = null, termino = null;
-        try
+        if (project != null)
         {
-            inicio = U.DefinirDataHora();
-            termino = U.DefinirDataHora();
+            m.getProjetos().add(project);
         }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e.getMessage());
-        }
-        
 
-        System.out.println("Defina o Coordenador do projeto, somente Professor/Pesquisador");
-        U.Listar(m.getUsuarios());
-        int idCoord = U.LerInt();
-
-        Usuario userCoord = U.Buscar(m.getUsuarios(), idCoord);
-
-        if (userCoord instanceof Docente)
-        {
-            Docente user = (Docente)userCoord;
-
-            if (idProject > 0 && descProject != null && inicio != null && termino != null)
-            {
-                Projeto project = new Projeto(idProject, descProject, inicio, termino, "Em processo de criacao", user);
-                
-                user.setProjeto(idProject);
-                user.setCoord(true);
-                user.setDiaIngresso(LocalDateTime.now());
-                m.getProjetos().add(project);
-                System.out.println("Projeto criado com sucesso\nEnter para continuar");
-                input.nextLine();
-                return true;
-            }
-        }
-        else
-        {
-            System.out.println("Discente nao pode ser Coordenador");
-        }
         return false;
     }
 }
