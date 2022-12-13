@@ -148,7 +148,7 @@ public class Cadastro extends VarGlobais {
     public Projeto CadastrarProjeto(ArrayList<Projeto> projs, ArrayList<Usuario> users) throws Exception
     {
         int idProject = CadastrarId(projs, "projeto");
-        if (idProject == 0) throw new RuntimeException("ID invalido");
+        if (idProject == 0) return null;
 
         String descProj = CadastrarDesc("do projeto");
 

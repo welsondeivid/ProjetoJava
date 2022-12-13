@@ -21,7 +21,7 @@ public class Manager {
         //teste, apague essas linhas
         Usuario testeU = new Docente("Welson", "Welson@icproj.com", "456", 5, 123);
         m.getUsuarios().add(testeU);
-        Usuario testeU2 = new Discente("Deivid", "Deivid@icproj.com", "456", 1, 789);
+        Usuario testeU2 = new Docente("Deivid", "Deivid@icproj.com", "456", 4, 789);
         m.getUsuarios().add(testeU2);
         Usuario testeU3 = new Discente("Gustavo", "Gustavo@icproj.com", "456", 2, 147);
         m.getUsuarios().add(testeU3);
@@ -90,7 +90,6 @@ public class Manager {
                 {
                     if (cmd != 0)   throw new RuntimeException ("Erro: Valor invalido");
                 }
-                U.Continue();
             }
             catch (Exception e)
             {

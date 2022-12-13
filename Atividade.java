@@ -209,7 +209,6 @@ public class Atividade extends VarGlobais implements Busca{
         if (tasks.isEmpty())
         {
             System.out.println("Todas as tarefas Finalizadas, alterando Status para Concluida");
-            U.Continue();
             this.setStatus("Concluida");
         }
         else
@@ -219,7 +218,6 @@ public class Atividade extends VarGlobais implements Busca{
             {
                 System.out.println(item);
             }
-            U.Continue();
         }
     }
 

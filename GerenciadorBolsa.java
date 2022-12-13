@@ -5,9 +5,9 @@ public class GerenciadorBolsa{
     
     Utilidades U = new Utilidades();
     
-    private float valorDevp = 0;
-    private float valorTest = 0;
-    private float valorAnlt = 0;
+    private float valorDevp = 0.0f;
+    private float valorTest = 0.0f;
+    private float valorAnlt = 0.0f;
     
     private LocalDateTime prazoDevp = null;
     private LocalDateTime prazoTest = null;
@@ -101,30 +101,30 @@ public class GerenciadorBolsa{
 
     public String ChecarBolsas()
     {
-        String falha = null;
-        if (this.getValorDevp() == 0)
+        String falha = "";
+        if (this.getValorDevp() == 0.0f)
         {
-            falha += "Falta designar o valor da Bolsa do Desenvolvedor\n";
+            falha = falha.concat("Falta designar o valor da Bolsa do Desenvolvedor\n");
         }
-        else if (this.getValorAnlt() == 0)
+        if (this.getValorAnlt() == 0.0f)
         {
-            falha += "Falta designar o valor da Bolsa do Analista\n";
+            falha = falha.concat("Falta designar o valor da Bolsa do Analista\n");
         }
-        else if (this.getValorTest() == 0)
+        if (this.getValorTest() == 0.0f)
         {
-            falha += "Falta designar o valor da Bolsa do Testador\n";
+            falha = falha.concat("Falta designar o valor da Bolsa do Testador\n");
         }
-        else if (this.getPrazoDevp() == null)
+        if (this.getPrazoDevp() == null)
         {
-            falha += "Falta designar o tempo da Bolsa do Desenvolvedor\n";
+            falha = falha.concat("Falta designar o tempo da Bolsa do Desenvolvedor\n");
         }
-        else if (this.getPrazoAnlt() == null)
+        if (this.getPrazoAnlt() == null)
         {
-            falha += "Falta designar o tempo da Bolsa do Analista\n";
+            falha = falha.concat("Falta designar o tempo da Bolsa do Analista\n");
         }
-        else if (this.getPrazoTest() == null)
+        if (this.getPrazoTest() == null)
         {
-            falha += "Falta designar o tempo da Bolsa do Testador\n";
+            falha = falha.concat("Falta designar o tempo da Bolsa do Testador\n");
         }
 
         return falha;

@@ -80,7 +80,6 @@ public class Utilidades{
         T obj = Buscar(objs, escolha);
 
         Dados(obj);
-        Continue();
     }
     
     public <T extends Busca> void Dados (T obj)
@@ -99,9 +98,9 @@ public class Utilidades{
 
         System.out.println("Status atual da atividade: "+ativ.getStatus());
 
-        ativ.AlterarStatus(tasks);
-
         Continue();
+
+        ativ.AlterarStatus(tasks);
     }
 
     public void RelatorioProj(Projeto proj, GerenciadorBolsa gerBolsa)
@@ -135,7 +134,7 @@ public class Utilidades{
             DateTimeFormatter dataForm = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	        DateTimeFormatter horaForm = DateTimeFormatter.ofPattern("HH:mm");
 
-            return  "Data: "+dataForm.format(tempo)+"\n"+
+            return  "Data: "+dataForm.format(tempo)+
                     "Hora: "+horaForm.format(tempo)+"\n";
         }
         else

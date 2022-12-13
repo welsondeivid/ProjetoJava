@@ -187,6 +187,9 @@ public class Projeto extends VarGlobais implements Busca{
 
                 this.setAtividades(atividade);
                 
+                System.out.println("Atividade adicionada com sucesso");
+                U.Continue();
+                
             } catch (Exception e) {
 
                 if (erro.TratarEscolha(input, e, "adicionar atividade") == 1)   i--;
@@ -218,6 +221,9 @@ public class Projeto extends VarGlobais implements Busca{
                 atividade.getTarefas().clear();
                 atividade = null;
 
+                System.out.println("Atividade removida com sucesso");
+                U.Continue();
+
             } catch (Exception e) {
                 
                 if (erro.TratarEscolha(input, e, "remover atividade") == 1)   i--;
@@ -225,7 +231,7 @@ public class Projeto extends VarGlobais implements Busca{
         }
     }
 
-    public void AlterarStatus() throws Exception
+    public void AlterarStatus(GerenciadorBolsa gerBolsa) throws Exception
     {
         System.out.println("Seu projeto é o : "+this.getNome());
         System.out.println("Status atual: "+this.getStatus());
@@ -241,7 +247,7 @@ public class Projeto extends VarGlobais implements Busca{
             int decisao = U.LerInt();
             if (decisao == 1)
             {
-                boolean check = this.ChecarStatus();
+                boolean check = this.ChecarStatus(gerBolsa);
 
                 if (check)
                 {
@@ -289,7 +295,7 @@ public class Projeto extends VarGlobais implements Busca{
         }
     }
     
-    public boolean ChecarStatus()
+    public boolean ChecarStatus(GerenciadorBolsa gerBolsa)
     {
         boolean falha = false;
 
@@ -329,7 +335,8 @@ public class Projeto extends VarGlobais implements Busca{
         }
 
         String checkBolsas = gerBolsa.ChecarBolsas();
-        if(checkBolsas != null)
+
+        if(checkBolsas != "")
         {
             System.out.println(checkBolsas);
             falha = true;

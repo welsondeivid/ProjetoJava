@@ -61,8 +61,13 @@ public abstract class Usuario extends VarGlobais implements Busca
         this.setAtividade(atividade.getId());
     }
 
-    public void EditarTarefas()
+    public void EditarTarefas() throws Exception
     {
+        if (this.getTarefas().isEmpty())
+        {
+            throw new RuntimeException("Lista vazia");
+        }
+        
         System.out.println("Tarefas atribuidas: ");
 
         Tarefa item = null;
